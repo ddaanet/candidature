@@ -169,28 +169,25 @@ déprimant. L'objectif est d'identifier des ajustements concrets :
 
 ## Stockage
 
-### Fichier de suivi (`candidatures/suivi.md`)
+Tout le suivi est en mémoire projet (`memory_user_edits`), pas dans des
+fichiers. Le candidat n'a rien à gérer.
 
-Un fichier unique, ordonné chronologiquement, avec une entrée par
-candidature. Chaque entrée contient :
+### Candidatures (préfixe `candidature:`)
 
-```markdown
-## [Entreprise] — [Poste]
-- **Date :** [date de candidature]
-- **Canal :** [plateforme / email / spontanée]
-- **Résultat :** [en cours / refus sans entretien / refus après
-  entretien N / offre]
-- **Compte rendu :** [lien vers fichier si niveau 2-3, résumé inline
-  si niveau 1]
-- **Apprentissages :** [1-2 phrases sur ce qui est transférable]
+Une entrée par candidature, format compact :
+
+```
+candidature: 2026-03-16 — Doctolib — Senior SWE Agentic AI — WTTJ —
+axes: Python 25 ans, agentique actif, blog tech P-O fit — statut: en attente
 ```
 
-### Comptes rendus détaillés (`candidatures/entretiens/`)
+Mise à jour in-place (`replace`) quand le statut change.
 
-Pour les niveaux 2 et 3, un fichier par entretien :
-`candidatures/entretiens/YYYY-MM-DD-entreprise.md`
+### Comptes rendus (préfixe `entretien:`)
 
-### Patterns (`candidatures/patterns.md`)
+Une entrée par entretien, synthèse des points clés et apprentissages.
+Pas de verbatim — la mémoire a un budget limité.
 
-Mis à jour après chaque analyse de patterns. Contient les observations
-et ajustements décidés.
+### Tendances (préfixe `tendance:`)
+
+Mises à jour après chaque analyse. Observations et ajustements décidés.

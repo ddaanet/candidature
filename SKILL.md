@@ -128,18 +128,19 @@ Une itération par offre d'emploi.
 Le candidat fournit l'offre d'emploi (texte, URL, ou capture d'écran). Lire
 la fiche de poste (appel d'outil). Si c'est une URL, aller la chercher.
 
-### 2.2 Recherche contextuelle `[outil: view index → web_search si besoin]`
+### 2.2 Recherche contextuelle `[outil: mémoire projet → web_search si besoin]`
 
 Avant de demander quoi que ce soit au candidat, rechercher ce qui est
 attendu pour ce type de poste. L'objectif est de savoir quels documents
 préparer, quel ton adopter, et quelles conventions respecter.
 
-**Consulter d'abord l'archive de recherche** (voir §Archive de recherche).
-Lire l'index (`recherche/index.md`). Si une entrée correspond exactement
-au type de poste, au secteur et à la taille d'entreprise : la charger et
-passer à 2.3. Si le match est approximatif, le signaler au candidat et
-lui laisser décider (réutiliser, adapter, ou refaire). Si rien ne correspond :
-lancer une recherche complète.
+**Consulter d'abord la mémoire projet.** Vérifier si une recherche
+précédente couvre ce type de poste (entrée mémoire préfixée
+`recherche:`). Si une entrée correspond exactement au type de poste, au
+secteur et à la taille d'entreprise : la réutiliser et passer à 2.3. Si
+le match est approximatif, le signaler au candidat et lui laisser décider
+(réutiliser, adapter, ou refaire). Si rien ne correspond : lancer une
+recherche complète.
 
 **Recherche complète** (`web_search`) — explorer :
 
@@ -155,8 +156,8 @@ lancer une recherche complète.
   formulaire à champs imposés, envoi direct par email, candidature
   spontanée...
 
-**Créer un artefact de recherche** (`create_file`) avec les résultats, et
-mettre à jour l'index. Voir §Archive de recherche.
+**Stocker les résultats en mémoire projet** (`memory_user_edits`, préfixe
+`recherche:`) pour réutilisation lors de candidatures similaires.
 
 ### 2.3 Documents et contexte candidat `[choix]`
 
@@ -232,15 +233,18 @@ d'inspection Fagan : segmentation, analyse par item, décision forcée.
   l'agent interprète
 - Le protocole fonctionne même sur un texte de 3 lignes (un seul item)
 
-### 3.1 Présentation `[état]`
+### 3.1 Orientation `[état]`
 
-```
-[relecture : <artefact> — <N> éléments à passer en revue]
-```
+Résumer en une phrase : quel texte, pour quel poste, combien de
+paragraphes. Exemple : "Je relis votre lettre pour Doctolib — 4
+paragraphes. On y va ?"
 
-Résumer : quel artefact, pour qui, quel canal, nombre d'éléments détectés.
-Voir `references/review-items.md` pour le découpage. Attendre avant de
-commencer.
+Pas de ligne d'état formatée, pas de liste de critères, pas de vocabulaire
+de protocole. Le candidat a besoin de savoir ce qu'on relit, pas comment
+la mécanique fonctionne.
+
+Voir `references/review-items.md` pour le découpage en éléments. Attendre
+la confirmation avant de commencer.
 
 ### 3.2 Item par item
 
@@ -336,11 +340,12 @@ que ceux focalisés sur les résultats bruts (Kanfer et al., 2001 ;
 Van Hooft & Van Hoye, 2022). Voir `references/feedback-tracking.md` pour
 le protocole détaillé.
 
-### 4.1 Enregistrement des retours `[outil: create_file ou str_replace]`
+### 4.1 Enregistrement des retours `[outil: memory_user_edits]`
 
-Quand le candidat signale un retour (refus, entretien, offre), enregistrer
-dans `candidatures/suivi.md`. L'enregistrement est minimal pour les refus
-génériques — l'information exploitable est ailleurs.
+Quand le candidat signale un retour (refus, entretien, offre), mettre à
+jour l'entrée mémoire de la candidature concernée (`replace` pour changer
+le statut). L'enregistrement est minimal pour les refus génériques —
+l'information exploitable est ailleurs.
 
 ### 4.2 Compte rendu d'entretien `[choix au premier CR]`
 
@@ -359,13 +364,14 @@ comportement du candidat — si le candidat saute des sections, proposer
 un niveau plus léger `[choix]` ; s'il ajoute spontanément du détail,
 proposer un niveau plus structuré `[choix]`.
 
-Le compte rendu est stocké dans `candidatures/entretiens/` pour les
-niveaux guidé et structuré, inline dans `suivi.md` pour l'informel.
+Le compte rendu est conversationnel. L'agent synthétise les points clés
+et les stocke en mémoire projet (une entrée par entretien, préfixe
+`entretien:`).
 
 **L'objectif du compte rendu n'est pas l'archivage — c'est l'extraction
 d'apprentissages transférables.** Chaque compte rendu se termine par :
 "Qu'est-ce qui est utile pour les prochaines candidatures ?" La réponse
-est enregistrée dans le suivi et alimente l'analyse des patterns.
+est enregistrée en mémoire et alimente l'analyse des tendances.
 
 ### 4.3 Analyse des patterns `[choix]`
 
@@ -387,72 +393,38 @@ L'analyse est conversationnelle et orientée action. Pas de tableau de
 bord, pas de statistiques déprimantes. L'objectif est d'identifier des
 ajustements concrets pour les prochaines candidatures.
 
-Les observations sont stockées dans `candidatures/patterns.md` et
-consultées au §2.4 (axes) des candidatures suivantes pour éclairer les
+Les observations sont stockées en mémoire projet (préfixe `tendance:`)
+et consultées au §2.4 (axes) des candidatures suivantes pour éclairer les
 choix.
 
 ---
 
 ## Archive de recherche
 
-Les résultats de recherche contextuelle (§2.2) sont persistés dans le projet
-pour éviter de refaire la même recherche à chaque candidature similaire.
+Les résultats de recherche contextuelle (§2.2) sont stockés en mémoire
+projet pour éviter de refaire la même recherche à chaque candidature
+similaire.
 
-### Structure
+### Format (préfixe `recherche:`)
+
+Chaque entrée mémoire contient juste assez pour décider si elle
+s'applique :
 
 ```
-recherche/
-  index.md                              — catalogue
-  backend-senior-startup-esn.md         — exemple
-  commercial-b2b-grande-entreprise.md   — exemple
-  ...
+recherche: backend-senior-startup — Tech/ESN/Startup — 10-500 employés —
+France — 2026-03 — Documents: CV + LM optionnelle — Ton: direct, tu
+accepté — CV 1 page — Pas applicable: lead/management, data/ML, stage
 ```
 
-### Index (`recherche/index.md`)
+### Réutilisation
 
-Chaque entrée contient juste assez pour décider si elle s'applique :
-
-```markdown
-## backend-senior-startup-esn
-
-- **Type de poste :** Développeur backend senior, contributeur individuel
-- **Secteur :** Tech / ESN / Startup
-- **Taille d'entreprise :** 10-500 employés
-- **Pays :** France
-- **Date :** 2026-03-15
-- **Fichier :** recherche/backend-senior-startup-esn.md
-- **Ne s'applique PAS à :** Poste lead/management, poste data/ML,
-  stage/alternance, grande entreprise (>500)
-```
-
-Le champ "Ne s'applique PAS à" est obligatoire. Il empêche la réutilisation
-abusive d'une recherche approximativement similaire.
-
-### Artefact de recherche
-
-Chaque fichier contient :
-
-- **Périmètre d'applicabilité** (repris dans l'index)
-- **Documents attendus** — ce qui est standard pour ce type de candidature
-- **Conventions de ton** — formalisme, tutoiement, humour, niveau de
-  technicité
-- **Normes sectorielles** — format de CV, longueur de lettre, contenu
-  attendu
-- **Spécificités canal** — contraintes des plateformes de candidature
-  courantes pour ce type de poste
-- **Sources** — URLs consultées (pour vérification ou mise à jour)
-
-### Réutilisation `[outil: view index]`
-
-1. Lire `recherche/index.md`
-2. Comparer chaque entrée au poste courant sur : type de poste, secteur,
-   taille d'entreprise, pays
-3. Vérifier le champ "Ne s'applique PAS à"
-4. **Correspondance exacte** → charger le fichier, continuer
+1. Vérifier la mémoire projet (entrées préfixées `recherche:`)
+2. Comparer au poste courant : type de poste, secteur, taille, pays
+3. Vérifier le périmètre d'exclusion ("Pas applicable")
+4. **Correspondance exacte** → réutiliser, continuer
 5. **Correspondance approximative** → signaler au candidat, lui laisser
    décider (réutiliser / adapter / refaire)
-6. **Aucune correspondance** → recherche complète, créer artefact, mettre
-   à jour l'index
+6. **Aucune correspondance** → recherche complète, stocker en mémoire
 
 Ne jamais réutiliser silencieusement un match approximatif. Le candidat
 décide.

@@ -44,16 +44,14 @@ comme ajout au corpus (boucle d'apprentissage).
 Avant de demander des documents au candidat, le skill recherche ce qui est
 attendu pour ce type de poste (documents, ton, conventions sectorielles).
 
-**Mécanisme :** Consultation d'un index d'archive (`recherche/index.md`),
-puis web_search si aucune entrée ne correspond. Les résultats sont persistés
-dans le projet pour réutilisation.
+**Mécanisme :** L'agent vérifie en mémoire projet si une recherche
+précédente couvre ce type de poste, puis lance `web_search` si rien ne
+correspond. Les résultats sont stockés en mémoire projet pour
+réutilisation (une entrée mémoire par type de poste).
 
 **Critère de réutilisation :** Match exact sur type de poste + secteur +
 taille d'entreprise + pays. Match approximatif = le candidat décide. Jamais
 de réutilisation silencieuse.
-
-**Champ "Ne s'applique PAS à" obligatoire** dans chaque entrée d'index.
-Empêche la réutilisation abusive.
 
 ### FR-3 : Génération de candidature
 
@@ -95,14 +93,29 @@ verdict. Pas de traçage formel des verdicts.
 Deux critères ajoutés après la recherche de fond : crédibilité des signaux
 (Spence) et accroche comme point critique (biais d'ancrage).
 
+**Orientation condensée.** Avant le premier item, l'agent résume en une
+phrase le contexte : quel texte, pour quel poste, combien de paragraphes.
+Pas de ligne d'état formatée, pas de liste de critères, pas de vocabulaire
+de protocole. Exemple : "Je relis votre lettre pour Doctolib — 4
+paragraphes. On y va ?" Voir D-11.
+
 ### FR-6 : Suivi des candidatures et comptes rendus d'entretien
 
-Enregistrement des retours, comptes rendus d'entretien à 3 niveaux de
-détail, analyse de patterns.
+Enregistrement des retours, comptes rendus d'entretien, analyse de
+patterns.
 
-**Mécanisme :** 3 niveaux (informel, guidé, structuré) choisis au premier
-CR via widget. Ajustement dynamique selon le comportement du candidat.
-Analyse de patterns proposée après 5+ candidatures, jamais automatique.
+**Mécanisme :** Chaque candidature est enregistrée comme une entrée de
+mémoire projet (`memory_user_edits`) contenant : date, entreprise, poste,
+canal, axes, statut. Le statut est mis à jour in-place (`replace`) quand
+le candidat signale un retour.
+
+Les comptes rendus d'entretien sont conversationnels. 3 niveaux (informel,
+guidé, structuré) choisis au premier CR via widget. Ajustement dynamique
+selon le comportement du candidat. Les apprentissages sont extraits et
+stockés en mémoire projet.
+
+L'analyse de patterns se fait en lisant les mémoires existantes, pas en
+parsant des fichiers. Proposée après 5+ candidatures, jamais automatique.
 
 **Fondement :** Orientation apprentissage > orientation performance
 (Kanfer et al., 2001 ; Van Hooft & Van Hoye, 2022). Le suivi extrait des
@@ -111,7 +124,7 @@ apprentissages transférables, pas des statistiques.
 ### FR-7 : Enrichissement continu
 
 Le corpus de style, l'archive de recherche et les patterns de candidature
-s'enrichissent au fil des candidatures.
+s'enrichissent au fil des candidatures. Tout est stocké en mémoire projet.
 
 ---
 
@@ -133,17 +146,21 @@ Chaque point de décision est ancré par un résultat visible ou un appel
 d'outil. Trois niveaux : `[choix]` (widget), `[outil]` (tool call),
 `[état]` (ligne visible).
 
-**Fondement :** Protocole `proof` d'agent-core — un gate sans ancrage est
-un gate que l'agent saute (anti-pattern prose-only gate).
+**Fondement :** Protocole `proof` d'agent-core — une porte sans ancrage est
+une porte que l'agent saute (anti-pattern prose-only gate).
 
 ### NFR-3 : Interface simple
 
 Pas de vocabulaire de protocole exposé à l'utilisateur. Le candidat parle
-naturellement. L'agent interprète.
+naturellement. L'agent interprète. Pas de jargon technique dans les
+messages de l'agent.
 
 **Décision écartée :** La version initiale (héritée de `proof`) imposait
 des raccourcis (a/r/k/s). Retiré — le public cible n'est pas des
 développeurs familiers avec des CLI.
+
+**Extension (v2) :** L'étape d'orientation de la relecture exposait du
+vocabulaire de protocole. Condensée en un résumé d'une phrase. Voir D-11.
 
 ### NFR-4 : Français sans anglicismes superflus
 
@@ -161,6 +178,20 @@ plateforme. Fonctionne sur Claude.ai (projet), ChatGPT (GPT), Gemini
 
 Claude.ai : 4 étapes via "Ajouter depuis GitHub". Autres : coller une
 URL dans un chat. Pas de terminal, pas de build, pas de config.
+
+### NFR-7 : Stockage en mémoire projet
+
+Le public cible ne sait pas manipuler des fichiers dans un projet IA.
+Toutes les données persistantes (suivi des candidatures, préférences,
+archive de recherche, patterns) sont stockées via la mémoire du projet
+(`memory_user_edits`), pas dans des fichiers markdown.
+
+**Avantages :** Accessible dans toutes les conversations du projet sans
+manipulation. Pas de fichiers à gérer.
+
+**Limites :** La mémoire a un budget limité. Les comptes rendus
+d'entretien détaillés sont stockés sous forme de synthèse, pas de
+verbatim. Voir D-6 pour les détails.
 
 ---
 
@@ -232,16 +263,29 @@ AppleScript dans Pages (fragile et limité), PDF (lecture seule).
 flottantes ni les mises en page très complexes. Le candidat qui a un CV
 avec un design élaboré recevra des suggestions de modifications manuelles.
 
-### D-6 : Archive de recherche — par candidature vs par type de poste
+### D-6 : Données persistantes — mémoire projet vs fichiers
 
-**Choisi :** Par type de poste, avec index et périmètre d'applicabilité.
+**Choisi :** Mémoire projet (`memory_user_edits`) pour toutes les données
+persistantes : archive de recherche, suivi des candidatures, comptes
+rendus, patterns.
 
-**Raison :** Les conventions (documents attendus, ton, format) sont les
-mêmes entre deux candidatures du même type. Refaire la recherche à chaque
-fois gaspille du temps et des tokens.
+**Raison :** La v1 utilisait des fichiers markdown (archive dans
+`recherche/index.md` + fichiers par type de poste, suivi dans
+`candidatures/suivi.md`, CR dans `candidatures/entretiens/`, patterns
+dans `candidatures/patterns.md`). En pratique, cela implique que le
+candidat sache manipuler des fichiers dans un projet IA — télécharger,
+re-uploader, maintenir la cohérence. Le public cible ne sait pas faire ça.
 
-**Écarté :** Par candidature (pas de réutilisation), index global sans
-périmètre (risque de match approximatif silencieux).
+La mémoire projet est accessible dans toutes les conversations sans
+manipulation. Pour l'archive de recherche : une entrée par type de poste.
+Pour le suivi : une entrée par candidature, mise à jour in-place.
+
+**Écarté :** Fichiers markdown (complexe pour le grand public), base de
+données externe (surdimensionné).
+
+**Compromis accepté :** La mémoire a un budget limité. Le suivi de 50+
+candidatures peut saturer. Solution à terme : condensation périodique.
+Les CR d'entretien détaillés sont stockés sous forme de synthèse.
 
 ### D-7 : Suivi — automatique vs proposé
 
@@ -284,6 +328,24 @@ cognitifs, autorégulation) ne changent pas selon qu'on postule comme dev
 ou comme commercial. Les séparer des recherches contextuelles évite la
 duplication et permet la mise à jour indépendante.
 
+### D-11 : Orientation relecture — condensée
+
+**Choisi :** Orientation réduite à un résumé d'une phrase avant le
+premier item.
+
+**Raison :** En test utilisateur, l'orientation complète produisait un
+message incompréhensible pour un non-technicien : ligne d'état avec
+crochets, liste de critères, vocabulaire de protocole (« actions:
+feedback, proceed, skip-to-end »). Le candidat n'a pas besoin de
+connaître la mécanique — mais il a besoin de savoir ce qu'on relit.
+
+L'orientation reste, condensée en un résumé : quel texte, pour qui,
+combien d'éléments. L'agent attend la confirmation puis passe au
+premier item.
+
+**Écarté :** Suppression totale (le candidat ne sait plus ce qu'on
+relit). Orientation complète v1 (jargon, tour de conversation inutile).
+
 ---
 
 ## Alternatives écartées globales
@@ -304,9 +366,9 @@ candidat.
 
 ### Traçage formel des candidatures (CRM-like)
 
-Écarté au profit d'un suivi léger en markdown. Un système CRM complexe
-est une surcharge pour la plupart des candidats. Le fichier `suivi.md`
-avec un format simple suffit.
+Écarté au profit d'un suivi léger en mémoire projet. Un système CRM
+complexe est une surcharge pour la plupart des candidats. Une ligne de
+mémoire par candidature suffit.
 
 ---
 
@@ -354,16 +416,36 @@ avec un format simple suffit.
 
 ```
 candidature/
-  README.md                   — Installation et proposition de valeur
-  SKILL.md                    — Méthode complète (4 phases, gates ancrés)
-  DESIGN.md                   — Ce document
+  README.md                       — Installation et proposition de valeur
+  SKILL.md                        — Méthode complète (4 phases, portes ancrées)
+  DESIGN.md                       — Ce document
   references/
-    recruitment-science.md    — 5 cadres théoriques (stable)
-    cover-letter.md           — Principes de rédaction
-    cv-handling.md            — Protocole python-docx
-    review-items.md           — Découpage pour la relecture
-    feedback-tracking.md      — Suivi, CR d'entretien, patterns
+    recruitment-science.md        — 5 cadres théoriques (stable)
+    cover-letter.md               — Principes de rédaction
+    cv-handling.md                — Protocole python-docx
+    review-items.md               — Découpage pour la relecture
+    feedback-tracking.md          — Suivi, CR d'entretien, patterns
 ```
+
+Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le
+suivi et l'archive sont en mémoire projet.
+
+---
+
+## Portes SKILL.md à mettre à jour
+
+Les portes suivantes dans SKILL.md référencent des fichiers ou du jargon
+de protocole et doivent être mises à jour :
+
+| Section | Porte actuelle | Changement |
+|---------|---------------|------------|
+| §2.2 | `[outil: view index → web_search]` | Remplacer `view index` par consultation mémoire projet |
+| §2.2 | `create_file` pour artefact de recherche | Remplacer par `memory_user_edits` |
+| §3.1 | `[état]` ligne d'état jargonneuse | Condenser en résumé d'une phrase |
+| §4.1 | `[outil: create_file ou str_replace]` | Remplacer par `[outil: memory_user_edits]` |
+| §4.2 | Stockage CR dans `candidatures/entretiens/` | CR conversationnel, synthèse en mémoire |
+| §4.3 | `candidatures/patterns.md` | Observations en mémoire projet |
+| §Archive | Structure fichiers `recherche/` | Supprimer la section entière |
 
 ---
 
@@ -382,6 +464,13 @@ candidature/
 - **Localisation :** Le skill est en français. Une version anglaise
   élargirait l'audience. Les principes sont universels, seuls l'interface
   et les conventions sectorielles changent.
+- **Environnement hybride Desktop + Claude.ai :** Le skill a été conçu
+  pour Claude.ai (projet), mais le workflow complet de candidature
+  (navigation sites d'emploi, remplissage de formulaires, tri des
+  recommandations) nécessite un contrôle du navigateur disponible
+  uniquement sur Claude Desktop. Documenter le tandem.
+- **Saturation mémoire :** Avec 50+ candidatures, la mémoire projet peut
+  saturer. Prévoir un mécanisme de condensation.
 
 ---
 
@@ -410,10 +499,10 @@ concernés.
 | 1 | Théorie du signal — signaux coûteux vs gratuits | recruitment-science.md §1 | Spence 1973 | Grounded |
 | 2 | P-J fit / P-O fit distinction | recruitment-science.md §2 | Edwards 1991, Kristof-Brown 2005 | Grounded |
 | 3 | Biais de similarité culturelle en recrutement | recruitment-science.md §4 | Rivera 2012 | Grounded |
-| 4 | Tri initial CV ~7,4 secondes | recruitment-science.md §3 | Ladders 2018 | Grounded (réserves : 30 recruteurs, postes >100k$, méthodologie peu documentée, non publié en revue à comité de lecture) |
+| 4 | Tri initial CV ~7,4 secondes | recruitment-science.md §3 | Ladders 2018 | Grounded (réserves) |
 | 5 | Biais d'ancrage sur première information | recruitment-science.md §4 | Tversky & Kahneman 1974 | Grounded |
 | 6 | Discrimination sur les noms | recruitment-science.md §4 | Bertrand & Mullainathan 2004 | Grounded |
-| 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 (méta-analyse N=73k+) | Grounded |
+| 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 | Grounded |
 | 8 | JSQS : 4 dimensions de qualité de recherche | recruitment-science.md §5 | Van Hooft & Van Hoye 2022 | Grounded |
 | 9 | Orientation apprentissage > performance | recruitment-science.md §5 | Kanfer 2001, Van Hooft 2021 | Grounded |
 | 10 | Inspection Fagan : détection par item | SKILL.md §Phase 3 | Fagan 1976 | Grounded |
@@ -423,24 +512,24 @@ concernés.
 
 | # | Claim | Fichier | Dérivation | Statut | Action |
 |---|-------|---------|------------|--------|--------|
-| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV = compétences (P-J), lettre = motivation/valeurs (P-O) | Weakly grounded | Qualifié avec note dans les deux fichiers |
-| 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation du biais d'ancrage au contexte des lettres | Weakly grounded | Qualifié avec note |
-| 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence à un contexte non étudié directement | Weakly grounded | Qualifié avec note |
-| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (ancienne version) | Extension non justifiée de l'étude Ladders (CV uniquement) | **Ungrounded** | **Corrigé** — retiré, ne mentionne plus que le CV |
+| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV→P-J, lettre→P-O | Weakly grounded | Qualifié avec note |
+| 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Weakly grounded | Qualifié avec note |
+| 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Weakly grounded | Qualifié avec note |
+| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | **Ungrounded** | **Corrigé** — retiré |
 
 ### Claims factuelles (plateformes)
 
 | # | Claim | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 16 | Claude.ai "Ajouter depuis GitHub" | README.md | Documentation Claude Help Center | Grounded |
-| 17 | ChatGPT : pas d'import GitHub pour GPTs | README.md | OpenAI Help Center, OpenAI Community | Grounded |
-| 18 | Gemini Gems : max 10 fichiers | README.md | Google Workspace Blog, Computerworld | Grounded |
+| 16 | Claude.ai "Ajouter depuis GitHub" | README.md | Claude Help Center | Grounded |
+| 17 | ChatGPT : pas d'import GitHub | README.md | OpenAI Help Center | Grounded |
+| 18 | Gemini Gems : max 10 fichiers | README.md | Google Workspace Blog | Grounded |
 | 19 | Mistral Agents + Libraries | README.md | Mistral Help Center | Grounded |
 
 ### Bilan
 
 - **15 claims grounded** (dont 1 avec réserves méthodologiques)
-- **3 claims weakly grounded** — qualifiées avec notes dans les fichiers
-  sources, inférences raisonnables documentées comme telles
+- **3 claims weakly grounded** — qualifiées avec notes, inférences
+  raisonnables documentées comme telles
 - **1 claim ungrounded** — corrigée (retirée du SKILL.md)
 - **0 claim non auditée**

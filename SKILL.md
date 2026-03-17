@@ -371,35 +371,24 @@ le protocole détaillé.
 ### 4.1 Enregistrement des retours `[outil: memory_user_edits]`
 
 Quand le candidat signale un retour (refus, entretien, offre), mettre à
-jour l'entrée mémoire de la candidature concernée (`replace` pour changer
-le statut). L'enregistrement est minimal pour les refus génériques —
-l'information exploitable est ailleurs.
+jour l'entrée mémoire `candidature:` correspondante (`replace` du
+statut). Le candidat parle naturellement ("refus Wiremind", "entretien 1
+chez Doctolib") — l'agent interprète et enregistre.
 
-### 4.2 Compte rendu d'entretien `[choix au premier CR]`
+Voir `references/feedback-tracking.md` pour les statuts et le détail.
 
-Au premier compte rendu d'entretien, demander la préférence entre trois
-niveaux de détail :
+### 4.2 Entretiens `[choix]`
 
-> "Comment voulez-vous faire vos comptes rendus d'entretien ?"
+Deux moments distincts :
 
-Trois options proposées via widget :
-- **Informel** — Conversation libre, je synthétise en quelques lignes
-- **Guidé** — Je pose des questions par thème, vous répondez librement
-- **Structuré** — Formulaire complet, question par question
+- **Préparation** — Avant un entretien, voir
+  `references/interview-prep.md` : recherche sur l'entreprise et les
+  interlocuteurs, questions probables, stratégie de négociation salariale.
+- **Compte rendu** — Après un entretien, l'agent demande "Comment ça
+  s'est passé ?" et adapte la profondeur selon ce que le candidat dit.
+  Voir `references/feedback-tracking.md` pour le protocole.
 
-Enregistrer la préférence. L'ajuster au fil du temps selon le
-comportement du candidat — si le candidat saute des sections, proposer
-un niveau plus léger `[choix]` ; s'il ajoute spontanément du détail,
-proposer un niveau plus structuré `[choix]`.
-
-Le compte rendu est conversationnel. L'agent synthétise les points clés
-et les stocke en mémoire projet (une entrée par entretien, préfixe
-`entretien:`).
-
-**L'objectif du compte rendu n'est pas l'archivage — c'est l'extraction
-d'apprentissages transférables.** Chaque compte rendu se termine par :
-"Qu'est-ce qui est utile pour les prochaines candidatures ?" La réponse
-est enregistrée en mémoire et alimente l'analyse des tendances.
+L'objectif des deux est l'extraction d'apprentissages transférables.
 
 ### 4.3 Analyse des patterns `[choix]`
 

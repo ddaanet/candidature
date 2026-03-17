@@ -19,151 +19,96 @@ et de l'analyse des patterns sur plusieurs candidatures.
 
 **Sources :**
 - Kanfer, R., Wanberg, C. R., & Kantrowitz, T. M. (2001). Job search
-  and employment: A personality-motivational analysis. *Journal of
-  Applied Psychology*, 86(5), 837-855.
-- Van Hooft, E. A. J., & Van Hoye, G. (2022). How to optimize the job
-  search process: Development and validation of the Job Search Quality
-  Scale. *Journal of Vocational Behavior*, 132.
-- Van Hooft, E. A. J. et al. (2021). Job search and employment success:
-  A quantitative review and future research agenda. *Journal of Applied
-  Psychology*, 106(5).
-- Wanberg, C. R. et al. (2012). Explicating layers of job search context
-  and adaptational responses. In *The Oxford Handbook of Organizational
-  Psychology*.
+  and employment. *JAP*, 86(5), 837-855.
+- Van Hooft, E. A. J., & Van Hoye, G. (2022). JSQS. *JVB*, 132.
+- Van Hooft, E. A. J. et al. (2021). Job search and employment success.
+  *JAP*, 106(5).
+- Wanberg, C. R. et al. (2012). Layers of job search context.
 
 ---
 
 ## Enregistrement des retours
 
-### Réponses négatives
+Le candidat signale un retour en langage naturel : "refus Wiremind",
+"entretien 1 chez Doctolib", "offre reçue de Pigment". L'agent met à
+jour l'entrée mémoire `candidature:` correspondante (`replace` du statut).
 
-La plupart des réponses négatives sont génériques et n'apportent aucune
-information exploitable. L'enregistrement est minimal :
+Pas de formulaire. Pas de format imposé. L'agent interprète et enregistre.
 
-```markdown
-## [Entreprise] — [Poste] — [Date]
-- **Résultat :** Refus (sans entretien / après entretien N)
-- **Feedback reçu :** [verbatim si reçu, "générique" sinon]
-- **Hypothèse :** [optionnel — pourquoi ça n'a pas marché, si le candidat
-  a une intuition]
-```
+### Statuts possibles
 
-L'hypothèse est optionnelle mais précieuse sur le long terme : elle
-permet de détecter des patterns (toujours recalé sur le même type de
-poste, toujours au même stade du process, etc.).
+- **en attente** — candidature envoyée, pas de réponse
+- **refus** — réponse négative (avec ou sans entretien)
+- **entretien N** — convoqué ou passé au tour N
+- **offre** — offre reçue
+- **accepté** / **décliné** — résolution finale
 
-### Entretiens sans suite
+### Informations optionnelles
 
-Quand un entretien n'est pas suivi d'un retour dans un délai raisonnable,
-enregistrer comme refus implicite avec la date du dernier contact.
+Si le candidat donne plus de contexte (feedback du recruteur, hypothèse
+sur le refus, délai de réponse), l'agent l'ajoute à l'entrée mémoire.
+Rien n'est imposé — tout est capté s'il est offert.
 
 ---
 
 ## Compte rendu d'entretien
 
-### Niveaux de détail
+Après un entretien, l'agent demande simplement : "Comment ça s'est
+passé ?" et adapte la profondeur selon ce que le candidat dit.
 
-Au premier compte rendu, demander la préférence du candidat entre trois
-niveaux `[choix]`. Enregistrer la préférence. Ajuster au fil du temps
-selon les retours du candidat (s'il saute des sections, proposer un
-niveau plus léger ; s'il ajoute spontanément du détail, proposer un
-niveau plus structuré).
+**Candidat bref** ("bien, on verra") → L'agent note le statut et passe.
+Pas de forcing.
 
-#### Niveau 1 — Informel
+**Candidat bavard** (détaille les questions, les signaux, les points
+forts/faibles) → L'agent structure la synthèse et extrait les
+apprentissages transférables.
 
-Conversation libre. L'agent pose quelques questions ouvertes et
-synthétise. Adapté aux candidats qui veulent débriéfer vite sans
-structure imposée.
-
-Questions de base :
-- Comment ça s'est passé globalement ?
+**Candidat entre les deux** → L'agent pose 2-3 questions ciblées :
 - Qu'est-ce qui a bien marché ?
 - Qu'est-ce qui a coincé ou surpris ?
 - Quelque chose à retenir pour la suite ?
 
-L'agent synthétise en quelques lignes.
+### Stockage
 
-#### Niveau 2 — Guidé
+Une entrée mémoire par entretien (préfixe `entretien:`), synthèse
+compacte des points clés et apprentissages. Pas de verbatim — la mémoire
+a un budget limité.
 
-L'agent pose des questions par thème mais laisse le candidat répondre
-librement. Chaque thème reçoit 1-3 phrases.
+### Extraction d'apprentissages
 
-Thèmes :
-- **Impression générale** — Comment ça s'est passé ? Ambiance ?
-- **Questions techniques** — Quoi, comment ça s'est passé ?
-- **Questions comportementales / motivation** — Quoi, comment on a
-  répondu ?
-- **Ce qu'on a appris sur le poste / l'entreprise** — Infos nouvelles ?
-- **Points forts de la prestation** — Moments où on a été bon.
-- **Points à améliorer** — Moments où on a hésité, mal répondu, ou été
-  pris au dépourvu.
-- **Signaux du recruteur** — Enthousiasme, réserves, prochaines étapes
-  annoncées ?
-
-#### Niveau 3 — Structuré
-
-Formulaire complet, question par question. Adapté aux candidats en
-recherche intensive qui veulent un suivi rigoureux et exploitable.
-
-Formulaire :
-- **Entreprise, poste, date, interlocuteur(s)**
-- **Type d'entretien** (téléphone, visio, présentiel, technique, RH,
-  manager, panel)
-- **Durée**
-- **Questions posées** (lister les questions mémorisées)
-- **Mes réponses** (résumé de ce qu'on a dit pour chaque question clé)
-- **Ce qui a bien marché** (avec exemples concrets)
-- **Ce qui a moins bien marché** (avec exemples concrets)
-- **Ce que j'ai appris sur le poste / l'entreprise / l'équipe**
-- **Signaux du recruteur** (enthousiasme, réserves, langage corporel)
-- **Prochaines étapes annoncées**
-- **Actions à prendre** (relance, préparation pour le tour suivant,
-  recherche complémentaire)
-- **Apprentissages transférables** (ce qui est utile pour d'autres
-  candidatures)
-
-### Ajustement du niveau
-
-Le niveau n'est pas figé. L'agent observe les comportements du candidat :
-
-- Le candidat saute des sections → proposer de passer au niveau inférieur
-- Le candidat ajoute spontanément du détail → proposer le niveau supérieur
-- Le candidat dit "c'est trop long" / "on peut faire plus vite" → descendre
-- Le candidat dit "j'aimerais plus de structure" → monter
-
-Le changement de niveau est proposé, pas imposé `[choix]`.
+Chaque compte rendu se termine par : "Qu'est-ce qui est utile pour les
+prochaines candidatures ?" La réponse est enregistrée en mémoire et
+alimente l'analyse des tendances. Si le candidat ne sait pas, l'agent
+propose ses observations — le candidat valide ou non.
 
 ---
 
 ## Analyse des patterns
 
-Après 5+ candidatures enregistrées, l'agent peut proposer une analyse des
-patterns `[choix]`. L'analyse n'est pas automatique — le candidat décide
-quand il veut prendre du recul.
+Après 5+ candidatures enregistrées, l'agent peut proposer une analyse
+des patterns `[choix]`. L'analyse n'est pas automatique — le candidat
+décide quand il veut prendre du recul.
 
 ### Axes d'analyse
 
-- **Taux de conversion par étape** — Candidatures envoyées → entretiens
-  obtenus → tours suivants → offres. Où est le goulot ?
+- **Taux de conversion par étape** — Candidatures → entretiens → suites
+  → offres. Où est le goulot ?
 - **Types de postes / entreprises** — Quels types produisent les
-  meilleurs retours ? Y a-t-il des patterns ?
-- **Axes de candidature** — Quels arguments, quels angles, quels tons
-  sont corrélés aux meilleurs résultats ?
-- **Points récurrents en entretien** — Questions qui reviennent, sujets
-  où le candidat est régulièrement solide ou régulièrement en difficulté.
-- **Signaux d'alerte** — Candidatures qui n'auraient pas dû être envoyées
-  (poste mal ciblé, inadéquation fondamentale).
+  meilleurs retours ?
+- **Axes de candidature** — Quels arguments, quels tons sont corrélés
+  aux meilleurs résultats ?
+- **Points récurrents en entretien** — Sujets où le candidat est
+  régulièrement solide ou en difficulté.
+- **Signaux d'alerte** — Candidatures qui n'auraient pas dû être
+  envoyées (poste mal ciblé, inadéquation fondamentale).
 
 ### Présentation
 
 L'analyse est conversationnelle, pas un rapport. Pas de tableau de bord
-déprimant. L'objectif est d'identifier des ajustements concrets :
+déprimant. L'objectif est d'identifier des ajustements concrets.
 
-> "Sur vos 12 candidatures, vous avez obtenu 4 entretiens. Les 4 étaient
-> dans des entreprises de moins de 200 personnes. Aucune des 5 grandes
-> entreprises n'a répondu. C'est peut-être un pattern à explorer — votre
-> profil résonne mieux avec des structures où le recruteur voit un
-> fondateur technique comme un atout, pas comme un risque de gestion."
+Les observations sont stockées en mémoire projet (préfixe `tendance:`)
+et consultées au §2.4 (axes) des candidatures suivantes.
 
 ---
 
@@ -186,7 +131,6 @@ Mise à jour in-place (`replace`) quand le statut change.
 ### Comptes rendus (préfixe `entretien:`)
 
 Une entrée par entretien, synthèse des points clés et apprentissages.
-Pas de verbatim — la mémoire a un budget limité.
 
 ### Tendances (préfixe `tendance:`)
 

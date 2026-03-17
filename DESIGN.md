@@ -455,9 +455,6 @@ de protocole et doivent être mises à jour :
   cas d'usage (dev backend senior). Il faudrait le tester avec des profils
   radicalement différents (commercial, ouvrier, graphiste) pour valider
   l'universalité.
-- **Préparation d'entretien :** Le skill couvre la candidature écrite mais
-  pas la préparation aux entretiens (questions fréquentes, simulation).
-  Extension naturelle de la Phase 4.
 - **Intégration plateforme :** ChatGPT/Gemini/Mistral n'ont pas d'import
   GitHub. Si une de ces plateformes ajoute cette fonctionnalité,
   l'installation devient triviale partout.

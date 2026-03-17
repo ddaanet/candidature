@@ -1,17 +1,4 @@
-# Sandbox artifacts
-.bash_profile
-.bashrc
-.gitconfig
-.gitmodules
-.idea
-.mcp.json
-.profile
-.ripgreprc
-.vscode
-.zprofile
-.zshrc
-HEAD
-config
-hooks
-objects
-refs
+.DS_Store
+
+# Fichiers opérationnels (pas dans la distribution)
+2026-*.md

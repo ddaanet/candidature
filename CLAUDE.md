@@ -24,6 +24,9 @@ a common French equivalent exists. Exception: terms without common equivalents
 ## Commit Messages
 
 Gitmoji prefix. Short, dense messages focused on "why" not "what."
+Chaque commit est une unité thématique cohérente, pas un découpage par
+fichier. Un commit peut toucher plusieurs fichiers s'ils participent au
+même changement logique.
 
 Select the most specific emoji matching the commit's primary intent:
 
@@ -43,7 +46,17 @@ Select the most specific emoji matching the commit's primary intent:
 
 ## Content Rules
 
-- Every factual claim must trace to a source (file path, citation, search result)
-- Claims without sources must be marked `[ungrounded]` or removed
-- DESIGN.md appendix tracks claim grounding — update when adding claims
-- `references/recruitment-science.md` is the stable theoretical foundation — changes here are rare and require source verification
+- Every factual affirmation must trace to a source (file path, citation,
+  search result)
+- Affirmations without sources must be marked `[non étayé]` or removed
+- DESIGN.md appendix tracks affirmation grounding — update when adding
+  affirmations
+- `references/recruitment-science.md` is the stable theoretical
+  foundation — changes here are rare and require source verification
+
+## Model Constraint
+
+All modifications to SKILL.md, DESIGN.md, and references/*.md must be
+redacted in an Opus session. Do not modify these files in Sonnet sessions
+— the prose quality of agentic instructions requires Opus-level
+attention.

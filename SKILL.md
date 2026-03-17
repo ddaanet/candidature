@@ -207,6 +207,31 @@ Si oui, voir `references/cv-handling.md`.
 
 ### 2.6 Génération `[outil: create_file]`
 
+#### Passe d'étayage `[outil: web_search si besoin]`
+
+Avant de produire un artefact, vérifier que chaque affirmation prévue
+est étayée. La passe s'applique à tout artefact, y compris les textes
+courts.
+
+**Bloc visible** — liste compacte, une ligne par affirmation :
+
+```
+- [affirmation courte] — [source] — ✓ / ⚠️ / ✗
+```
+
+Pour chaque ✗ ou ⚠️ :
+- **Données personnelles** (parcours, compétences) → demander au candidat.
+  Bloquer jusqu'à réponse.
+- **Données publiques** (entreprise, stack, culture) → `web_search` ou
+  `web_fetch`.
+
+Après recherche, nouveau bloc visible avec les lignes modifiées.
+Répéter jusqu'à ce que tout soit ✓ ou explicitement qualifié.
+
+**Seulement alors** → produire l'artefact.
+
+#### Artefacts
+
 Produire les artefacts identifiés en 2.2-2.3 :
 
 - **Lettre de motivation / message** — Format adapté au canal. Voir
@@ -315,6 +340,9 @@ Fondés sur la recherche en sciences du recrutement (voir
   la première impression colore toute la lecture). L'agent signale
   explicitement la qualité de l'accroche lors de la relecture du premier
   item. Une accroche générique ou interchangeable est un problème majeur.
+- **Étayage** — Chaque affirmation est-elle sourcée (CV, profil,
+  recherche) ou qualifiée ? Vérifier que la passe d'étayage (§2.6) a
+  été respectée.
 - **Format** — Respect des contraintes du canal (limite de caractères,
   format attendu).
 

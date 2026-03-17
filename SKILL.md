@@ -6,7 +6,7 @@ description: >-
   Utiliser quand un utilisateur veut postuler à une offre d'emploi, préparer
   une lettre de motivation, adapter son CV à un poste, structurer sa
   démarche de candidature, enregistrer un retour négatif, ou faire un compte
-  rendu d'entretien. Se déclenche sur "candidature", "postuler", "lettre de
+  rendu d'entretien. Se déclenche sur "/candidature", "candidature", "postuler", "lettre de
   motivation", "adapter mon CV", "refus", "rejeté", "compte rendu
   entretien", "debrief", ou quand l'utilisateur fournit une offre d'emploi
   et demande de l'aide pour y répondre. Fonctionne pour tout métier et tout

@@ -90,6 +90,8 @@ Puis creuser selon les réponses. Ce qui peut émerger :
 
 - Profils en ligne (LinkedIn, portfolio, site perso, GitHub, Behance...)
 - Type de poste recherché, contraintes (géographie, disponibilité, remote...)
+- Fourchette salariale (plancher, objectif) — sert de critère de
+  cadrage pour la recherche et de référence pour §2.6 (champ prétentions)
 - Ce que le candidat veut mettre en avant ou ne pas mentionner
 - Secteurs ou entreprises visés
 
@@ -125,8 +127,43 @@ Une itération par offre d'emploi.
 
 ### 2.1 Fiche de poste `[outil: view/web_fetch]`
 
-Le candidat fournit l'offre d'emploi (texte, URL, ou capture d'écran). Lire
-la fiche de poste (appel d'outil). Si c'est une URL, aller la chercher.
+Le candidat fournit une ou plusieurs offres d'emploi (texte, URL, ou
+capture d'écran). Lire chaque fiche de poste (appel d'outil). Si c'est
+une URL, aller la chercher.
+
+**Si le candidat n'a pas encore d'offre :** recommander des plateformes
+adaptées à son profil et son secteur (pas de liste en dur — recherche
+contextuelle §2.2). Le candidat revient avec des URLs.
+
+#### Shortlist `[outil: memory_user_edits]`
+
+Quand le candidat apporte plusieurs offres, le skill analyse chaque offre
+contre le profil :
+- Alignement P-J fit (compétences matchées, écarts)
+- Alignement P-O fit (culture, mission, taille, philosophie)
+- Différenciation (où le candidat sort du lot vs où il est un parmi 200)
+
+Chaque offre analysée est stockée immédiatement en mémoire (`shortlist:`,
+datée YYYY-MM) :
+
+```
+shortlist: 2026-03 — Wiremind — Software Engineer — Paris hybride —
+https://... — SQLAlchemy commun, philosophie open source. Écarts:
+PostgreSQL, GitLab.
+```
+
+Le candidat décide quoi en faire :
+- **Candidater** → l'entrée est remplacée (`replace`) par une entrée
+  `candidature:` enrichie au lancement de la Phase 2 complète
+- **Écarter** → l'entrée est supprimée (`remove`)
+- **Différer** → l'entrée reste en l'état
+
+Avec 3+ offres en buffer, l'agent peut proposer un tri comparatif :
+quelles offres sont les plus différenciantes pour ce profil. Le candidat
+décide, pas l'agent.
+
+Pas de workflow imposé — le candidat peut shortlister une offre et
+candidater dans la foulée, ou accumuler et trier plus tard.
 
 ### 2.2 Recherche contextuelle `[outil: mémoire projet → web_search si besoin]`
 
@@ -436,15 +473,22 @@ accepté — CV 1 page — Pas applicable: lead/management, data/ML, stage
 ### Réutilisation
 
 1. Vérifier la mémoire projet (entrées préfixées `recherche:`)
-2. Comparer au poste courant : type de poste, secteur, taille, pays
-3. Vérifier le périmètre d'exclusion ("Pas applicable")
-4. **Correspondance exacte** → réutiliser, continuer
-5. **Correspondance approximative** → signaler au candidat, lui laisser
+2. Vérifier l'ancienneté de l'entrée (date YYYY-MM) :
+   - **< 3 mois** → réutilisable
+   - **3-6 mois** → signaler au candidat, lui laisser décider
+   - **> 6 mois** → périmée, relancer la recherche
+3. Comparer au poste courant : type de poste, secteur, taille, pays
+4. Vérifier le périmètre d'exclusion ("Pas applicable")
+5. **Correspondance exacte + entrée fraîche** → réutiliser, continuer
+6. **Correspondance approximative** → signaler au candidat, lui laisser
    décider (réutiliser / adapter / refaire)
-6. **Aucune correspondance** → recherche complète, stocker en mémoire
+7. **Aucune correspondance** → recherche complète, stocker en mémoire
 
-Ne jamais réutiliser silencieusement un match approximatif. Le candidat
-décide.
+Ne jamais réutiliser silencieusement un match approximatif ou une entrée
+de plus de 3 mois. Le candidat décide.
+
+**Règle d'expiration.** S'applique aussi aux entrées `shortlist:` — une
+offre shortlistée il y a 6 mois est probablement pourvue.
 
 ---
 

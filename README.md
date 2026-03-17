@@ -1,4 +1,4 @@
-# Candidature — Des candidatures qui ne sonnent pas comme de l'IA
+# /candidature — Des candidatures qui ne sonnent pas comme de l'IA
 
 Demander à une IA "écris-moi une lettre de motivation" produit un texte
 générique, interchangeable, que le recruteur identifie en 3 secondes.
@@ -32,11 +32,11 @@ psychologie du recrutement.
 4. Sélectionner tous les fichiers
 5. Uploader votre CV (DOCX de préférence) dans le même projet
 
-Ouvrir un chat dans le projet et dire "je veux postuler".
+Ouvrir un chat dans le projet et taper `/candidature`.
 
 ## Pour commencer
 
-Ouvrir un chat dans le projet et dire "je veux postuler". L'assistant
+Ouvrir un chat dans le projet et taper `/candidature`. L'assistant
 commence toujours par votre profil — quelques minutes de conversation
 pour comprendre votre parcours, vos contraintes et vos objectifs.
 

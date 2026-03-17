@@ -36,13 +36,12 @@ Ouvrir un chat dans le projet et dire "je veux postuler".
 
 ## Pour commencer
 
-Trois façons d'entrer :
+Ouvrir un chat dans le projet et dire "je veux postuler". L'assistant
+commence toujours par votre profil — quelques minutes de conversation
+pour comprendre votre parcours, vos contraintes et vos objectifs.
 
-- **"Je veux postuler"** → l'assistant commence par votre profil
-- **Coller une offre d'emploi** → l'assistant analyse et lance la
-  candidature
-- **Apporter plusieurs offres** → l'assistant compare et vous aide à
-  prioriser
+Ensuite, vous pouvez apporter une offre ou plusieurs — l'assistant
+analyse l'alignement avec votre profil et vous aide à prioriser.
 
 ## Contenu
 

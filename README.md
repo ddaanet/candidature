@@ -21,7 +21,7 @@ psychologie du recrutement.
 3. **Rédaction** — Lettre de motivation, réponses formulaire, CV adapté
    — chaque affirmation est vérifiée avant d'écrire
 4. **Relecture** — Revue point par point avant envoi, dans votre voix
-5. **Suivi** — Retours, comptes rendus d'entretien, patterns sur
+5. **Suivi** — Retours, comptes rendus d'entretien, tendances sur
    plusieurs candidatures
 
 ## Installation (Claude.ai)

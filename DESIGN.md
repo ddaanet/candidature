@@ -476,60 +476,60 @@ de protocole et doivent être mises à jour :
 
 ## Appendice : Validation des sources
 
-Audit de traçabilité des claims vers leurs sources. Réalisé en fin de
+Audit de traçabilité des affirmations vers leurs sources. Réalisé en fin de
 session de conception. Les corrections ont été appliquées aux fichiers
 concernés.
 
 ### Légende
 
-- **Grounded** — source primaire identifiée et vérifiée dans les
+- **Étayé** — source primaire identifiée et vérifiée dans les
   résultats de recherche de cette session
-- **Grounded (réserves)** — source identifiée mais avec des limites
+- **Étayé (réserves)** — source identifiée mais avec des limites
   méthodologiques documentées
-- **Weakly grounded** — inférence raisonnable à partir d'un cadre
+- **Faiblement étayé** — inférence raisonnable à partir d'un cadre
   théorique, pas de citation directe. Qualifié dans le fichier source
   avec une note explicite.
-- **Ungrounded** — claim non soutenue par la recherche. Corrigée ou
+- **Non étayé** — affirmation non soutenue par la recherche. Corrigée ou
   retirée.
 
-### Claims académiques
+### Affirmations académiques
 
-| # | Claim | Fichier | Source | Statut |
+| # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 1 | Théorie du signal — signaux coûteux vs gratuits | recruitment-science.md §1 | Spence 1973 | Grounded |
-| 2 | P-J fit / P-O fit distinction | recruitment-science.md §2 | Edwards 1991, Kristof-Brown 2005 | Grounded |
-| 3 | Biais de similarité culturelle en recrutement | recruitment-science.md §4 | Rivera 2012 | Grounded |
-| 4 | Tri initial CV ~7,4 secondes | recruitment-science.md §3 | Ladders 2018 | Grounded (réserves) |
-| 5 | Biais d'ancrage sur première information | recruitment-science.md §4 | Tversky & Kahneman 1974 | Grounded |
-| 6 | Discrimination sur les noms | recruitment-science.md §4 | Bertrand & Mullainathan 2004 | Grounded |
-| 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 | Grounded |
-| 8 | JSQS : 4 dimensions de qualité de recherche | recruitment-science.md §5 | Van Hooft & Van Hoye 2022 | Grounded |
-| 9 | Orientation apprentissage > performance | recruitment-science.md §5 | Kanfer 2001, Van Hooft 2021 | Grounded |
-| 10 | Inspection Fagan : détection par item | SKILL.md §Phase 3 | Fagan 1976 | Grounded |
-| 11 | ~4 items en mémoire de travail | proof/SKILL.md (source) | Cowan 2001 | Grounded |
+| 1 | Théorie du signal — signaux coûteux vs gratuits | recruitment-science.md §1 | Spence 1973 | Étayé |
+| 2 | P-J fit / P-O fit distinction | recruitment-science.md §2 | Edwards 1991, Kristof-Brown 2005 | Étayé |
+| 3 | Biais de similarité culturelle en recrutement | recruitment-science.md §4 | Rivera 2012 | Étayé |
+| 4 | Tri initial CV ~7,4 secondes | recruitment-science.md §3 | Ladders 2018 | Étayé (réserves) |
+| 5 | Biais d'ancrage sur première information | recruitment-science.md §4 | Tversky & Kahneman 1974 | Étayé |
+| 6 | Discrimination sur les noms | recruitment-science.md §4 | Bertrand & Mullainathan 2004 | Étayé |
+| 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 | Étayé |
+| 8 | JSQS : 4 dimensions de qualité de recherche | recruitment-science.md §5 | Van Hooft & Van Hoye 2022 | Étayé |
+| 9 | Orientation apprentissage > performance | recruitment-science.md §5 | Kanfer 2001, Van Hooft 2021 | Étayé |
+| 10 | Inspection Fagan : détection par item | SKILL.md §Phase 3 | Fagan 1976 | Étayé |
+| 11 | ~4 items en mémoire de travail | proof/SKILL.md (source) | Cowan 2001 | Étayé |
 
-### Claims dérivées (inférences)
+### Affirmations dérivées (inférences)
 
-| # | Claim | Fichier | Dérivation | Statut | Action |
+| # | Affirmation | Fichier | Dérivation | Statut | Action |
 |---|-------|---------|------------|--------|--------|
-| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV→P-J, lettre→P-O | Weakly grounded | Qualifié avec note |
-| 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Weakly grounded | Qualifié avec note |
-| 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Weakly grounded | Qualifié avec note |
-| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | **Ungrounded** | **Corrigé** — retiré |
+| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV→P-J, lettre→P-O | Faiblement étayé | Qualifié avec note |
+| 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Faiblement étayé | Qualifié avec note |
+| 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Faiblement étayé | Qualifié avec note |
+| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | **Non étayé** | **Corrigé** — retiré |
 
-### Claims factuelles (plateformes)
+### Affirmations factuelles (plateformes)
 
-| # | Claim | Fichier | Source | Statut |
+| # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 16 | Claude.ai "Ajouter depuis GitHub" | README.md | Claude Help Center | Grounded |
-| 17 | ChatGPT : pas d'import GitHub | README.md | OpenAI Help Center | Grounded |
-| 18 | Gemini Gems : max 10 fichiers | README.md | Google Workspace Blog | Grounded |
-| 19 | Mistral Agents + Libraries | README.md | Mistral Help Center | Grounded |
+| 16 | Claude.ai "Ajouter depuis GitHub" | README.md | Claude Help Center | Étayé |
+| 17 | ChatGPT : pas d'import GitHub | README.md | OpenAI Help Center | Étayé |
+| 18 | Gemini Gems : max 10 fichiers | README.md | Google Workspace Blog | Étayé |
+| 19 | Mistral Agents + Libraries | README.md | Mistral Help Center | Étayé |
 
 ### Bilan
 
-- **15 claims grounded** (dont 1 avec réserves méthodologiques)
-- **3 claims weakly grounded** — qualifiées avec notes, inférences
-  raisonnables documentées comme telles
-- **1 claim ungrounded** — corrigée (retirée du SKILL.md)
-- **0 claim non auditée**
+- **15 affirmations étayées** (dont 1 avec réserves méthodologiques)
+- **3 affirmations faiblement étayées** — qualifiées avec notes,
+  inférences raisonnables documentées comme telles
+- **1 affirmation non étayée** — corrigée (retirée du SKILL.md)
+- **0 affirmation non auditée**

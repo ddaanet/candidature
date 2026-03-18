@@ -1,6 +1,6 @@
 # /candidature — Des candidatures qui ne sonnent pas comme de l'IA
 
-Demander à une IA "écris-moi une lettre de motivation" produit un texte
+Demander à une IA « écris-moi une lettre de motivation » produit un texte
 générique, interchangeable, que le recruteur identifie en 3 secondes.
 
 Cette méthode transforme l'IA en assistant de candidature qui connaît votre
@@ -24,31 +24,41 @@ psychologie du recrutement.
 5. **Suivi** — Retours, comptes rendus d'entretien, tendances sur
    plusieurs candidatures
 
-## Mise en place (Claude.ai)
+## Installation (Claude.ai)
 
-1. Créer un **Projet** sur [claude.ai](https://claude.ai)
-2. Cliquer **+** → **Depuis GitHub** → coller
-   `https://github.com/ddaanet/candidature` → tout sélectionner
-3. Uploader votre CV (DOCX de préférence) dans le même projet
-4. Dans les **instructions du projet** (l'encadré texte en haut),
-   coller :
+1. Télécharger [`candidature.skill`](https://github.com/ddaanet/candidature/releases/latest)
+2. Dans Claude.ai, aller dans **Paramètres** → **Personnaliser** → **Skills**
+3. Uploader le fichier `.skill`
+4. Créer un **Projet**, y uploader votre CV (DOCX de préférence)
+5. Ouvrir un chat dans le projet et taper `/candidature`
 
-> Quand l'utilisateur tape /candidature, utiliser
-> project_knowledge_search pour chercher SKILL.md et suivre ses
-> instructions.
+C'est tout. Pas besoin d'instructions spéciales dans le projet.
 
-**Alternative sans GitHub :** télécharger le
-[ZIP du repo](https://github.com/ddaanet/candidature/archive/refs/heads/main.zip),
-dézipper, puis glisser tous les fichiers dans le projet.
+## Mises à jour
+
+Le skill vérifie automatiquement si une version plus récente est
+disponible sur GitHub. Si c'est le cas, il vous le signale avec un lien
+vers le téléchargement. Il suffit de réinstaller le nouveau `.skill`.
 
 ## Pour commencer
 
-Ouvrir un chat dans le projet et taper `/candidature`. L'assistant
-commence par votre profil — quelques minutes de conversation pour
-comprendre votre parcours, vos contraintes et vos objectifs.
+L'assistant commence par votre profil — quelques minutes de conversation
+pour comprendre votre parcours, vos contraintes et vos objectifs.
 
 Ensuite, apportez une offre ou plusieurs — l'assistant analyse
 l'alignement avec votre profil et vous aide à prioriser.
+
+## Mode développement
+
+Pour les contributeurs qui modifient le skill activement. Nécessite le
+[MCP Filesystem](https://modelcontextprotocol.io/docs/concepts/transports)
+connecté au répertoire du repo.
+
+Dans un chat du projet, dire « mode dev » — le skill demande le chemin
+du repo et bascule. Il lira les instructions directement depuis le
+filesystem au lieu de la version installée.
+
+Pour revenir à la version installée : « mode normal ».
 
 ## Contenu
 
@@ -61,6 +71,9 @@ references/
   review-items.md             — Découpage pour la relecture
   feedback-tracking.md        — Suivi et comptes rendus d'entretien
   interview-prep.md           — Préparation d'entretien et négociation
+build/
+  build.sh                    — Assemblage du .skill et release GitHub
+  dispatcher.md               — Point d'entrée installé dans le .skill
 ```
 
 ## Licence

@@ -176,8 +176,16 @@ plateforme. Fonctionne sur Claude.ai (projet), ChatGPT (GPT), Gemini
 
 ### NFR-6 : Installation minimale
 
-Claude.ai : 4 étapes via "Ajouter depuis GitHub". Autres : coller une
-URL dans un chat. Pas de terminal, pas de build, pas de config.
+Claude.ai : 4 étapes — import GitHub (ou ZIP), upload du CV, et une
+instruction projet qui force le déclenchement sur `/candidature`.
+L'instruction est nécessaire parce que les fichiers importés depuis
+GitHub arrivent dans le project knowledge (documents de référence
+indexés), pas comme skills avec déclenchement automatique. Sans
+l'instruction, rien ne garantit que le modèle cherchera SKILL.md quand
+l'utilisateur tape la commande.
+
+Autres plateformes : coller une URL dans un chat. Pas de terminal, pas
+de build, pas de config.
 
 ### NFR-7 : Stockage en mémoire projet
 

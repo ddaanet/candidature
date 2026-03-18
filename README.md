@@ -40,16 +40,14 @@ psychologie du recrutement.
 [ZIP du repo](https://github.com/ddaanet/candidature/archive/refs/heads/main.zip),
 dézipper, puis glisser tous les fichiers dans le projet.
 
-Ouvrir un chat dans le projet et taper `/candidature`.
-
 ## Pour commencer
 
 Ouvrir un chat dans le projet et taper `/candidature`. L'assistant
-commence toujours par votre profil — quelques minutes de conversation
-pour comprendre votre parcours, vos contraintes et vos objectifs.
+commence par votre profil — quelques minutes de conversation pour
+comprendre votre parcours, vos contraintes et vos objectifs.
 
-Ensuite, vous pouvez apporter une offre ou plusieurs — l'assistant
-analyse l'alignement avec votre profil et vous aide à prioriser.
+Ensuite, apportez une offre ou plusieurs — l'assistant analyse
+l'alignement avec votre profil et vous aide à prioriser.
 
 ## Contenu
 

@@ -193,6 +193,27 @@ manipulation. Pas de fichiers à gérer.
 d'entretien détaillés sont stockés sous forme de synthèse, pas de
 verbatim. Voir D-6 pour les détails.
 
+### NFR-8 : Étayage réflexif
+
+La passe d'étayage (§2.6) s'applique à tout artefact produit par
+l'agent, pas seulement aux artefacts destinés au candidat. Un agent
+qui produit un questionnaire de feedback, un post LinkedIn, un message
+de communication, ou toute autre sortie contenant des affirmations doit
+passer par la même vérification : chaque affirmation est-elle sourcée
+ou qualifiée ?
+
+**Fondement :** Un skill fondé sur la crédibilité des signaux (Spence)
+qui produit lui-même des signaux gratuits dans ses propres communications
+détruit sa proposition de valeur. L'étayage n'est pas un protocole de
+relecture — c'est une propriété de tout texte produit par le système.
+
+**Incident fondateur :** Session 2026-03-17. L'agent a produit un
+Google Form (questions présupposant un usage qui n'avait pas encore eu
+lieu, question orientée négative, pas de NPS) et un post LinkedIn
+(4 affirmations non étayées sur 8, dont un signal gratuit au sens de
+Spence) sans appliquer sa propre procédure d'étayage. Corrigé après
+revue utilisateur.
+
 ---
 
 ## Décisions de conception

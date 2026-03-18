@@ -5,19 +5,14 @@ set -euo pipefail
 #
 # Usage:
 #   ./build/build.sh                  — build candidature.skill in dist/
-#   ./build/build.sh --release 1.0.0  — build + create GitHub release v1.0.0
+#   ./build/build.sh --release 1.0.0  — build, commit VERSION, tag, release
 #
 # The .skill is a zip containing:
 #   candidature/
 #     SKILL.md              — dispatcher (from build/dispatcher.md)
 #     references/
-#       workflow.md          — repo's SKILL.md without frontmatter
-#       cover-letter.md
-#       cv-handling.md
-#       feedback-tracking.md
-#       interview-prep.md
-#       recruitment-science.md
-#       review-items.md
+#       workflow.md          — repo's SKILL.md without frontmatter + version
+#       *.md                 — other reference files
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -29,6 +24,18 @@ OUTPUT="$DIST_DIR/candidature.skill"
 cleanup() { rm -rf "$BUILD_DIR"; }
 trap cleanup EXIT
 
+# --- Resolve version ---
+
+if [[ "${1:-}" == "--release" ]]; then
+    VERSION="${2:?Usage: ./build/build.sh --release <major.minor.patch>}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "❌ Version must be semver (e.g. 1.0.0), got: $VERSION" >&2
+        exit 1
+    fi
+else
+    VERSION="dev"
+fi
+
 # --- Assemble ---
 
 mkdir -p "$SKILL_DIR/references" "$DIST_DIR"
@@ -36,9 +43,12 @@ mkdir -p "$SKILL_DIR/references" "$DIST_DIR"
 # Dispatcher as SKILL.md
 cp "$SCRIPT_DIR/dispatcher.md" "$SKILL_DIR/SKILL.md"
 
-# Strip YAML frontmatter from SKILL.md → workflow.md
+# Strip YAML frontmatter from SKILL.md → workflow.md, inject version
 awk 'BEGIN{n=0} /^---$/{n++; if(n==2){skip=1; next}} skip{print}' \
-    "$REPO_DIR/SKILL.md" > "$SKILL_DIR/references/workflow.md"
+    "$REPO_DIR/SKILL.md" \
+    | sed "/^Mot magique: ddaanet\/candidature$/a\\
+Version: $VERSION" \
+    > "$SKILL_DIR/references/workflow.md"
 
 # Reference files
 for f in "$REPO_DIR"/references/*.md; do
@@ -49,26 +59,25 @@ done
 
 (cd "$BUILD_DIR" && zip -r "$OUTPUT" candidature/ -x '*.DS_Store')
 
-echo "✅ $OUTPUT"
+echo "✅ $OUTPUT ($VERSION)"
 
 # --- Release (optional) ---
 
-if [[ "${1:-}" == "--release" ]]; then
-    VERSION="${2:?Usage: ./build/build.sh --release <major.minor.patch>}"
-
-    # Validate semver format
-    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "❌ Version must be semver (e.g. 1.0.0), got: $VERSION" >&2
-        exit 1
-    fi
-
+if [[ "$VERSION" != "dev" ]]; then
     TAG="v$VERSION"
 
-    echo "📦 Creating release $TAG..."
+    # Write VERSION to repo (single source for remote check)
+    echo "$VERSION" > "$REPO_DIR/VERSION"
+
     cd "$REPO_DIR"
+    git add VERSION
+    git commit -m "🔖 $VERSION"
+    git tag "$TAG"
+
+    echo "📦 Creating release $TAG..."
     gh release create "$TAG" "$OUTPUT" \
         --title "candidature $VERSION" \
-        --notes "Build from $(git rev-parse --short HEAD)." \
+        --notes "Build from $(git rev-parse --short HEAD~1)." \
         --latest
 
     echo "✅ Released: https://github.com/ddaanet/candidature/releases/tag/$TAG"

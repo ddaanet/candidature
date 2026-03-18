@@ -9,68 +9,56 @@ description: >-
 
 # Candidature — Dispatcher
 
-Point d'entrée. Charge les instructions depuis la source appropriée.
+Point d'entrée. Charge les instructions, vérifie les mises à jour.
 
 ## Changement de mode
 
-Si l'utilisateur demande à changer de mode ("mode dev", "mode sync",
-"mode normal"), **valider d'abord**, puis modifier la mémoire
-(`memory_user_edits`) et s'arrêter.
+Si l'utilisateur demande à changer de mode ("mode dev", "mode normal"),
+modifier la mémoire (`memory_user_edits`) et s'arrêter.
 
-- **normal** — supprimer l'entrée mémoire. Pas de validation nécessaire.
-- **sync** — avant d'écrire, vérifier que le workflow est dans le project
-  knowledge : `project_knowledge_search("ddaanet/candidature")`.
-  Valider : le résultat doit contenir la phrase verbatim
-  `Mot magique: ddaanet/candidature`. Si absente → erreur sync (voir
-  §Erreurs). Ne pas écrire en mémoire tant que non validé.
+- **normal** — supprimer l'entrée mémoire `candidature: mode ...`.
 - **dev** — demander le chemin si non précisé. Avant d'écrire, vérifier
   que le SKILL.md existe : `Filesystem:read_text_file path=<chemin>/SKILL.md`
-  (head 20 suffit). Valider : doit contenir `Mot magique: ddaanet/candidature`.
+  (head 5 suffit). Valider : doit contenir `Mot magique: ddaanet/candidature`.
   Si absent → erreur dev (voir §Erreurs). Ne pas écrire en mémoire tant
-  que non validé.
+  que non validé. Format : `candidature: mode dev — <chemin absolu>`.
 
 ## Chargement `[outil: memory_user_edits view]`
 
 Lire la mémoire. Chercher `candidature: mode`. Émettre **uniquement** la
-ligne de statut (pas de narration, pas de commentaire sur la mémoire),
-puis charger :
+ligne de statut (pas de narration), puis charger :
 
 | Mémoire | Statut | Source |
 |---------|--------|--------|
 | aucune | `Chargement du skill.` | `view references/workflow.md` |
-| `mode sync` | `Chargement du skill, mode sync.` | `project_knowledge_search("ddaanet/candidature")` |
 | `mode dev — <path>` | `Chargement du skill, mode dev: <path>.` | `Filesystem:read_text_file path=<path>/SKILL.md` |
 
-Références : même source que le workflow (bundlées / project knowledge /
-`<path>/references/`).
+Références : même source que le workflow (bundlées / `<path>/references/`).
 
-### Validation du chargement
+## Vérification de mise à jour (mode normal uniquement)
 
-Le résultat doit contenir la phrase verbatim `Mot magique: ddaanet/candidature`.
-C'est le seul critère. Pas de match partiel, pas d'interprétation.
+Après le chargement en mode normal, vérifier silencieusement s'il existe
+une version plus récente :
 
-**Une seule recherche.** Si la phrase est absente du résultat, c'est une
-erreur — ne pas reformuler la requête, ne pas chercher avec d'autres
-mots, ne pas explorer. Passer directement à §Erreurs de chargement.
+1. Lire la version bundlée dans `references/workflow.md` (ligne
+   `Version: X.Y.Z`).
+2. `web_fetch` sur `https://raw.githubusercontent.com/ddaanet/candidature/main/VERSION`
+3. Comparer les deux versions.
+
+Si la version distante est plus récente, **après** avoir traité la
+demande de l'utilisateur, mentionner brièvement :
+
+> Une mise à jour est disponible (X.Y.Z → A.B.C).
+> Télécharger : https://github.com/ddaanet/candidature/releases/latest
+
+Ne pas bloquer le travail pour une mise à jour. L'utilisateur décide
+quand il installe.
+
+Si le fetch échoue (pas de réseau, erreur GitHub), ignorer silencieusement.
 
 ## Erreurs de chargement
 
-**Ne pas explorer ni improviser.** Si la source n'est pas accessible ou
-ne contient pas le mot magique, expliquer le problème et proposer de
-continuer en mode normal.
-
-### Mode sync — instructions non trouvées
-
-Le repo GitHub n'est probablement pas importé dans le projet. Dire :
-
-> Je ne trouve pas les instructions à jour. Pour activer le mode sync :
-> 1. Dans le projet, cliquer **+** → **Depuis GitHub**
-> 2. Coller `https://github.com/ddaanet/candidature`
-> 3. Tout sélectionner et confirmer
->
-> En attendant, je peux continuer avec la version installée. On fait ça ?
-
-Si oui, charger `references/workflow.md` et continuer.
+**Ne pas explorer ni improviser.**
 
 ### Mode dev — instructions non trouvées
 

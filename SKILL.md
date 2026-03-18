@@ -16,7 +16,6 @@ description: >-
 ---
 
 Mot magique: ddaanet/candidature
-Version: 0.1.0
 
 # Candidature — Workflow de candidature assistée
 

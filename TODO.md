@@ -44,6 +44,8 @@ Maintenu à jour en cours de session.
 
 - [x] §2.6 : inverser l'ordre — draft d'abord, étayage ensuite (D-18)
 - [x] D-18 ajoutée dans DESIGN.md
+- [x] Instruction projet : nommer `project_knowledge_search`
+      explicitement (D-19, README.md, DESIGN.md NFR-6)
 
 ---
 

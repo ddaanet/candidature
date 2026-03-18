@@ -182,7 +182,10 @@ L'instruction est nécessaire parce que les fichiers importés depuis
 GitHub arrivent dans le project knowledge (documents de référence
 indexés), pas comme skills avec déclenchement automatique. Sans
 l'instruction, rien ne garantit que le modèle cherchera SKILL.md quand
-l'utilisateur tape la commande.
+l'utilisateur tape la commande. L'instruction doit nommer l'outil
+`project_knowledge_search` explicitement — « chercher dans les fichiers
+du projet » est ambigu et l'agent le confond avec une recherche
+filesystem (`view /mnt/project/`). Voir D-19.
 
 Autres plateformes : coller une URL dans un chat. Pas de terminal, pas
 de build, pas de config.
@@ -475,6 +478,28 @@ de protocole et doivent être mises à jour :
 | §4.2 | Stockage CR dans `candidatures/entretiens/` | CR conversationnel, synthèse en mémoire |
 | §4.3 | `candidatures/patterns.md` | Observations en mémoire projet |
 | §Archive | Structure fichiers `recherche/` | Supprimer la section entière |
+
+### D-19 : Instruction projet — nommer l'outil explicitement
+
+**Choisi :** L'instruction projet dit « utiliser
+`project_knowledge_search` pour chercher SKILL.md ».
+
+**Raison :** Les fichiers GitHub importés dans un projet Claude.ai sont
+indexés dans le *project knowledge*, accessible uniquement via
+`project_knowledge_search`. Ils ne sont **pas** dans `/mnt/project/`
+(qui ne contient que les fichiers uploadés manuellement). L'instruction
+initiale (« chercher SKILL.md dans les fichiers du projet ») était
+ambigu — l'agent cherchait via `view /mnt/project/`, ne trouvait rien,
+et abandonnait.
+
+**Incident :** Session 2026-03-18. Premier test du skill dans un
+nouveau chat. L'agent a cherché dans `/mnt/project/`, échoué, puis
+demandé l'offre d'emploi sans avoir chargé le skill. Le skill n'a été
+trouvé qu'après redirection manuelle vers `project_knowledge_search`.
+
+**Écarté :** Formulations vagues (« dans les fichiers du projet »,
+« dans le projet »). Toute formulation qui ne nomme pas l'outil laisse
+le modèle deviner — et il devine mal.
 
 ### D-18 : Étayage après le draft, pas avant
 

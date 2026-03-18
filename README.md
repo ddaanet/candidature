@@ -33,8 +33,9 @@ psychologie du recrutement.
 4. Dans les **instructions du projet** (l'encadré texte en haut),
    coller :
 
-> Quand l'utilisateur tape /candidature, chercher SKILL.md dans les
-> fichiers du projet et suivre ses instructions.
+> Quand l'utilisateur tape /candidature, utiliser
+> project_knowledge_search pour chercher SKILL.md et suivre ses
+> instructions.
 
 **Alternative sans GitHub :** télécharger le
 [ZIP du repo](https://github.com/ddaanet/candidature/archive/refs/heads/main.zip),

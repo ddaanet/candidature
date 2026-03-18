@@ -31,8 +31,9 @@ Si l'utilisateur demande à changer de mode ("mode dev", "mode sync",
 
 ## Chargement `[outil: memory_user_edits view]`
 
-Lire la mémoire. Chercher `candidature: mode`. Émettre une seule ligne
-de statut, puis charger :
+Lire la mémoire. Chercher `candidature: mode`. Émettre **uniquement** la
+ligne de statut (pas de narration, pas de commentaire sur la mémoire),
+puis charger :
 
 | Mémoire | Statut | Source |
 |---------|--------|--------|
@@ -54,37 +55,35 @@ mots, ne pas explorer. Passer directement à §Erreurs de chargement.
 
 ## Erreurs de chargement
 
-**Ne pas explorer ni improviser.** Si la source configurée n'est pas
-accessible ou ne contient pas le mot magique, expliquer le problème et
-proposer de continuer en mode normal.
+**Ne pas explorer ni improviser.** Si la source n'est pas accessible ou
+ne contient pas le mot magique, expliquer le problème et proposer de
+continuer en mode normal.
 
-### Mode sync — workflow non trouvé dans le project knowledge
+### Mode sync — instructions non trouvées
 
-Le repo GitHub n'est probablement pas importé dans le projet. Expliquer :
+Le repo GitHub n'est probablement pas importé dans le projet. Dire :
 
-> Le skill est configuré en mode sync, mais je ne trouve pas le workflow
-> dans le project knowledge. Pour que ce mode fonctionne :
+> Je ne trouve pas les instructions à jour. Pour activer le mode sync :
 > 1. Dans le projet, cliquer **+** → **Depuis GitHub**
 > 2. Coller `https://github.com/ddaanet/candidature`
 > 3. Tout sélectionner et confirmer
 >
-> En attendant, je peux continuer avec le workflow bundlé (mode normal).
+> En attendant, je peux continuer avec la version installée. On fait ça ?
 
-Si l'utilisateur accepte, charger `references/workflow.md` et continuer.
+Si oui, charger `references/workflow.md` et continuer.
 
-### Mode dev — SKILL.md non trouvé sur le filesystem
+### Mode dev — instructions non trouvées
 
-Le chemin du repo est probablement incorrect, ou le MCP Filesystem n'est
-pas connecté. Expliquer :
+Le chemin est probablement incorrect, ou le connecteur fichiers n'est
+pas actif. Dire :
 
-> Le skill est configuré en mode dev (`<path>`), mais je ne peux pas
-> lire le SKILL.md à cet emplacement. Vérifier que :
-> - Le chemin est correct (mode dev pour corriger)
-> - Le MCP Filesystem est connecté et autorise ce répertoire
+> Je ne peux pas lire les instructions à `<path>`. Vérifier que :
+> - Le chemin est correct ("mode dev" pour corriger)
+> - Le connecteur fichiers (Filesystem) est connecté
 >
-> En attendant, je peux continuer avec le workflow bundlé (mode normal).
+> En attendant, je peux continuer avec la version installée. On fait ça ?
 
-Si l'utilisateur accepte, charger `references/workflow.md` et continuer.
+Si oui, charger `references/workflow.md` et continuer.
 
 ## Exécution
 

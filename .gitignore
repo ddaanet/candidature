@@ -2,3 +2,6 @@
 
 # Fichiers opérationnels (pas dans la distribution)
 2026-*.md
+
+# Build output
+dist/

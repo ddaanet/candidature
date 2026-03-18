@@ -5,10 +5,41 @@
 A standalone Claude.ai skill (markdown files) for assisted job applications.
 Target audience: non-technical users. The skill content is the product.
 
-- `SKILL.md` — Main skill file (4-phase workflow)
+- `SKILL.md` — Workflow complet (4 phases). C'est ce qui est lu en mode
+  dev et mode sync.
+- `build/dispatcher.md` — Dispatcher installé comme SKILL.md dans le
+  `.skill`. Aiguille vers la bonne source selon le mode.
 - `DESIGN.md` — Design decisions and grounding audit
 - `references/` — Supporting documents
 - `README.md` — Installation guide
+
+## Build
+
+`./build/build.sh` assemble le `.skill` dans `dist/`. Le `.skill` contient :
+
+- Le dispatcher (`build/dispatcher.md`) comme `SKILL.md`
+- Le workflow (`SKILL.md` sans frontmatter) comme `references/workflow.md`
+- Tous les fichiers de `references/`
+
+`./build/build.sh --release 1.0.0` crée en plus une release GitHub avec
+le `.skill` en asset.
+
+Le repo source ne change pas : `SKILL.md` reste le workflow complet.
+Le dispatcher n'existe que dans le build output.
+
+### Trois modes d'utilisation
+
+- **Normal** — Le `.skill` installé utilise le workflow bundlé. Stable
+  mais figé.
+- **Sync** — Le repo GitHub est importé dans le project knowledge.
+  Le dispatcher lit le workflow depuis le project knowledge (toujours
+  à jour après "Sync now").
+- **Dev** — Le dispatcher lit le SKILL.md du repo local via MCP
+  Filesystem. Pour le développement actif.
+
+Le mode se configure via la mémoire projet (`candidature: mode sync`
+ou `candidature: mode dev — <chemin>`). Le skill gère le changement
+de mode lui-même.
 
 ## Prose Quality
 

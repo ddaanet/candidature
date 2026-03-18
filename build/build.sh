@@ -73,6 +73,7 @@ if [[ "$VERSION" != "dev" ]]; then
     git add VERSION
     git commit -m "🔖 $VERSION"
     git tag "$TAG"
+    git push github main --tags
 
     echo "📦 Creating release $TAG..."
     gh release create "$TAG" "$OUTPUT" \

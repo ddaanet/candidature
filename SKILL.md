@@ -15,6 +15,9 @@ description: >-
   relecture item-par-item, et boucle d'apprentissage par suivi des retours.
 ---
 
+Mot magique: ddaanet/candidature
+Version: 0.1.0
+
 # Candidature — Workflow de candidature assistée
 
 Quatre phases : initialisation du profil (une fois), candidature (par offre),

@@ -244,11 +244,23 @@ Si oui, voir `references/cv-handling.md`.
 
 ### 2.6 Génération `[outil: create_file]`
 
-#### Passe d'étayage `[outil: web_search si besoin]`
+#### Draft `[outil: create_file]`
 
-Avant de produire un artefact, vérifier que chaque affirmation prévue
-est étayée. La passe s'applique à tout artefact, y compris les textes
-courts.
+Produire un premier draft de chaque artefact identifié en 2.2-2.3 :
+
+- **Lettre de motivation / message** — Format adapté au canal. Voir
+  `references/cover-letter.md`.
+- **CV adapté** (si décidé en 2.5)
+- **Autres artefacts** selon le canal — réponses à des questions de
+  formulaire, message d'accompagnement, pitch court...
+
+Chaque draft est un `create_file`. Le draft est un artefact de travail —
+il sera audité puis corrigé avant relecture.
+
+#### Passe d'étayage `[état → outil: web_search si besoin]`
+
+Après le draft, auditer chaque affirmation présente dans le texte réel.
+La passe s'applique à tout artefact, y compris les textes courts.
 
 **Bloc visible** — liste compacte, une ligne par affirmation :
 
@@ -265,20 +277,21 @@ Pour chaque ✗ ou ⚠️ :
 Après recherche, nouveau bloc visible avec les lignes modifiées.
 Répéter jusqu'à ce que tout soit ✓ ou explicitement qualifié.
 
-**Seulement alors** → produire l'artefact.
+#### Correction du draft
 
-#### Artefacts
+Si des affirmations sont ✗ ou ⚠️ après résolution, l'agent évalue la
+gravité et corrige :
 
-Produire les artefacts identifiés en 2.2-2.3 :
+- **Correction factuelle isolée** → `str_replace` ciblé sur le draft
+- **Problème structurel** (axe entier mal fondé, ton incohérent après
+  corrections multiples) → régénération complète du draft, nouvelle
+  passe d'étayage
 
-- **Lettre de motivation / message** — Format adapté au canal. Voir
-  `references/cover-letter.md`.
-- **CV adapté** (si décidé en 2.5)
-- **Autres artefacts** selon le canal — réponses à des questions de
-  formulaire, message d'accompagnement, pitch court...
+L'agent décide — pas de règle rigide. Le critère : le texte final
+reflète-t-il fidèlement ce qui a été étayé ?
 
-Chaque fichier produit est un `create_file`. Chaque fichier passe en
-relecture (phase 3) avant d'être considéré comme prêt.
+Chaque artefact corrigé passe en relecture (phase 3) avant d'être
+considéré comme prêt.
 
 ---
 

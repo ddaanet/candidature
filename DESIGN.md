@@ -468,6 +468,29 @@ de protocole et doivent être mises à jour :
 | §4.3 | `candidatures/patterns.md` | Observations en mémoire projet |
 | §Archive | Structure fichiers `recherche/` | Supprimer la section entière |
 
+### D-18 : Étayage après le draft, pas avant
+
+**Choisi :** Générer un draft d'abord (`create_file`), puis auditer les
+affirmations présentes dans le texte réel.
+
+**Raison :** L'approche précédente (étayage avant génération) auditait
+des affirmations que l'agent *prévoyait* d'écrire — abstrait, et rien ne
+garantissait que le texte final correspondrait. Avec le draft d'abord,
+l'audit porte sur du concret : le texte existe, on vérifie ce qu'il dit
+effectivement.
+
+Avantages : anti-hallucination (l'agent ne peut pas simuler un étayage
+sur des intentions), ancrage plus fort (le `create_file` matérialise
+l'artefact avant l'audit).
+
+**Correction :** L'agent évalue la gravité et décide : `str_replace`
+ciblé pour les corrections factuelles isolées, régénération complète si
+le problème est structurel (avec nouvelle passe d'étayage). Pas de règle
+rigide.
+
+**Écarté :** Étayage avant génération (v1, abstrait). Règle de
+correction fixée (trop rigide pour la diversité des cas).
+
 ---
 
 ## Axes d'évolution identifiés (non implémentés)

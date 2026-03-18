@@ -40,6 +40,13 @@ Maintenu à jour en cours de session.
 
 ---
 
+## Terminé (session 2026-03-18)
+
+- [x] §2.6 : inverser l'ordre — draft d'abord, étayage ensuite (D-18)
+- [x] D-18 ajoutée dans DESIGN.md
+
+---
+
 ## À faire (prochaine session)
 
 ### DESIGN.md

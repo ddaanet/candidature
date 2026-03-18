@@ -24,13 +24,21 @@ psychologie du recrutement.
 5. **Suivi** — Retours, comptes rendus d'entretien, tendances sur
    plusieurs candidatures
 
-## Installation (Claude.ai)
+## Mise en place (Claude.ai)
 
 1. Créer un **Projet** sur [claude.ai](https://claude.ai)
-2. Dans les fichiers du projet, cliquer **+** → **Ajouter depuis GitHub**
-3. Coller : `https://github.com/ddaanet/candidature`
-4. Sélectionner tous les fichiers
-5. Uploader votre CV (DOCX de préférence) dans le même projet
+2. Cliquer **+** → **Depuis GitHub** → coller
+   `https://github.com/ddaanet/candidature` → tout sélectionner
+3. Uploader votre CV (DOCX de préférence) dans le même projet
+4. Dans les **instructions du projet** (l'encadré texte en haut),
+   coller :
+
+> Quand l'utilisateur tape /candidature, chercher SKILL.md dans les
+> fichiers du projet et suivre ses instructions.
+
+**Alternative sans GitHub :** télécharger le
+[ZIP du repo](https://github.com/ddaanet/candidature/archive/refs/heads/main.zip),
+dézipper, puis glisser tous les fichiers dans le projet.
 
 Ouvrir un chat dans le projet et taper `/candidature`.
 

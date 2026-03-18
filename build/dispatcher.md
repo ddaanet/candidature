@@ -20,13 +20,13 @@ Si l'utilisateur demande à changer de mode ("mode dev", "mode sync",
 - **normal** — supprimer l'entrée mémoire. Pas de validation nécessaire.
 - **sync** — avant d'écrire, vérifier que le workflow est dans le project
   knowledge : `project_knowledge_search("workflow candidature phases")`.
-  Si pas trouvé, expliquer comment importer le repo GitHub dans le projet
-  (voir §Erreurs de chargement, mode sync). Ne pas écrire en mémoire
-  tant que la source n'est pas accessible.
+  Valider : le résultat doit contenir le marqueur `# Candidature —
+  Workflow de candidature assistée`. Si absent → erreur sync (voir
+  §Erreurs). Ne pas écrire en mémoire tant que non validé.
 - **dev** — demander le chemin si non précisé. Avant d'écrire, vérifier
   que le SKILL.md existe : `Filesystem:read_text_file path=<chemin>/SKILL.md`
-  (head 1 suffit). Si pas trouvé, expliquer (voir §Erreurs de chargement,
-  mode dev). Ne pas écrire en mémoire tant que le chemin n'est pas validé.
+  (head 1 suffit). Si pas trouvé → erreur dev (voir §Erreurs). Ne pas
+  écrire en mémoire tant que non validé.
 
 ## Chargement `[outil: memory_user_edits view]`
 
@@ -42,10 +42,21 @@ de statut, puis charger :
 Références : même source que le workflow (bundlées / project knowledge /
 `<path>/references/`).
 
+### Validation du chargement
+
+Le workflow commence par `# Candidature — Workflow de candidature
+assistée`. Ce marqueur valide que le bon fichier a été chargé.
+
+**Une seule recherche.** Si le marqueur est absent du résultat, c'est
+une erreur — ne pas reformuler la requête, ne pas chercher avec d'autres
+mots, ne pas explorer le project knowledge. Passer directement à
+§Erreurs de chargement.
+
 ## Erreurs de chargement
 
 **Ne pas explorer ni improviser.** Si la source configurée n'est pas
-accessible, expliquer le problème et proposer de continuer en mode normal.
+accessible ou ne contient pas le marqueur, expliquer le problème et
+proposer de continuer en mode normal.
 
 ### Mode sync — workflow non trouvé dans le project knowledge
 

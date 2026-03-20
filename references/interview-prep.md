@@ -4,6 +4,15 @@ Protocole de préparation avant un entretien d'embauche. Couvre la
 recherche, les questions probables, et la stratégie de négociation
 salariale.
 
+## Contexte 2025-2026
+
+Les entretiens en présentiel sont en hausse (24% → 38% des processus,
+ResumeBuilder 2025). Les recruteurs évaluent de plus en plus la fluence
+IA de manière indirecte : questions ouvertes sur les outils utilisés,
+mises en situation improvisées, demandes de raisonnement en direct. Le
+candidat qui a réellement utilisé des outils IA (pas seulement fait
+rédiger par IA) se distingue naturellement dans ces situations.
+
 ## Recherche pré-entretien `[outil: web_search]`
 
 Avant tout entretien, rechercher :

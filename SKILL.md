@@ -133,6 +133,20 @@ Le candidat fournit une ou plusieurs offres d'emploi (texte, URL, ou
 capture d'écran). Lire chaque fiche de poste (appel d'outil). Si c'est
 une URL, aller la chercher.
 
+#### Canal de candidature
+
+Quand l'offre est trouvée via un agrégateur (LinkedIn, WTTJ, Indeed...),
+chercher d'abord le site carrière direct de l'entreprise (page « rejoindre »,
+« careers », ATS propre). Candidater via le canal direct quand il existe —
+moins de bruit, meilleure traçabilité pour le recruteur.
+
+Si un canal est nettement supérieur (ATS direct ouvert vs agrégateur sans
+champ libre), le recommander et avancer. Ne proposer un choix que si les
+canaux sont comparables. Pas de widget pour une décision évidente.
+
+Si l'agent n'a pas accès au navigateur, demander au candidat de vérifier
+si un site carrière direct existe.
+
 **Si le candidat n'a pas encore d'offre :** recommander des plateformes
 adaptées à son profil et son secteur (pas de liste en dur — recherche
 contextuelle §2.2). Le candidat revient avec des URLs.
@@ -194,6 +208,11 @@ recherche complète.
 - **Spécificités du canal** — EasyApply (pas de pièce jointe libre),
   formulaire à champs imposés, envoi direct par email, candidature
   spontanée...
+- **Benchmark salarial** — Fourchettes de rémunération pour ce type de
+  poste dans cette zone géographique. Sources pas codées en dur —
+  rechercher les sources les plus pertinentes au moment de la recherche.
+  Sert de référence pour §2.6 (champ prétentions) et pour la
+  préparation d'entretien (`references/interview-prep.md`).
 
 **Stocker les résultats en mémoire projet** (`memory_user_edits`, préfixe
 `recherche:`) pour réutilisation lors de candidatures similaires.
@@ -259,15 +278,33 @@ Produire un premier draft de chaque artefact identifié en 2.2-2.3 :
 Chaque draft est un `create_file`. Le draft est un artefact de travail —
 il sera audité puis corrigé avant relecture.
 
+**Lecture des champs avant rédaction.** Quand le canal est un formulaire
+web, lire les libellés et la taille visible des champs avant de rédiger.
+Caliber la longueur au champ (~150 caractères par ligne visible). Un
+champ intitulé « quelques mots » ou « en vos propres termes » est un
+test d'authenticité — la réponse doit sonner comme le candidat, pas
+comme un modèle. Si l'agent n'a pas accès au navigateur, demander au
+candidat de décrire les champs.
+
 #### Passe d'étayage `[état → outil: web_search si besoin]`
 
 Après le draft, auditer chaque affirmation présente dans le texte réel.
 La passe s'applique à tout artefact, y compris les textes courts.
 
+**Double audit :** chaque affirmation est évaluée sur deux axes :
+1. **Véracité** — L'affirmation est-elle factuelle et sourcée ?
+2. **Crédibilité du signal** (Spence, 1973) — L'affirmation est-elle un
+   signal coûteux (vérifiable, engageant) ou un signal gratuit
+   (auto-attribué, invérifiable) ? Une affirmation peut être vraie et
+   rester un signal gratuit si elle est invérifiable par le recruteur.
+   Exemple : « je suis rigoureux » est peut-être vrai, mais c'est un
+   signal gratuit — tout candidat peut l'écrire. « 200k lignes en
+   production pendant 15 ans » est un signal coûteux.
+
 **Bloc visible** — liste compacte, une ligne par affirmation :
 
 ```
-- [affirmation courte] — [source] — ✓ / ⚠️ / ✗
+- [affirmation courte] — [source] — ✓ / ⚠️ / ✗ — [signal: coûteux|gratuit]
 ```
 
 Pour chaque ✗ ou ⚠️ :
@@ -294,6 +331,20 @@ reflète-t-il fidèlement ce qui a été étayé ?
 
 Chaque artefact corrigé passe en relecture (phase 3) avant d'être
 considéré comme prêt.
+
+#### Archivage `[outil: memory_user_edits]`
+
+Après la relecture (phase 3), enrichir l'entrée mémoire `candidature:`
+avec un résumé structuré de l'artefact envoyé :
+
+- Axes retenus (P-J, P-O, différenciation)
+- Accroche (premiers mots ou résumé)
+- Ton (registre utilisé)
+- Prétentions salariales (si communiquées)
+
+Permet de retrouver rapidement ce qui a été envoyé, sans stocker le
+texte intégral. Le texte complet reste dans la conversation
+(`conversation_search`).
 
 ---
 
@@ -523,3 +574,7 @@ offre shortlistée il y a 6 mois est probablement pourvue.
   chaque réponse apporte du contenu distinct.
 - **Recherche refaite à chaque fois** — Ignorer l'archive de recherche pour
   un type de poste déjà exploré.
+- **Correction acquiescée sans reformulation** — Le candidat corrige une
+  erreur, l'agent dit « noté » et passe à la suite. Cycle correct :
+  reformuler la correction → obtenir la validation du candidat →
+  appliquer → re-présenter l'élément corrigé.

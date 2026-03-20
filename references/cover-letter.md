@@ -75,6 +75,14 @@ technique, valeur concrète (pas les valeurs génériques du site corporate).
 
 Investir 10-15 minutes de recherche sur l'entreprise avant de rédiger.
 
+### Ton et formalité
+
+Évaluer le registre de l'entreprise avant de rédiger. Sources : site web,
+blog technique, réseaux sociaux, page carrière, ton des offres d'emploi.
+Une startup qui tutoie sur sa page carrière attend un ton différent d'une
+ESN qui vouvoie dans ses communications. Le registre de la lettre doit
+être cohérent avec celui de l'entreprise, pas avec un modèle générique.
+
 ### Voix du candidat, pas de l'IA
 
 La lettre doit sonner comme le candidat. Si des exemples de style existent,
@@ -85,4 +93,6 @@ Signaux d'un ton artificiel à éviter :
 - Mots creux ("synergie", "proactif", "force de proposition")
 - Excès de connecteurs logiques ("En effet", "Par ailleurs", "De surcroît")
 - Ouvertures génériques ("Passionné par...", "Fort de mon expérience...")
+- Points-virgules dans du texte court (signal de prose générée — rares
+  dans l'écriture humaine informelle)
 - Gras dans du texte brut (signal de génération IA dans un formulaire web)

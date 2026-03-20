@@ -49,21 +49,38 @@ Maintenu à jour en cours de session.
 
 ---
 
-## À faire (prochaine session)
+## Terminé (session 2026-03-20)
 
-### DESIGN.md
-
-- [ ] Ajouter D-12 à D-17 dans les décisions de conception
-- [ ] Mettre à jour la structure du livrable (ajouter interview-prep.md)
-- [ ] Mettre à jour le tableau des portes SKILL.md (certaines résolues)
+Plan de 11 items (passation 2026-03-20) appliqué en une passe.
 
 ### SKILL.md
 
-- [ ] Vérifier que §2.2 mentionne le benchmark salarial comme dimension
-      de la recherche contextuelle
-- [ ] Archivage artefact : dans §2.6, après génération et relecture,
-      l'entrée `candidature:` est enrichie avec le résumé structuré
-      (axes, accroche, ton, prétentions)
+- [x] Item 1 — §2.1 Canal ATS direct, recommander si nettement supérieur
+- [x] Item 2 — §2.6 Lecture des libellés de champs avant rédaction
+- [x] Item 3 — Contre-exemple : correction acquiescée sans reformulation
+- [x] Item 5 — §2.6 Étayage Spence : double audit véracité + signal
+- [x] Item 6 — §2.6 Archivage `candidature:` après relecture
+- [x] Item 7 — §2.2 Benchmark salarial comme dimension de recherche
+
+### cover-letter.md
+
+- [x] Item 4a — Section "Ton et formalité" (registre entreprise)
+- [x] Item 4b — Point-virgule dans signaux de prose artificielle
+
+### recruitment-science.md + interview-prep.md
+
+- [x] Item 11 — Cui et al. 2025 dans §1 Spence
+- [x] Item 11 — Contexte entretien 2025-2026 (présentiel ↑, évaluation IA)
+
+### DESIGN.md
+
+- [x] Item 8 — D-12 à D-17 documentées
+- [x] Item 9 — interview-prep.md dans structure du livrable
+- [x] Item 10 — Tableau des portes SKILL.md mis à jour (✅ résolues)
+
+---
+
+## À faire
 
 ### Portes mémoire (points d'écriture concrets)
 
@@ -81,8 +98,25 @@ Liste exhaustive des moments où le skill écrit en mémoire :
 | §4.2 CR entretien | `entretien:` | `add` | conversation |
 | §4.3 Pattern identifié | `tendance:` | `add` | `[choix]` |
 
+### D-17 : Prototyper la remontée d'expérience (prochaine session)
+
+- [ ] Lire agent-core (`~/code/claudeutils/agent-core/skills/`) pour
+      fondement structurel (ground)
+- [ ] Définir un format mémoire projet pour les retours d'intégration ATS
+      (préfixe à décider, ex: `site-exp:`)
+- [ ] Se traiter comme premier utilisateur : capturer les retours
+      d'expérience accumulés (SmartRecruiters, Teamtailor, WTTJ) en
+      mémoire structurée
+- [ ] Concevoir le chemin de remontée vers les références candidate-desktop
+
 ### Axes d'évolution (DESIGN.md)
 
-- [ ] Ajouter : candidature-desktop (séparation confirmée D-16)
-- [ ] Ajouter : canal de remontée vers le repo (reporté D-17)
+- [ ] Ajouter : candidate-desktop (séparation confirmée D-16)
 - [ ] Ajouter : simulation d'entretien (extension interview-prep.md)
+
+### Hors repo candidature
+
+- [ ] Mettre à jour brief-*.skill pour claude.ai (conversations
+      antérieures accessibles par RAG seulement, pas d'accès direct
+      au log de session)
+- [ ] Mettre à jour ddaa.net (page d'accueil / section candidature)

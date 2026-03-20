@@ -26,6 +26,22 @@ théorique, pas une conclusion directe de l'article.)
 doit être vérifiable ou au minimum spécifique. La grille de relecture
 évalue le ratio signaux crédibles / signaux gratuits.
 
+**Évolution 2025-2026 : IA et dévaluation des signaux.**
+Cui, Dias & Ye (2025, Yale, arXiv:2509.25054) analysent ~5M lettres de
+motivation sur Freelancer.com. Après l'introduction d'un outil IA de
+rédaction, la corrélation entre personnalisation de la lettre et callbacks
+chute de 51%, et la corrélation avec les offres chute de 79%. Les
+employeurs se reportent sur l'historique de travail et les évaluations
+passées — des signaux coûteux que l'IA ne peut pas fabriquer. Kessler
+(Wharton, mars 2026) synthétise : l'IA « tue » la lettre de motivation
+comme signal, en homogénéisant la qualité rédactionnelle.
+
+**Implication pour le skill :** La lettre reste utile comme véhicule de
+P-O fit (l'IA ne connaît pas la motivation authentique du candidat), mais
+son pouvoir de signal rédactionnel diminue. Renforcer les signaux
+coûteux (faits vérifiables, références spécifiques à l'entreprise) et
+réduire la dépendance aux qualités purement rédactionnelles.
+
 **Sources :**
 - Spence, M. (1973). Job market signaling. *Quarterly Journal of
   Economics*, 87(3), 355-374.
@@ -33,6 +49,9 @@ doit être vérifiable ou au minimum spécifique. La grille de relecture
   assessment. *Journal of Management*, 37(1), 39-67.
 - Uggerslev, K. L., Fassina, N. E., & Kraichy, D. (2012). Recruitment
   and job search: A meta-analytic review. *Personnel Psychology*, 65(3).
+- Cui, Z., Dias, M. B., & Ye, H. (2025). The AI cover letter
+  devaluation. *arXiv:2509.25054*.
+- Kessler, S. (2026). AI is killing the cover letter. *Knowledge@Wharton*.
 
 ---
 

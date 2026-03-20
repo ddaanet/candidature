@@ -378,6 +378,78 @@ premier item.
 **Écarté :** Suppression totale (le candidat ne sait plus ce qu'on
 relit). Orientation complète v1 (jargon, tour de conversation inutile).
 
+### D-12 : Archivage des artefacts en mémoire
+
+**Choisi :** Résumé structuré dans l'entrée `candidature:` (axes, accroche,
+ton, prétentions). Pas le texte intégral.
+
+**Raison :** La mémoire projet a un budget limité. Le texte complet reste
+accessible via `conversation_search` si besoin. Le résumé suffit pour
+l'analyse de patterns (§4.3) et la réutilisation d'axes lors de
+candidatures similaires.
+
+### D-13 : Porte mémoire — écriture systématique
+
+**Choisi :** Toujours écrire en mémoire sur le chemin autonome (y compris
+quand la recherche contextuelle ne trouve rien — c'est une décision de
+typologie). Sur le chemin interactif, la conversation suffit.
+
+**Raison :** Intégrité structurelle. La porte est ancrée `[outil]`. Sans
+l'appel obligatoire même sur « rien trouvé », l'agent a un prose-only
+escape hatch : il rationalise « RAS, pas besoin d'écrire » et évite
+l'appel d'outil, ce qui casse l'ancrage. Bénéfice secondaire : le
+résultat négatif est une information utile pour les candidatures
+suivantes.
+
+### D-14 : Shortlist → candidature — transition par replace
+
+**Choisi :** Quand le candidat lance la Phase 2 sur une offre shortlistée,
+l'entrée `shortlist:` est remplacée (`replace`) par une entrée
+`candidature:` enrichie.
+
+**Raison :** Une seule entrée par offre en mémoire. Pas de duplication.
+Le préfixe change pour refléter l'état d'avancement.
+
+### D-15 : Benchmark salarial = dimension de la recherche contextuelle
+
+**Choisi :** Le benchmark salarial est une dimension de §2.2 (recherche
+contextuelle), pas une procédure séparée. Les sources ne sont pas codées
+en dur.
+
+**Raison :** Les sources de benchmark varient selon le pays, le secteur
+et le type de poste. Coder des URLs spécifiques (Glassdoor, levels.fyi)
+rend le skill fragile. L'agent recherche les sources pertinentes au
+moment de la recherche.
+
+### D-16 : Deux skills complémentaires
+
+**Choisi :** `candidature` (claude.ai) et `candidate-desktop` (Claude
+Desktop) sont deux skills séparés partageant un workflow commun.
+
+**Raison :** Le workflow (méthodologie) est identique. Les différences
+sont dans le substrat : stockage (memory_user_edits vs Filesystem),
+capacités (pas de navigateur dans claude.ai), et contraintes (30 slots
+mémoire vs fichiers structurés). La séparation de substrat justifie
+deux points d'entrée.
+
+**Architecture cible :** `workflow.md` (méthodologie pure, partagée) +
+deux SKILL.md minces (orchestration spécifique plateforme).
+
+### D-17 : Canal de remontée vers le repo
+
+**Choisi :** Reporté (prématuré sans utilisateurs externes).
+
+**Canal visé :** Retour d'expérience d'intégration avec des sites ATS
+spécifiques (SmartRecruiters, Teamtailor, WTTJ...), pour alimenter les
+références de `candidate-desktop` de manière structurée.
+
+**Approche :** L'accumulation d'expérience utilisateur sur ces sites est
+naturelle et doit être structurée pour permettre une intégration
+systématique dans les références. Utiliser la mémoire projet comme
+stockage intermédiaire pour les retours d'expérience, puis prototyper
+la remontée en traitant l'auteur comme premier utilisateur. Fondement
+à chercher dans agent-core (`~/code/claudeutils/agent-core/skills/`).
+
 ---
 
 ## Alternatives écartées globales
@@ -457,6 +529,7 @@ candidature/
     cv-handling.md                — Protocole python-docx
     review-items.md               — Découpage pour la relecture
     feedback-tracking.md          — Suivi, CR d'entretien, patterns
+    interview-prep.md             — Préparation d'entretien, négociation
 ```
 
 Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le
@@ -464,20 +537,20 @@ suivi et l'archive sont en mémoire projet.
 
 ---
 
-## Portes SKILL.md à mettre à jour
+## Portes SKILL.md — état actuel
 
-Les portes suivantes dans SKILL.md référencent des fichiers ou du jargon
-de protocole et doivent être mises à jour :
+Toutes les portes ont été résolues dans la version courante du SKILL.md.
+Conservé comme référence historique.
 
-| Section | Porte actuelle | Changement |
+| Section | Porte initiale | Résolution |
 |---------|---------------|------------|
-| §2.2 | `[outil: view index → web_search]` | Remplacer `view index` par consultation mémoire projet |
-| §2.2 | `create_file` pour artefact de recherche | Remplacer par `memory_user_edits` |
-| §3.1 | `[état]` ligne d'état jargonneuse | Condenser en résumé d'une phrase |
-| §4.1 | `[outil: create_file ou str_replace]` | Remplacer par `[outil: memory_user_edits]` |
-| §4.2 | Stockage CR dans `candidatures/entretiens/` | CR conversationnel, synthèse en mémoire |
-| §4.3 | `candidatures/patterns.md` | Observations en mémoire projet |
-| §Archive | Structure fichiers `recherche/` | Supprimer la section entière |
+| §2.2 | `view index` fichier | ✅ Consultation mémoire projet (`recherche:`) |
+| §2.2 | `create_file` recherche | ✅ `memory_user_edits` |
+| §3.1 | Ligne d'état jargonneuse | ✅ Résumé d'une phrase (D-11) |
+| §4.1 | `create_file ou str_replace` | ✅ `memory_user_edits` |
+| §4.2 | CR dans fichiers | ✅ CR conversationnel, synthèse en mémoire |
+| §4.3 | `candidatures/patterns.md` | ✅ Mémoire projet (`tendance:`) |
+| §Archive | Structure fichiers | ✅ Section supprimée, archive en mémoire |
 
 ### D-19 : Instruction projet — nommer l'outil explicitement
 
@@ -538,7 +611,7 @@ correction fixée (trop rigide pour la diversité des cas).
 - **Localisation :** Le skill est en français. Une version anglaise
   élargirait l'audience. Les principes sont universels, seuls l'interface
   et les conventions sectorielles changent.
-- **Environnement hybride Desktop + Claude.ai :** Le skill a été conçu
+- **Environnement hybride candidate-desktop + Claude.ai :** Le skill a été conçu
   pour Claude.ai (projet), mais le workflow complet de candidature
   (navigation sites d'emploi, remplissage de formulaires, tri des
   recommandations) nécessite un contrôle du navigateur disponible

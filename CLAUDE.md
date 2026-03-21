@@ -6,6 +6,8 @@ A standalone Claude.ai skill (markdown files) for assisted job applications.
 Target audience: non-technical users. The skill content is the product.
 
 - `SKILL.md` — Workflow complet (4 phases). Lu en mode dev.
+- `desktop/SKILL.md` — Couche navigateur (Claude Desktop + Chrome).
+- `desktop/references/sites/` — Un fichier par plateforme ATS.
 - `VERSION` — Version courante. Écrit par `build/build.sh --release`.
 - `build/dispatcher.md` — Dispatcher installé comme SKILL.md dans le
   `.skill`. Aiguille vers la bonne source selon le mode.
@@ -16,15 +18,14 @@ Target audience: non-technical users. The skill content is the product.
 
 ## Build
 
-`./build/build.sh` assemble le `.skill` dans `dist/`. Le `.skill` contient :
+`./build/build.sh` assemble les deux `.skill` dans `dist/` :
 
-- Le dispatcher (`build/dispatcher.md`) comme `SKILL.md`
-- Le workflow (`SKILL.md` sans frontmatter) comme `references/workflow.md`
-- `VERSION`
-- Tous les fichiers de `references/`
+- `candidature.skill` — dispatcher + workflow + références partagées
+- `candidate-desktop.skill` — desktop/SKILL.md + workflow + références
+  partagées + consolidation.md + sites/*.md
 
-`./build/build.sh --release 1.0.0` : écrit VERSION, commite, tague,
-crée une release GitHub avec le `.skill` en asset.
+`./build/build.sh --bump minor` : incrémente VERSION, commite, tague,
+crée une release GitHub avec les deux `.skill` en assets.
 
 Le repo source ne change pas : `SKILL.md` reste le workflow complet.
 Le dispatcher n'existe que dans le build output.

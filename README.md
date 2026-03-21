@@ -60,6 +60,19 @@ filesystem au lieu de la version installée.
 
 Pour revenir à la version installée : « mode normal ».
 
+## Claude Desktop (navigateur)
+
+Pour utiliser le workflow avec contrôle du navigateur (remplissage de
+formulaires, navigation sur les sites carrière) :
+
+1. Télécharger [`candidate-desktop.skill`](https://github.com/ddaanet/candidature/releases/latest)
+2. Installer dans Claude Desktop
+3. Connecter Claude in Chrome et le MCP Filesystem
+
+Le skill desktop hérite de toute la méthodologie et ajoute les
+instructions de navigation par site (SmartRecruiters, Teamtailor,
+WTTJ, LinkedIn...).
+
 ## Contenu
 
 ```
@@ -71,8 +84,13 @@ references/
   review-items.md             — Découpage pour la relecture
   feedback-tracking.md        — Suivi et comptes rendus d'entretien
   interview-prep.md           — Préparation d'entretien et négociation
+desktop/
+  SKILL.md                    — Couche navigateur (Claude Desktop)
+  references/
+    consolidation.md           — Processus de consolidation (groundé)
+    sites/*.md                — Contraintes par plateforme ATS
 build/
-  build.sh                    — Assemblage du .skill et release GitHub
+  build.sh                    — Assemblage des deux .skill + release
   dispatcher.md               — Point d'entrée installé dans le .skill
 ```
 

@@ -36,7 +36,8 @@ Maintenu à jour en cours de session.
   pas procédure séparée. Sources pas codées en dur.
 - D-16 : Deux skills complémentaires — `candidature` (claude.ai) et
   `candidature-desktop` (Claude Desktop). Séparation confirmée.
-- D-17 : Canal de remontée vers le repo — reporté.
+- D-17 : Cycle rappel → capture → consolidation pour sites ATS.
+  Préfixe `site:`, fondé sur pattern codify d'agent-core.
 
 ---
 
@@ -91,23 +92,48 @@ Liste exhaustive des moments où le skill écrit en mémoire :
 | §2.1 Offre analysée | `shortlist:` | `add` | `[outil]` |
 | §2.1 Candidater sur shortlist | `candidature:` | `replace` shortlist | `[outil]` |
 | §2.2 Recherche contextuelle | `recherche:` | `add` (y compris "rien trouvé") | `[outil]` |
+| §2.6 Rappel site | `site:` | lecture mémoire projet (contexte) | `[état]` |
 | §2.6 Champ prétentions | — | consulter cache `recherche:` | `[outil: web_search]` |
 | §2.6 Après génération+relecture | `candidature:` | `replace` (résumé) | `[outil]` |
+| §2.6 Capture site | `site:` | `add` ou `replace` après soumission | `[outil]` |
 | §3.5 Corpus enrichi | — | lettre ajoutée aux exemples | `[choix]` |
 | §4.1 Retour candidature | `candidature:` | `replace` statut | `[outil]` |
 | §4.2 CR entretien | `entretien:` | `add` | conversation |
 | §4.3 Pattern identifié | `tendance:` | `add` | `[choix]` |
 
-### D-17 : Prototyper la remontée d'expérience (prochaine session)
+### D-17 : Cycle rappel → capture → consolidation (terminé 2026-03-21)
 
-- [ ] Lire agent-core (`~/code/claudeutils/agent-core/skills/`) pour
-      fondement structurel (ground)
-- [ ] Définir un format mémoire projet pour les retours d'intégration ATS
-      (préfixe à décider, ex: `site-exp:`)
-- [ ] Se traiter comme premier utilisateur : capturer les retours
-      d'expérience accumulés (SmartRecruiters, Teamtailor, WTTJ) en
-      mémoire structurée
-- [ ] Concevoir le chemin de remontée vers les références candidate-desktop
+- [x] Lire agent-core (ground, codify, memory-index, reflect) pour
+      fondement structurel
+- [x] Préfixe `site:` pour les retours d'intégration ATS
+- [x] Prototype : 4 entrées `site:` écrites en mémoire projet
+      (Teamtailor, LinkedIn, WTTJ, SmartRecruiters) — minage des
+      conversations passées, auteur comme premier utilisateur
+- [x] Rappel (§2.6 SKILL.md) : consultation obligatoire avant rédaction
+- [x] Capture (§2.6 SKILL.md) : question + écriture après soumission
+- [x] D-17 mise à jour dans DESIGN.md (reporté → résolu)
+- [x] Création desktop/SKILL.md + desktop/references/sites/
+- [x] Consolidation prototype : 4 fichiers sites écrits depuis minage
+      des conversations passées (transfert direct MCP Filesystem)
+- [ ] Médium de remontée pour utilisateurs externes (GitHub? Google
+      Forms? autre?) + processus de validation (prompt injection,
+      qualité)
+
+### Dispatcher unique + détection plateforme
+
+- [ ] Fusionner en un seul .skill avec dispatcher unique
+- [ ] Détection 3 modes : claude.ai (pas de MCP) / Desktop sans
+      extensions (MCP présent, Chrome/Filesystem absents → suggérer) /
+      Desktop complet
+- [ ] Renommer SKILL.md → workflow.md, desktop/SKILL.md →
+      desktop/orchestration.md
+
+### Archivage candidatures sur Filesystem (Desktop)
+
+- [ ] Concevoir le stockage structuré des candidatures en fichiers
+      (textes complets, CR détaillés, historique) pour le mode Desktop
+- [ ] Définir la relation avec la mémoire projet (source de vérité ?
+      duplication ? condensation vers mémoire ?)
 
 ### Axes d'évolution (DESIGN.md)
 

@@ -435,20 +435,65 @@ deux points d'entrée.
 **Architecture cible :** `workflow.md` (méthodologie pure, partagée) +
 deux SKILL.md minces (orchestration spécifique plateforme).
 
-### D-17 : Canal de remontée vers le repo
+### D-17 : Cycle rappel → capture → consolidation pour les sites ATS
 
-**Choisi :** Reporté (prématuré sans utilisateurs externes).
+**Choisi :** Cycle en trois temps intégré dans le skill.
 
-**Canal visé :** Retour d'expérience d'intégration avec des sites ATS
-spécifiques (SmartRecruiters, Teamtailor, WTTJ...), pour alimenter les
-références de `candidate-desktop` de manière structurée.
+**Rappel** (§2.6, avant rédaction) — consultation obligatoire des entrées
+`site:` en mémoire projet. Porte `[outil]` : l'agent lit la mémoire
+même s'il pense connaître le site.
 
-**Approche :** L'accumulation d'expérience utilisateur sur ces sites est
-naturelle et doit être structurée pour permettre une intégration
-systématique dans les références. Utiliser la mémoire projet comme
-stockage intermédiaire pour les retours d'expérience, puis prototyper
-la remontée en traitant l'auteur comme premier utilisateur. Fondement
-à chercher dans agent-core (`~/code/claudeutils/agent-core/skills/`).
+**Capture** (§2.6, après soumission) — question systématique + écriture
+obligatoire (même « RAS »). Porte `[outil]` cohérente avec D-13.
+
+**Consolidation** (candidate-desktop, différée) — les entrées `site:`
+sont lues, dédupliquées, et intégrées dans
+`candidate-desktop/references/sites/<site>.md`. Les entrées
+consolidées sont supprimées de la mémoire projet.
+
+**Fondement :** Pattern `codify` d'agent-core (staging → maturation →
+consolidation). La mémoire projet joue le rôle de staging, les
+références candidate-desktop sont la documentation permanente.
+
+**Prototype :** 4 entrées `site:` écrites en mémoire projet (Teamtailor,
+LinkedIn, WTTJ, SmartRecruiters) à partir du minage des conversations
+passées. L'auteur traité comme premier utilisateur.
+
+**Raison du canal `site:` :** L'expérience d'intégration avec les ATS
+s'accumule naturellement au fil des candidatures. Sans structuration,
+elle reste éparpillée dans les conversations et la mémoire utilisateur.
+Le préfixe `site:` permet le rappel et la consolidation systématiques.
+
+### D-20 : Dispatcher unique avec détection de plateforme
+
+**Choisi :** Reporté (en conception).
+
+**Direction :** Un seul `.skill` avec un dispatcher qui détecte trois
+modes : claude.ai (pas de MCP), Desktop sans extensions (MCP présent
+mais Chrome/Filesystem absents), Desktop complet. Le dispatcher
+suggère d'activer les extensions manquantes en mode 2.
+
+**Impact structurel :** `SKILL.md` → `workflow.md` (source partagée),
+`desktop/SKILL.md` → `desktop/orchestration.md` (référence chargée
+par le dispatcher). Build produit un seul `.skill`.
+
+**Question ouverte :** Comment distinguer claude.ai (pas de MCP) de
+Desktop sans extensions (MCP présent). Tester la présence d'un outil
+MCP générique (ex: `Filesystem:list_allowed_directories`) — si l'outil
+existe mais échoue, c'est Desktop sans config.
+
+### D-21 : Archivage candidatures sur Filesystem (Desktop)
+
+**Choisi :** Reporté (en conception).
+
+**Problème :** Sur claude.ai la mémoire projet est le seul stockage,
+avec ses limites (30 slots, condensation). Sur Desktop avec Filesystem,
+on peut stocker les textes complets, les CR détaillés, l'historique
+structuré — tout ce que la mémoire projet oblige à résumer.
+
+**Questions ouvertes :** Source de vérité (fichiers ou mémoire ?
+duplication ? condensation vers mémoire ?). Structure de dossiers.
+Relation avec le suivi existant en mémoire projet.
 
 ---
 
@@ -530,6 +575,15 @@ candidature/
     review-items.md               — Découpage pour la relecture
     feedback-tracking.md          — Suivi, CR d'entretien, patterns
     interview-prep.md             — Préparation d'entretien, négociation
+  desktop/
+    SKILL.md                      — Couche navigateur (Claude Desktop)
+    references/
+      consolidation.md            — Processus de consolidation (groundé)
+      sites/
+        smartrecruiters.md        — Contraintes SmartRecruiters
+        teamtailor.md             — Contraintes Teamtailor
+        wttj.md                   — Contraintes WTTJ
+        linkedin.md               — Contraintes LinkedIn
 ```
 
 Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le

@@ -56,6 +56,8 @@ sautera.
   `create_file`...). L'agent ne peut pas simuler un appel d'outil.
 - `[état]` — ligne d'état visible. Force l'agent à matérialiser l'état
   courant.
+- `[prompt]` — question ouverte au candidat. L'agent attend une réponse
+  libre avant de continuer.
 
 ---
 
@@ -80,7 +82,7 @@ toute ambiguïté.
 
 Voir `references/cv-handling.md` pour le protocole de modification.
 
-### 1.2 Profil `[choix]`
+### 1.2 Profil `[prompt]`
 
 Conversation ouverte pour comprendre le candidat au-delà du CV. Une seule
 question de départ :
@@ -278,6 +280,17 @@ Produire un premier draft de chaque artefact identifié en 2.2-2.3 :
 Chaque draft est un `create_file`. Le draft est un artefact de travail —
 il sera audité puis corrigé avant relecture.
 
+#### Rappel site `[état]`
+
+Avant de rédiger pour un site identifié, vérifier les entrées
+`site:` dans la mémoire du projet. Les contraintes de la plateforme
+influencent la rédaction (longueur de champ, caractères bloqués,
+structure du formulaire). Émettre une ligne résumant ce qui est connu
+pour ce site, ou "aucune observation connue" si rien.
+
+Si aucune entrée n'existe : noter le nom pour la capture après
+soumission.
+
 **Lecture des champs avant rédaction.** Quand le canal est un formulaire
 web, lire les libellés et la taille visible des champs avant de rédiger.
 Caliber la longueur au champ (~150 caractères par ligne visible). Un
@@ -345,6 +358,33 @@ avec un résumé structuré de l'artefact envoyé :
 Permet de retrouver rapidement ce qui a été envoyé, sans stocker le
 texte intégral. Le texte complet reste dans la conversation
 (`conversation_search`).
+
+#### Capture site `[outil: memory_user_edits]`
+
+Après soumission, demander au candidat :
+
+> "Des difficultés avec le site de candidature ?"
+
+Écriture obligatoire en mémoire projet (préfixe `site:`), même si le
+candidat répond "non" ou "RAS" :
+
+```
+site: <nom du site> — RAS. Découvert YYYY-MM-DD (<entreprise>).
+```
+
+Si le candidat signale un problème, le décrire factuellement avec le
+contournement s'il a été trouvé :
+
+```
+site: <nom du site> — <observation factuelle>. Contournement : <solution>.
+Découvert YYYY-MM-DD (<entreprise>).
+```
+
+Si une entrée `site:` existe déjà pour ce site, la compléter
+(`replace`) plutôt que créer un doublon.
+
+La capture alimente directement le rappel (§2.6) des candidatures
+suivantes sur le même site.
 
 ---
 

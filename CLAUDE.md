@@ -53,6 +53,16 @@ All skill content is in French. Use natural French — no anglicisms where
 a common French equivalent exists. Exception: terms without common equivalents
 (commit, widget, markdown).
 
+## Branches
+
+- `main` reçoit des livrables, pas des brouillons.
+- `dev` pour le travail en cours, les explorations, les plans.
+- Merge `dev → main` en `--no-ff` pour les livrables de plus d'un
+  commit, avec un message de merge rédigé (pas le message par défaut).
+  La friction est faible, le signal est élevé — si quelqu'un regarde
+  l'historique, il voit des livrables nommés.
+- Un commit unique peut aller directement sur `main`.
+
 ## Commit Messages
 
 Gitmoji prefix. Short, dense messages focused on "why" not "what."

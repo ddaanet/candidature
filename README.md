@@ -26,7 +26,7 @@ psychologie du recrutement.
 
 ## Installation (Claude.ai)
 
-1. Télécharger [`candidature.skill`](https://github.com/ddaanet/candidature/releases/latest)
+1. Télécharger [`candidature.skill`](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
 2. Dans Claude.ai, aller dans **Paramètres** → **Personnaliser** → **Skills**
 3. Uploader le fichier `.skill`
 4. Créer un **Projet**, y uploader votre CV (DOCX de préférence)
@@ -65,7 +65,7 @@ Pour revenir à la version installée : « mode normal ».
 Pour utiliser le workflow avec contrôle du navigateur (remplissage de
 formulaires, navigation sur les sites carrière) :
 
-1. Télécharger [`candidate-desktop.skill`](https://github.com/ddaanet/candidature/releases/latest)
+1. Télécharger [`candidate-desktop.skill`](https://github.com/ddaanet/candidature/releases/latest/download/candidate-desktop.skill)
 2. Installer dans Claude Desktop
 3. Connecter Claude in Chrome et le MCP Filesystem
 

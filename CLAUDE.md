@@ -6,41 +6,40 @@ A standalone Claude.ai skill (markdown files) for assisted job applications.
 Target audience: non-technical users. The skill content is the product.
 
 - `SKILL.md` — Workflow complet (4 phases). Lu en mode dev.
-- `desktop/SKILL.md` — Couche navigateur (Claude Desktop + Chrome).
-- `desktop/references/sites/` — Un fichier par plateforme ATS.
-- `VERSION` — Version courante. Écrit par `build/build.sh --release`.
-- `build/dispatcher.md` — Dispatcher installé comme SKILL.md dans le
-  `.skill`. Aiguille vers la bonne source selon le mode.
-- `build/build.sh` — Assemblage du `.skill` et release GitHub.
+- `references/` — Documents de support (recrutement, CV, relecture...)
+- `references/browser-layer.md` — Couche navigateur (Chrome).
+- `references/sites/` — Un fichier par plateforme ATS.
+- `references/consolidation.md` — Processus de consolidation sites.
+- `VERSION` — Version courante. Écrit par `build/build.sh --bump`.
+- `build/dispatcher.md` — Dispatcher public (SKILL.md dans le `.skill`).
+- `build/dev-stub.md` — Stub dev (charge depuis le repo local).
+- `build/build.sh` — Assemblage des `.skill` et release GitHub.
 - `DESIGN.md` — Design decisions and grounding audit
-- `references/` — Supporting documents
 - `README.md` — Installation guide
 
 ## Build
 
-`./build/build.sh` assemble les deux `.skill` dans `dist/` :
+`./build/build.sh` assemble deux `.skill` dans `dist/` :
 
-- `candidature.skill` — dispatcher + workflow + références partagées
-- `candidate-desktop.skill` — desktop/SKILL.md + workflow + références
-  partagées + consolidation.md + sites/*.md
+- `candidature.skill` — dispatcher + workflow + toutes les références
+  (browser-layer, consolidation, sites/). Seul artefact releasé.
+- `candidature-dev.skill` — stub dev, charge depuis le repo local via
+  Filesystem. Non releasé.
 
 `./build/build.sh --bump minor` : incrémente VERSION, commite, tague,
-crée une release GitHub avec les deux `.skill` en assets.
+crée une release GitHub avec `candidature.skill` uniquement.
 
 Le repo source ne change pas : `SKILL.md` reste le workflow complet.
 Le dispatcher n'existe que dans le build output.
 
-### Deux modes d'utilisation
+### Deux skills d'utilisation
 
-- **Normal** — Le `.skill` installé utilise le workflow bundlé. Au
-  démarrage, compare la version installée avec la dernière release
-  GitHub. Si une mise à jour est disponible, propose un lien.
-- **Dev** — Le dispatcher lit le SKILL.md du repo local via MCP
-  Filesystem. Pas de check de version.
-
-Le mode se configure via la mémoire projet
-(`candidature: mode dev — <chemin>`). Le skill gère le changement
-de mode lui-même.
+- **Public** (`candidature.skill`) — Workflow bundlé. Détecte Chrome
+  et charge la couche navigateur si disponible. Vérifie les mises à
+  jour au démarrage.
+- **Dev** (`candidature-dev.skill`) — Stub minimal, charge le
+  workflow depuis le repo local via Filesystem. Chemin configuré en
+  mémoire projet (`candidature: dev — <chemin>`).
 
 ## Prose Quality
 

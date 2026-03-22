@@ -9,36 +9,23 @@ description: >-
 
 # Candidature — Dispatcher
 
-Point d'entrée. Charge les instructions, vérifie les mises à jour.
+Point d'entrée. Charge les instructions, vérifie les mises à jour,
+détecte les capacités disponibles.
 
-## Changement de mode
+## Chargement `[outil: view]`
 
-Si l'utilisateur demande à changer de mode ("mode dev", "mode normal"),
-modifier la mémoire (`memory_user_edits`) et s'arrêter.
+Émettre la ligne de statut `Chargement du skill.`, puis :
 
-- **normal** — supprimer l'entrée mémoire `candidature: mode ...`.
-- **dev** — demander le chemin si non précisé. Avant d'écrire, vérifier
-  que le SKILL.md existe : `Filesystem:read_text_file path=<chemin>/SKILL.md`
-  (head 5 suffit). Valider : doit contenir `Mot magique: ddaanet/candidature`.
-  Si absent → erreur dev (voir §Erreurs). Ne pas écrire en mémoire tant
-  que non validé. Format : `candidature: mode dev — <chemin absolu>`.
+1. `view references/workflow.md`
+2. Si des outils `Control Chrome:*` figurent dans les outils
+   disponibles → charger aussi `view references/browser-layer.md`. Les fichiers
+   `references/sites/*.md` sont chargés à la demande par le workflow
+   (rappel avant navigation sur un site).
 
-## Chargement `[outil: memory_user_edits view]`
+## Vérification de mise à jour
 
-Lire la mémoire. Chercher `candidature: mode`. Émettre **uniquement** la
-ligne de statut (pas de narration), puis charger :
-
-| Mémoire | Statut | Source |
-|---------|--------|--------|
-| aucune | `Chargement du skill.` | `view references/workflow.md` |
-| `mode dev — <path>` | `Chargement du skill, mode dev: <path>.` | `Filesystem:read_text_file path=<path>/SKILL.md` |
-
-Références : même source que le workflow (bundlées / `<path>/references/`).
-
-## Vérification de mise à jour (mode normal uniquement)
-
-Après le chargement en mode normal, vérifier silencieusement s'il existe
-une version plus récente :
+Après le chargement, vérifier silencieusement s'il existe une version
+plus récente :
 
 1. Lire la version bundlée dans `references/workflow.md` (ligne
    `Version: X.Y.Z`).
@@ -58,20 +45,11 @@ Si le fetch échoue (pas de réseau, erreur GitHub), ignorer silencieusement.
 
 ## Erreurs de chargement
 
-**Ne pas explorer ni improviser.**
+**Ne pas explorer ni improviser.** Si `references/workflow.md` n'est
+pas lisible, le skill est probablement mal installé. Dire :
 
-### Mode dev — instructions non trouvées
-
-Le chemin est probablement incorrect, ou le connecteur fichiers n'est
-pas actif. Dire :
-
-> Je ne peux pas lire les instructions à `<path>`. Vérifier que :
-> - Le chemin est correct ("mode dev" pour corriger)
-> - Le connecteur fichiers (Filesystem) est connecté
->
-> En attendant, je peux continuer avec la version installée. On fait ça ?
-
-Si oui, charger `references/workflow.md` et continuer.
+> Les instructions du skill ne sont pas lisibles. Réinstaller depuis
+> https://github.com/ddaanet/candidature/releases/latest
 
 ## Exécution
 

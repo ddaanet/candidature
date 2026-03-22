@@ -423,17 +423,16 @@ moment de la recherche.
 
 ### D-16 : Deux skills complémentaires
 
-**Choisi :** `candidature` (claude.ai) et `candidate-desktop` (Claude
-Desktop) sont deux skills séparés partageant un workflow commun.
+**Supersédé par D-20.** Un seul skill avec détection de capacités.
 
-**Raison :** Le workflow (méthodologie) est identique. Les différences
+~~**Choisi :** `candidature` (claude.ai) et `candidate-desktop` (Claude
+Desktop) sont deux skills séparés partageant un workflow commun.~~
+
+~~**Raison :** Le workflow (méthodologie) est identique. Les différences
 sont dans le substrat : stockage (memory_user_edits vs Filesystem),
 capacités (pas de navigateur dans claude.ai), et contraintes (30 slots
 mémoire vs fichiers structurés). La séparation de substrat justifie
-deux points d'entrée.
-
-**Architecture cible :** `workflow.md` (méthodologie pure, partagée) +
-deux SKILL.md minces (orchestration spécifique plateforme).
+deux points d'entrée.~~
 
 ### D-17 : Cycle rappel → capture → consolidation pour les sites ATS
 
@@ -464,23 +463,24 @@ s'accumule naturellement au fil des candidatures. Sans structuration,
 elle reste éparpillée dans les conversations et la mémoire utilisateur.
 Le préfixe `site:` permet le rappel et la consolidation systématiques.
 
-### D-20 : Dispatcher unique avec détection de plateforme
+### D-20 : Dispatcher unique avec détection de capacités
 
-**Choisi :** Reporté (en conception).
+**Choisi :** Implémenté (v0.2). Supersède D-16.
 
-**Direction :** Un seul `.skill` avec un dispatcher qui détecte trois
-modes : claude.ai (pas de MCP), Desktop sans extensions (MCP présent
-mais Chrome/Filesystem absents), Desktop complet. Le dispatcher
-suggère d'activer les extensions manquantes en mode 2.
+**Réalisation :** Un seul `.skill` public (`candidature.skill`). Le
+dispatcher charge le workflow bundlé, puis détecte si Chrome est
+disponible (présence d'outils `Control Chrome:*` dans le contexte).
+Si oui, charge `references/browser-layer.md` qui contient les
+instructions de navigation, cookies, et le cycle
+rappel→capture→consolidation. Les fichiers
+`references/sites/*.md` sont chargés à la demande.
 
-**Impact structurel :** `SKILL.md` → `workflow.md` (source partagée),
-`desktop/SKILL.md` → `desktop/orchestration.md` (référence chargée
-par le dispatcher). Build produit un seul `.skill`.
+Un dev stub séparé (`candidature-dev.skill`) charge le workflow
+depuis le repo local via Filesystem. Non releasé.
 
-**Question ouverte :** Comment distinguer claude.ai (pas de MCP) de
-Desktop sans extensions (MCP présent). Tester la présence d'un outil
-MCP générique (ex: `Filesystem:list_allowed_directories`) — si l'outil
-existe mais échoue, c'est Desktop sans config.
+**Écarté :** Détection par plateforme (claude.ai vs Desktop). Chrome
+est disponible sur claude.ai web (beta). Seul Filesystem est
+spécifique à Desktop, et le dev stub le gère.
 
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
@@ -575,15 +575,17 @@ candidature/
     review-items.md               — Découpage pour la relecture
     feedback-tracking.md          — Suivi, CR d'entretien, patterns
     interview-prep.md             — Préparation d'entretien, négociation
-  desktop/
-    SKILL.md                      — Couche navigateur (Claude Desktop)
-    references/
-      consolidation.md            — Processus de consolidation (groundé)
-      sites/
-        smartrecruiters.md        — Contraintes SmartRecruiters
-        teamtailor.md             — Contraintes Teamtailor
-        wttj.md                   — Contraintes WTTJ
-        linkedin.md               — Contraintes LinkedIn
+    browser-layer.md              — Couche navigateur (Chrome)
+    consolidation.md              — Processus de consolidation (groundé)
+    sites/
+      smartrecruiters.md          — Contraintes SmartRecruiters
+      teamtailor.md               — Contraintes Teamtailor
+      wttj.md                     — Contraintes WTTJ
+      linkedin.md                 — Contraintes LinkedIn
+  build/
+    build.sh                      — Assemblage des .skill + release
+    dispatcher.md                 — Dispatcher public
+    dev-stub.md                   — Stub de développement
 ```
 
 Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le

@@ -5,7 +5,7 @@ Operational Excellence ; incident.io ; PagerDuty) + pattern codify
 d'agent-core (staging → maturation → consolidation).
 
 Processus pour transférer les observations de la mémoire projet (entrées
-`site:`) vers les fichiers de référence (`desktop/references/sites/`).
+`site:`) vers les fichiers de référence (`references/sites/`).
 
 ---
 
@@ -37,7 +37,7 @@ ou erronées.
 - **Staging** — Mémoire projet, entrées préfixées `site:`. Observations
   brutes, datées, liées à une candidature source. Équivalent du
   `agents/learnings.md` d'agent-core.
-- **Référence** — `desktop/references/sites/<plateforme>.md`. Procédure
+- **Référence** — `references/sites/<plateforme>.md`. Procédure
   consolidée et structurée. Équivalent des fichiers
   `agents/decisions/*.md` d'agent-core.
 
@@ -89,7 +89,7 @@ Afficher le verdict par entrée.
 
 Pour chaque observation à consolider :
 
-- Si le fichier `desktop/references/sites/<plateforme>.md` existe :
+- Si le fichier `references/sites/<plateforme>.md` existe :
   lire (`view`), intégrer l'observation dans la section appropriée,
   écrire (`edit_file`). Fusionner avec le contenu existant — pas
   d'ajout en vrac.
@@ -122,7 +122,7 @@ Relire le fichier de référence. Vérifier :
 ### 6. Commit
 
 Un commit thématique par plateforme. Message :
-`📝 consolider site: <plateforme> → desktop/references/sites/`
+`📝 consolider site: <plateforme> → references/sites/`
 
 ---
 

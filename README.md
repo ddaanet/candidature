@@ -48,30 +48,21 @@ pour comprendre votre parcours, vos contraintes et vos objectifs.
 Ensuite, apportez une offre ou plusieurs — l'assistant analyse
 l'alignement avec votre profil et vous aide à prioriser.
 
+## Navigateur (Chrome)
+
+Si Claude in Chrome est connecté, le skill détecte automatiquement la
+capacité et charge les instructions de navigation par site
+(SmartRecruiters, Teamtailor, WTTJ, LinkedIn...). Pas d'installation
+supplémentaire.
+
 ## Mode développement
 
 Pour les contributeurs qui modifient le skill activement. Nécessite le
-[MCP Filesystem](https://modelcontextprotocol.io/docs/concepts/transports)
-connecté au répertoire du repo.
+MCP Filesystem connecté au répertoire du repo.
 
-Dans un chat du projet, dire « mode dev » — le skill demande le chemin
-du repo et bascule. Il lira les instructions directement depuis le
-filesystem au lieu de la version installée.
-
-Pour revenir à la version installée : « mode normal ».
-
-## Claude Desktop (navigateur)
-
-Pour utiliser le workflow avec contrôle du navigateur (remplissage de
-formulaires, navigation sur les sites carrière) :
-
-1. Télécharger [`candidate-desktop.skill`](https://github.com/ddaanet/candidature/releases/latest/download/candidate-desktop.skill)
-2. Installer dans Claude Desktop
-3. Connecter Claude in Chrome et le MCP Filesystem
-
-Le skill desktop hérite de toute la méthodologie et ajoute les
-instructions de navigation par site (SmartRecruiters, Teamtailor,
-WTTJ, LinkedIn...).
+1. Installer `candidature-dev.skill` (dans `dist/`, non releasé)
+2. Ajouter en mémoire projet : `candidature: dev — <chemin du repo>`
+3. Le stub charge le workflow depuis le repo local
 
 ## Contenu
 
@@ -84,14 +75,13 @@ references/
   review-items.md             — Découpage pour la relecture
   feedback-tracking.md        — Suivi et comptes rendus d'entretien
   interview-prep.md           — Préparation d'entretien et négociation
-desktop/
-  SKILL.md                    — Couche navigateur (Claude Desktop)
-  references/
-    consolidation.md           — Processus de consolidation (groundé)
-    sites/*.md                — Contraintes par plateforme ATS
+  browser-layer.md            — Couche navigateur (Chrome)
+  consolidation.md            — Processus de consolidation (groundé)
+  sites/*.md                  — Contraintes par plateforme ATS
 build/
-  build.sh                    — Assemblage des deux .skill + release
-  dispatcher.md               — Point d'entrée installé dans le .skill
+  build.sh                    — Assemblage des .skill + release
+  dispatcher.md               — Dispatcher public
+  dev-stub.md                 — Stub de développement
 ```
 
 ## Licence

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build candidature.skill and candidate-desktop.skill from the repo sources.
+# Build candidature.skill (public) and candidature-dev.skill (local stub)
+# from the repo sources.
 #
 # Usage:
 #   ./build/build.sh                  — build both .skill in dist/
 #   ./build/build.sh --bump patch     — build, bump version, tag, release
-#   ./build/build.sh --bump minor
+#   ./build/build.sh --bump minor       (only candidature.skill is released)
 #   ./build/build.sh --bump major
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -45,17 +46,9 @@ Version: $VERSION" \
         > "$dest"
 }
 
-# Copy shared reference files
-copy_shared_refs() {
-    local dest="$1"
-    for f in "$REPO_DIR"/references/*.md; do
-        cp "$f" "$dest/"
-    done
-}
-
 mkdir -p "$DIST_DIR"
 
-# --- Build candidature.skill ---
+# --- Build candidature.skill (public) ---
 
 CAND_DIR="$BUILD_DIR/candidature"
 CAND_OUTPUT="$DIST_DIR/candidature.skill"
@@ -63,29 +56,23 @@ CAND_OUTPUT="$DIST_DIR/candidature.skill"
 mkdir -p "$CAND_DIR/references"
 cp "$SCRIPT_DIR/dispatcher.md" "$CAND_DIR/SKILL.md"
 make_workflow "$CAND_DIR/references/workflow.md"
-copy_shared_refs "$CAND_DIR/references"
+cp -r "$REPO_DIR"/references/* "$CAND_DIR/references/"
 
 (cd "$BUILD_DIR" && zip -r "$CAND_OUTPUT" candidature/ -x '*.DS_Store')
 echo "✅ $CAND_OUTPUT ($VERSION)"
 
-# --- Build candidate-desktop.skill ---
+# --- Build candidature-dev.skill (local stub, not released) ---
 
-DESK_DIR="$BUILD_DIR/candidate-desktop"
-DESK_OUTPUT="$DIST_DIR/candidate-desktop.skill"
+DEV_DIR="$BUILD_DIR/candidature-dev"
+DEV_OUTPUT="$DIST_DIR/candidature-dev.skill"
 
-mkdir -p "$DESK_DIR/references/sites"
-cp "$REPO_DIR/desktop/SKILL.md" "$DESK_DIR/SKILL.md"
-make_workflow "$DESK_DIR/references/workflow.md"
-copy_shared_refs "$DESK_DIR/references"
-cp "$REPO_DIR/desktop/references/consolidation.md" "$DESK_DIR/references/"
-for f in "$REPO_DIR"/desktop/references/sites/*.md; do
-    cp "$f" "$DESK_DIR/references/sites/"
-done
+mkdir -p "$DEV_DIR"
+cp "$SCRIPT_DIR/dev-stub.md" "$DEV_DIR/SKILL.md"
 
-(cd "$BUILD_DIR" && zip -r "$DESK_OUTPUT" candidate-desktop/ -x '*.DS_Store')
-echo "✅ $DESK_OUTPUT ($VERSION)"
+(cd "$BUILD_DIR" && zip -r "$DEV_OUTPUT" candidature-dev/ -x '*.DS_Store')
+echo "✅ $DEV_OUTPUT (dev stub)"
 
-# --- Release (optional) ---
+# --- Release (optional, public skill only) ---
 
 if [[ "$VERSION" != "dev" ]]; then
     TAG="v$VERSION"
@@ -99,7 +86,7 @@ if [[ "$VERSION" != "dev" ]]; then
     git push github main --tags
 
     echo "📦 Creating release $TAG..."
-    gh release create "$TAG" "$CAND_OUTPUT" "$DESK_OUTPUT" \
+    gh release create "$TAG" "$CAND_OUTPUT" \
         --title "candidature $VERSION" \
         --notes "Build from $(git rev-parse --short HEAD)." \
         --latest

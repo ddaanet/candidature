@@ -1,27 +1,9 @@
----
-name: candidate-desktop
-description: >-
-  Couche navigateur pour le workflow candidature. Gère l'interaction avec
-  les sites d'emploi (ATS, agrégateurs, sites carrière) depuis Claude
-  Desktop. Se déclenche quand l'utilisateur veut soumettre une candidature
-  via le navigateur, naviguer sur un site carrière, ou remplir un
-  formulaire de candidature en ligne. Nécessite Claude in Chrome.
-  Complémentaire au skill candidature (méthodologie) — ce skill ajoute
-  l'exécution navigateur.
----
+# Interaction navigateur pour les candidatures
 
-# candidate-desktop — Interaction navigateur pour les candidatures
-
-Ce skill orchestre l'interaction avec les sites d'emploi via Claude in
-Chrome. Il hérite de toute la méthodologie du skill `candidature`
-(4 phases, étayage, relecture, Spence) et ajoute la couche d'exécution
+Instructions pour l'interaction avec les sites d'emploi via Chrome.
+Chargé par le dispatcher quand Chrome est disponible. Complémentaire au
+workflow (méthodologie) — ce document ajoute la couche d'exécution
 navigateur.
-
-## Prérequis
-
-- Skill `candidature` installé (méthodologie)
-- Claude in Chrome connecté
-- MCP Filesystem connecté au repo (`~/code/candidature`)
 
 ## Cycle rappel → capture → consolidation
 
@@ -29,9 +11,9 @@ navigateur.
 
 Avant de naviguer sur un site de candidature :
 
-1. **Fichier de référence** — lire
-   `desktop/references/sites/<plateforme>.md` (`view`). Contient les
-   contraintes consolidées et les contournements validés.
+1. **Fichier de référence** — lire `references/sites/<plateforme>.md`
+   (`view`). Contient les contraintes consolidées et les contournements
+   validés.
 2. **Mémoire projet** — consulter les entrées `site:` pour des
    observations récentes pas encore consolidées.
 
@@ -54,13 +36,15 @@ Quand 3+ entrées `site:` existent pour une même plateforme, ou quand
 une observation est suffisamment validée par l'usage :
 
 1. Lire les entrées `site:` concernées
-2. Intégrer dans `desktop/references/sites/<plateforme>.md`
+2. Intégrer dans `references/sites/<plateforme>.md`
 3. Supprimer les entrées consolidées de la mémoire projet
+
+Voir `references/consolidation.md` pour le processus détaillé et les
+critères de maturation.
 
 **Médium actuel :** transfert direct via MCP Filesystem (l'auteur est
 contributeur et utilisateur). Ultérieurement : définir un médium de
-remontée pour les utilisateurs externes (GitHub, Google Forms, autre)
-avec un processus de validation (prompt injection, qualité).
+remontée pour les utilisateurs externes.
 
 ## Cookies et consentement
 
@@ -82,9 +66,3 @@ Deux stratégies :
 La stratégie est documentée dans le fichier de référence de chaque
 plateforme. En l'absence de fichier, commencer par le DOM et basculer
 en visuel si les sélecteurs échouent.
-
-## Références
-
-- `desktop/references/consolidation.md` — processus de consolidation
-  mémoire → référence (fondé sur runbook evolution + codify)
-- `desktop/references/sites/` — un fichier par plateforme ATS/agrégateur

@@ -1,56 +1,80 @@
 ---
 name: candidature
 description: >-
-  Candidature assistée : postuler, lettre de motivation, CV adapté,
-  relecture, suivi des retours. Se déclenche sur "/candidature",
+  Candidature assistee : postuler, lettre de motivation, CV adapte,
+  relecture, suivi des retours. Se declenche sur "/candidature",
   "postuler", "lettre de motivation", "refus", "debrief", ou sur une
-  offre d'emploi à traiter.
+  offre d'emploi a traiter.
 ---
 
 # Candidature, dispatcher
 
-Point d'entrée. Charge les instructions, vérifie les mises à jour,
-détecte les capacités disponibles.
+Version: __VERSION__
+
+Point d'entree. Verifie les mises a jour, charge les instructions,
+detecte les capacites disponibles.
+
+## Verification de mise a jour `[outil: memory_user_edits, bash_tool]`
+
+Avant de charger quoi que ce soit, verifier s'il existe une version
+plus recente. Une seule verification par jour pour ne pas ralentir
+le demarrage.
+
+1. Lire les memoires (`memory_user_edits view`). Chercher une entree
+   `version-check: AAAA-MM-JJ`. Si la date correspond a aujourd'hui,
+   passer directement au chargement.
+2. Lire la version installee ci-dessus (ligne `Version:`).
+3. Executer `python3 scripts/version_check.py` dans `bash_tool`.
+4. Interpreter le resultat :
+   - `VERSION_REMOTE=X.Y.Z` : comparer avec la version locale.
+     Convertir chaque partie en entier, comparer les tuples.
+   - `VERSION_REMOTE=UNKNOWN` : le fichier distant ne contient pas
+     le format attendu. Traiter comme une erreur de fetch.
+   - `VERSION_REMOTE=ERROR ...` : le fetch a echoue.
+5. Mettre a jour la memoire (`memory_user_edits add` ou `replace`) :
+   `version-check: AAAA-MM-JJ` avec la date du jour.
+
+Si la version distante est plus recente, proposer au candidat :
+
+> Une mise a jour est disponible (X.Y.Z vers A.B.C).
+> Installer la mise a jour depuis
+> https://github.com/ddaanet/candidature/releases/latest
+> puis relancer `/candidature`.
+>
+> Sinon, on peut continuer avec la version actuelle.
+
+Si le candidat veut mettre a jour : s'arreter. Si le candidat veut
+continuer : passer au chargement.
+
+Si le fetch echoue ou la version est inconnue, proposer le lien
+direct au candidat :
+
+> Impossible de verifier les mises a jour automatiquement.
+> Telecharger la derniere version :
+> https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill
+>
+> Sinon, on peut continuer avec la version actuelle.
+
+Ne passer au chargement que si le candidat le demande explicitement.
 
 ## Chargement `[outil: view]`
 
-Émettre la ligne de statut `Chargement du skill.`, puis :
+Emettre la ligne de statut `Chargement du skill.`, puis :
 
 1. `view references/workflow.md`
 2. Si des outils `Control Chrome:*` figurent dans les outils
-   disponibles → charger aussi `view references/browser-layer.md`. Les fichiers
-   `references/sites/*.md` sont chargés à la demande par le workflow
+   disponibles, charger aussi `view references/browser-layer.md`. Les fichiers
+   `references/sites/*.md` sont charges a la demande par le workflow
    (rappel avant navigation sur un site).
-
-## Vérification de mise à jour
-
-Après le chargement, vérifier silencieusement s'il existe une version
-plus récente :
-
-1. Lire la version bundlée dans `references/workflow.md` (ligne
-   `Version: X.Y.Z`).
-2. `web_fetch` sur `https://raw.githubusercontent.com/ddaanet/candidature/main/VERSION`
-3. Comparer les deux versions.
-
-Si la version distante est plus récente, **après** avoir traité la
-demande de l'utilisateur, mentionner brièvement :
-
-> Une mise à jour est disponible (X.Y.Z → A.B.C).
-> Télécharger : https://github.com/ddaanet/candidature/releases/latest
-
-Ne pas bloquer le travail pour une mise à jour. L'utilisateur décide
-quand il installe.
-
-Si le fetch échoue (pas de réseau, erreur GitHub), ignorer silencieusement.
 
 ## Erreurs de chargement
 
-**Ne pas explorer ni improviser.** Si `references/workflow.md` n'est
-pas lisible, le skill est probablement mal installé. Dire :
+Ne pas explorer ni improviser. Si `references/workflow.md` n'est pas
+lisible, le skill est probablement mal installe. Dire :
 
-> Les instructions du skill ne sont pas lisibles. Réinstaller depuis
+> Les instructions du skill ne sont pas lisibles. Reinstaller depuis
 > https://github.com/ddaanet/candidature/releases/latest
 
-## Exécution
+## Execution
 
-Suivre les instructions chargées.
+Suivre les instructions chargees.

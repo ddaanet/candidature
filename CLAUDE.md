@@ -7,6 +7,7 @@ Target audience: non-technical users. The skill content is the product.
 
 - `SKILL.md` — Workflow complet (4 phases). Lu en mode dev.
 - `references/` — Documents de support (recrutement, CV, relecture...)
+- `references/etayage.md` — Protocole d'audit (chargé après le draft).
 - `references/browser-layer.md` — Couche navigateur (Chrome).
 - `references/sites/` — Un fichier par plateforme ATS.
 - `references/consolidation.md` — Processus de consolidation sites.
@@ -43,10 +44,28 @@ Le dispatcher n'existe que dans le build output.
 
 ## Prose Quality
 
-- State information directly — no hedging, framing, or preamble
-- Reference, never recap — assume the reader has context
-- Let results speak — no framing around visible output
-- Commit to answers — no hedging qualifiers
+- State information directly, no hedging, framing, or preamble
+- Reference, never recap. Assume the reader has context
+- Let results speak, no framing around visible output
+- Commit to answers, no hedging qualifiers
+
+## Style Contamination
+
+The style of every file in this repo contaminates the agent's output.
+The agent writes like it reads. If the instructions use emdashes,
+"**Label:** contenu" patterns, or bulleted fragments, the agent
+reproduces these in letters, messages, and every generated text.
+
+Rules for all skill content (SKILL.md, references/, DESIGN.md) :
+
+- No emdashes or endashes. Use periods, commas, or restructure.
+- No "**Label:** contenu" or "**Label.** contenu". Write prose.
+  The agent copies the label pattern into generated text.
+- No bulleted fragments as sentence substitutes. Write sentences.
+- No semicolons. Rare in natural French or English writing.
+- Examples and templates are the most dangerous vectors. The agent
+  copies them verbatim. Every example must look like the desired
+  output.
 
 All skill content is in French. Use natural French — no anglicisms where
 a common French equivalent exists. Exception: terms without common equivalents

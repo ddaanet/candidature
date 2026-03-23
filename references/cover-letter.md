@@ -1,6 +1,6 @@
 # Lettre de motivation
 
-Principes de rédaction. Universels — indépendants du métier, du niveau et
+Principes de rédaction. Universels, indépendants du métier, du niveau et
 du canal.
 
 ## Principe fondamental
@@ -21,15 +21,17 @@ dimension déjà couverte sans adresser l'autre.
 Pas de modèle rigide. Le contenu et la longueur s'adaptent au canal, au
 poste et au candidat. Mais toute lettre efficace contient ces éléments :
 
-- **Accroche** — Pourquoi ce poste, pourquoi cette entreprise. Doit contenir
-  un élément spécifique (pas interchangeable entre deux entreprises).
-- **Adéquation** — Ce qui fait que le profil correspond. Faits concrets.
-- **Différenciation** — Ce qui distingue ce candidat. Expérience, angle,
-  compétence rare, parcours atypique.
-- **Clôture** — Disponibilité, appel à l'action. Court.
+L'accroche ouvre toujours la lettre. Elle dit pourquoi ce poste et
+pourquoi cette entreprise, avec un élément spécifique qui ne serait pas
+interchangeable entre deux entreprises.
 
-L'ordre est flexible. L'accroche est toujours en premier. Le reste s'adapte
-au flux le plus naturel pour le candidat.
+Vient ensuite l'adéquation : ce qui fait que le profil correspond au
+poste, en faits concrets. Puis la différenciation : ce qui distingue
+ce candidat des autres pour ce poste précis. La clôture est courte : disponibilité,
+et éventuellement une phrase de transition vers l'entretien.
+
+L'ordre après l'accroche est flexible. Il s'adapte au flux le plus
+naturel pour le candidat.
 
 ## Format selon le canal
 
@@ -46,6 +48,16 @@ qu'un pavé de 300.
 
 ## Principes de rédaction
 
+### La lettre n'est pas un résumé du CV
+
+Le CV porte le P-J fit. La lettre porte le P-O fit. Si la lettre
+re-raconte le parcours du candidat, elle double le CV sans adresser la
+question que le recruteur attend : "pourquoi ici ?"
+
+Condenser le P-J en une phrase factuelle ("15 ans sur un même codebase
+Python SaaS"). Laisser le CV faire le travail. Le territoire de la
+lettre, c'est la projection dans l'entreprise.
+
 ### Spécificité plutôt que généralité
 
 Mauvais : "J'ai une solide expérience en gestion de projet."
@@ -57,9 +69,9 @@ Mauvais : "Je suis passionné, rigoureux et motivé."
 Bon : Le parcours parle de lui-même. Pas besoin de se qualifier.
 
 En théorie du signal (Spence, 1973) : les adjectifs auto-attribués sont
-des signaux gratuits — tout candidat peut les émettre, ils n'ont donc
+des signaux gratuits. Tout candidat peut les émettre, ils n'ont donc
 aucune valeur informative pour le recruteur. Les faits vérifiables sont
-des signaux coûteux — ils engagent la crédibilité du candidat.
+des signaux coûteux : ils engagent la crédibilité du candidat.
 
 ### Honnêteté plutôt que couverture
 
@@ -71,9 +83,17 @@ recruteur.
 
 Chaque lettre contient au moins un élément qui ne s'applique qu'à cette
 entreprise : fonctionnalité de leur produit, article de leur blog, choix
-technique, valeur concrète (pas les valeurs génériques du site corporate).
+technique, valeur concrète. Pas les valeurs génériques du site corporate.
 
 Investir 10-15 minutes de recherche sur l'entreprise avant de rédiger.
+
+**L'accroche P-O doit être factuelle, pas narrative.** Si c'est l'agent
+qui a trouvé un article de blog ou une fonctionnalité pendant la
+recherche, ne pas simuler une découverte organique du candidat. Écrire
+"GitGuardian builds developer security tools, and I build developer
+tools" (factuel), pas "Your Engineering Challenges post caught my
+attention" (narratif fabriqué). Le lien P-O est un fait, pas une
+histoire.
 
 ### Ton et formalité
 
@@ -93,6 +113,14 @@ Signaux d'un ton artificiel à éviter :
 - Mots creux ("synergie", "proactif", "force de proposition")
 - Excès de connecteurs logiques ("En effet", "Par ailleurs", "De surcroît")
 - Ouvertures génériques ("Passionné par...", "Fort de mon expérience...")
-- Points-virgules dans du texte court (signal de prose générée — rares
-  dans l'écriture humaine informelle)
-- Gras dans du texte brut (signal de génération IA dans un formulaire web)
+- Points-virgules dans du texte court. Rares dans l'écriture humaine
+  informelle, signal de prose générée.
+- Tirets longs et tirets cadratins. Signal IA immédiat, les humains
+  n'en mettent pas dans du texte courant.
+- Gras dans du texte brut. Signal de génération IA dans un formulaire web.
+- Ton défensif sur les écarts. "I should be transparent" sonne comme un
+  aveu préparé. Phrase négative en ouverture ("I have not used Django")
+  est défensif. Énoncer ce qui est, pas ce qui n'est pas : "My web
+  framework was CherryPy, not Django".
+- Labels de paragraphes. "What might set me apart:" est un label avant
+  le contenu, pattern LLM. Entrer directement dans le fait.

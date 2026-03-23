@@ -81,7 +81,59 @@ Plan de 11 items (passation 2026-03-20) appliqué en une passe.
 
 ---
 
+## Terminé (session 2026-03-23)
+
+v0.2.1 : Extraction étayage + feedback Alma/GitGuardian.
+
+### SKILL.md
+
+- [x] Item 1 — §2.6 Étayage extrait dans `references/etayage.md`
+      (isolation des instructions, D-22). L'agent charge le protocole
+      après avoir généré le draft.
+- [x] Item 6 — §2.6 Chemin "pas de LM" explicité (formulaire sans
+      champ texte libre)
+
+### cover-letter.md
+
+- [x] Item 2 — Accroche P-O factuelle, pas narrative (anti-pattern
+      GitGuardian)
+- [x] Item 3 — "La lettre n'est pas un résumé du CV" (P-J en une
+      phrase, laisser le CV faire)
+- [x] Item 4 — Signaux IA : ton défensif sur écarts, labels de
+      paragraphes
+
+### browser-layer.md
+
+- [x] Item 5 — Ouverture directe de page via Chrome quand connecté
+
+### DESIGN.md
+
+- [x] D-22 documentée (extraction étayage, référence StateFlow)
+- [x] Structure du livrable mise à jour (etayage.md ajouté)
+
+---
+
 ## À faire
+
+### Nettoyage style contamination (CLAUDE.md, section dédiée)
+
+Tous les fichiers du skill utilisent des emdashes, des patterns
+"**Label:** contenu", des fragments. Le style des instructions
+contamine le style de sortie de l'agent. Nettoyage fichier par
+fichier, par ordre de risque de contamination :
+
+- [x] references/cover-letter.md (v0.2.1)
+- [x] references/etayage.md (v0.2.1, nouveau fichier)
+- [ ] SKILL.md (prioritaire, lu à chaque candidature)
+- [ ] references/recruitment-science.md
+- [ ] references/feedback-tracking.md
+- [ ] references/interview-prep.md
+- [ ] references/review-items.md
+- [ ] references/cv-handling.md
+- [ ] references/browser-layer.md
+- [ ] references/consolidation.md
+- [ ] CLAUDE.md (instructions dev, moins critique)
+- [ ] DESIGN.md (document de conception, moins critique)
 
 ### Portes mémoire (points d'écriture concrets)
 

@@ -482,6 +482,37 @@ depuis le repo local via Filesystem. Non releasé.
 est disponible sur claude.ai web (beta). Seul Filesystem est
 spécifique à Desktop, et le dev stub le gère.
 
+### D-22 : Extraction de l'étayage — isolation des instructions
+
+**Choisi :** Implémenté (v0.2.1). Première étape vers le
+séquençage scripté (brief-sequencage.md).
+
+**Problème :** L'agent qui lit le workflow complet anticipe l'audit
+pendant la génération. Il pré-nettoie le texte au lieu de se faire
+auditer. L'étayage devient une formalité — l'agent vérifie ce qu'il a
+déjà consciemment choisi de rendre vérifiable. Le résultat est plus
+prudent mais pas plus honnête.
+
+C'est le même problème que le TDD dans Edify : un agent qui voit les
+tests futurs code la solution directement au lieu de respecter le cycle
+red-green.
+
+**Réalisation :** Le protocole d'étayage est extrait dans
+`references/etayage.md`, fichier autonome. SKILL.md §2.6 dit
+`view references/etayage.md` après le draft. L'agent découvre le
+protocole d'audit après avoir généré. L'isolation des instructions est
+réelle même si le contexte conversationnel reste.
+
+**Littérature :**
+- StateFlow (Wu et al., 2024, Microsoft/AutoGen) — FSM pour contrôler
+  un LLM avec des instructions différentes par état. +13-28% succès,
+  3-5x moins cher que ReAct.
+- VOXAM (2026-03) — les transitions d'état doivent être du code
+  déterministe, pas une décision LLM.
+
+**Écarté :** Séquençage complet du dispatcher (toutes les phases
+découpées). Reporté à 0.3.0.
+
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
 **Choisi :** Reporté (en conception).
@@ -575,6 +606,7 @@ candidature/
     review-items.md               — Découpage pour la relecture
     feedback-tracking.md          — Suivi, CR d'entretien, patterns
     interview-prep.md             — Préparation d'entretien, négociation
+    etayage.md                    — Protocole d'audit des affirmations
     browser-layer.md              — Couche navigateur (Chrome)
     consolidation.md              — Processus de consolidation (groundé)
     sites/

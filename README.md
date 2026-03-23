@@ -75,6 +75,7 @@ references/
   review-items.md             — Découpage pour la relecture
   feedback-tracking.md        — Suivi et comptes rendus d'entretien
   interview-prep.md           — Préparation d'entretien et négociation
+  etayage.md                  — Protocole d'audit des affirmations
   browser-layer.md            — Couche navigateur (Chrome)
   consolidation.md            — Processus de consolidation (groundé)
   sites/*.md                  — Contraintes par plateforme ATS

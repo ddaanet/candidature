@@ -277,6 +277,12 @@ Produire un premier draft de chaque artefact identifié en 2.2-2.3 :
 - **Autres artefacts** selon le canal — réponses à des questions de
   formulaire, message d'accompagnement, pitch court...
 
+**Si le formulaire n'a aucun champ texte libre** (pas de lettre, pas de
+message, pas de question ouverte) : les livrables se limitent au CV et
+aux champs factuels (langues, prétentions, liens). Pas de draft à
+générer, pas d'étayage, pas de relecture. Passer directement à
+l'archivage et à la capture site.
+
 Chaque draft est un `create_file`. Le draft est un artefact de travail —
 il sera audité puis corrigé avant relecture.
 
@@ -299,48 +305,14 @@ test d'authenticité — la réponse doit sonner comme le candidat, pas
 comme un modèle. Si l'agent n'a pas accès au navigateur, demander au
 candidat de décrire les champs.
 
-#### Passe d'étayage `[état → outil: web_search si besoin]`
+#### Passe d'étayage `[outil: view references/etayage.md]`
 
-Après le draft, auditer chaque affirmation présente dans le texte réel.
-La passe s'applique à tout artefact, y compris les textes courts.
+Après le draft, charger le protocole d'étayage :
 
-**Double audit :** chaque affirmation est évaluée sur deux axes :
-1. **Véracité** — L'affirmation est-elle factuelle et sourcée ?
-2. **Crédibilité du signal** (Spence, 1973) — L'affirmation est-elle un
-   signal coûteux (vérifiable, engageant) ou un signal gratuit
-   (auto-attribué, invérifiable) ? Une affirmation peut être vraie et
-   rester un signal gratuit si elle est invérifiable par le recruteur.
-   Exemple : « je suis rigoureux » est peut-être vrai, mais c'est un
-   signal gratuit — tout candidat peut l'écrire. « 200k lignes en
-   production pendant 15 ans » est un signal coûteux.
+> `view references/etayage.md`
 
-**Bloc visible** — liste compacte, une ligne par affirmation :
-
-```
-- [affirmation courte] — [source] — ✓ / ⚠️ / ✗ — [signal: coûteux|gratuit]
-```
-
-Pour chaque ✗ ou ⚠️ :
-- **Données personnelles** (parcours, compétences) → demander au candidat.
-  Bloquer jusqu'à réponse.
-- **Données publiques** (entreprise, stack, culture) → `web_search` ou
-  `web_fetch`.
-
-Après recherche, nouveau bloc visible avec les lignes modifiées.
-Répéter jusqu'à ce que tout soit ✓ ou explicitement qualifié.
-
-#### Correction du draft
-
-Si des affirmations sont ✗ ou ⚠️ après résolution, l'agent évalue la
-gravité et corrige :
-
-- **Correction factuelle isolée** → `str_replace` ciblé sur le draft
-- **Problème structurel** (axe entier mal fondé, ton incohérent après
-  corrections multiples) → régénération complète du draft, nouvelle
-  passe d'étayage
-
-L'agent décide — pas de règle rigide. Le critère : le texte final
-reflète-t-il fidèlement ce qui a été étayé ?
+L'agent découvre le protocole d'audit **après** avoir généré le draft.
+Cette séparation est intentionnelle — voir DESIGN.md D-22.
 
 Chaque artefact corrigé passe en relecture (phase 3) avant d'être
 considéré comme prêt.

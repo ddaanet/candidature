@@ -53,6 +53,12 @@ candidature. Refuser les cookies marketing/tracking. Accepter les
 cookies fonctionnels si nécessaire au bon fonctionnement du site
 (session, CSRF, état multi-étapes).
 
+## Ouverture de page
+
+Quand Chrome est connecté, ouvrir directement la page de candidature
+(`open_url`) au lieu de donner l'URL au candidat. Réduit la friction —
+le candidat n'a pas à copier-coller.
+
 ## Navigation
 
 L'approche dépend de la plateforme — voir le fichier de référence.

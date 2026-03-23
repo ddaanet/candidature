@@ -38,22 +38,23 @@ Si la version distante est plus récente, proposer au candidat
 (remplacer A.B.C par la version distante, X.Y.Z par la locale) :
 
 > Une mise à jour est disponible (X.Y.Z vers A.B.C).
-> Installer la mise à jour :
-> https://github.com/ddaanet/candidature/releases/download/vA.B.C/candidature.skill
-> puis relancer `/candidature`.
 >
+> 1. [Télécharger la mise à jour](https://github.com/ddaanet/candidature/releases/download/vA.B.C/candidature.skill)
+> 2. Téléverser dans Personnaliser → Compétences → +
+
 > Sinon, on peut continuer avec la version actuelle.
 
-Si le candidat veut mettre à jour : s'arrêter. Si le candidat veut
-continuer : passer au chargement.
+Si le candidat veut mettre à jour : s'arrêter.
+Si le candidat veut continuer : passer au chargement.
 
 Si le fetch échoue ou la version est inconnue, proposer le lien
 direct au candidat :
 
 > Impossible de vérifier les mises à jour automatiquement.
-> Télécharger la dernière version :
-> https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill
 >
+> 1. [Télécharger la dernière version](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
+> 2. Téléverser dans Personnaliser → Compétences → +
+
 > Sinon, on peut continuer avec la version actuelle.
 
 Ne passer au chargement que si le candidat le demande explicitement.
@@ -73,8 +74,8 @@ Ne passer au chargement que si le candidat le demande explicitement.
 Ne pas explorer ni improviser. Si `references/workflow.md` n'est pas
 lisible, le skill est probablement mal installé. Dire :
 
-> Les instructions du skill ne sont pas lisibles. Réinstaller :
-> https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill
+> Les instructions du skill ne sont pas lisibles.
+> [Réinstaller depuis GitHub](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
 
 ## Exécution
 

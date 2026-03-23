@@ -542,9 +542,16 @@ version, des listes de fichiers et des checksums est un obstacle. Le lien
 direct télécharge le fichier sans intermédiaire. Claude.ai accepte les
 fichiers `.skill` par drag-and-drop.
 
+Le téléchargement doit être fait par le candidat, pas par l'agent. Les
+URLs de release GitHub redirigent vers `objects.githubusercontent.com`,
+domaine bloqué par le proxy réseau de Claude.ai. L'URL est présentée dans
+un bloc code (bouton copier dans Claude.ai) pour que le candidat l'ouvre
+dans son navigateur.
+
 Écarté : lien vers `/releases/latest` (page de release). Le candidat doit
 trouver le bon fichier parmi les assets, comprendre ce qu'est une release,
-et cliquer au bon endroit.
+et cliquer au bon endroit. Également écarté : flux "coller l'URL pour que
+l'agent télécharge via web_fetch" (le redirect est bloqué).
 
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 

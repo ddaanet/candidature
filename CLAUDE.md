@@ -11,7 +11,8 @@ Le public cible est non technique. Le contenu du skill est le produit.
 - `references/browser-layer.md` contient la couche navigateur (Chrome).
 - `references/sites/` contient un fichier par plateforme ATS.
 - `references/consolidation.md` contient le processus de consolidation des sites.
-- `VERSION` contient la version courante, écrite par `build/build.sh --bump`.
+- `scripts/` contient les scripts Python exécutés par le skill au runtime.
+- `VERSION` contient la version courante au format `ddaanet/candidature X.Y.Z`.
 - `build/dispatcher.md` est le dispatcher public (SKILL.md dans le `.skill`).
 - `build/dev-stub.md` est le stub dev, qui charge depuis le repo local.
 - `build/build.sh` assemble les `.skill` et crée les releases GitHub.
@@ -22,9 +23,8 @@ Le public cible est non technique. Le contenu du skill est le produit.
 
 `./build/build.sh` assemble deux `.skill` dans `dist/` :
 
-- `candidature.skill` contient le dispatcher, le workflow et toutes les
-  références (browser-layer, consolidation, sites/). C'est le seul artefact
-  releasé.
+- `candidature.skill` contient le dispatcher, le workflow, les références
+  et les scripts. C'est le seul artefact releasé.
 - `candidature-dev.skill` contient le stub dev, qui charge depuis le repo
   local via Filesystem. Non releasé.
 
@@ -38,7 +38,7 @@ dispatcher n'existe que dans le build output.
 
 Le skill public (`candidature.skill`) contient le workflow bundlé. Il détecte
 Chrome et charge la couche navigateur si disponible. Il vérifie les mises à
-jour au démarrage.
+jour au démarrage (une fois par jour).
 
 Le skill dev (`candidature-dev.skill`) est un stub minimal qui charge le
 workflow depuis le repo local via Filesystem. Le chemin est configuré en

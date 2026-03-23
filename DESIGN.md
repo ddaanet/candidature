@@ -618,6 +618,11 @@ candidature/
   README.md
   SKILL.md
   DESIGN.md
+  VERSION
+  check.sh
+  TODO.md
+  scripts/
+    version_check.py
   references/
     recruitment-science.md
     cover-letter.md

@@ -1,122 +1,128 @@
-# Agent Instructions
+# Instructions pour l'agent
 
-## About This Repo
+## Ce repo
 
-A standalone Claude.ai skill (markdown files) for assisted job applications.
-Target audience: non-technical users. The skill content is the product.
+Un skill Claude.ai autonome (fichiers markdown) pour la candidature assistée.
+Le public cible est non technique. Le contenu du skill est le produit.
 
-- `SKILL.md` — Workflow complet (4 phases). Lu en mode dev.
-- `references/` — Documents de support (recrutement, CV, relecture...)
-- `references/etayage.md` — Protocole d'audit (chargé après le draft).
-- `references/browser-layer.md` — Couche navigateur (Chrome).
-- `references/sites/` — Un fichier par plateforme ATS.
-- `references/consolidation.md` — Processus de consolidation sites.
-- `VERSION` — Version courante. Écrit par `build/build.sh --bump`.
-- `build/dispatcher.md` — Dispatcher public (SKILL.md dans le `.skill`).
-- `build/dev-stub.md` — Stub dev (charge depuis le repo local).
-- `build/build.sh` — Assemblage des `.skill` et release GitHub.
-- `DESIGN.md` — Design decisions and grounding audit
-- `README.md` — Installation guide
+- `SKILL.md` est le workflow complet (4 phases), lu en mode dev.
+- `references/` contient les documents de support (recrutement, CV, relecture, etc.).
+- `references/etayage.md` contient le protocole d'audit, chargé après le draft.
+- `references/browser-layer.md` contient la couche navigateur (Chrome).
+- `references/sites/` contient un fichier par plateforme ATS.
+- `references/consolidation.md` contient le processus de consolidation des sites.
+- `VERSION` contient la version courante, écrite par `build/build.sh --bump`.
+- `build/dispatcher.md` est le dispatcher public (SKILL.md dans le `.skill`).
+- `build/dev-stub.md` est le stub dev, qui charge depuis le repo local.
+- `build/build.sh` assemble les `.skill` et crée les releases GitHub.
+- `DESIGN.md` documente les décisions de conception et l'audit d'étayage.
+- `README.md` est le guide d'installation.
 
 ## Build
 
 `./build/build.sh` assemble deux `.skill` dans `dist/` :
 
-- `candidature.skill` — dispatcher + workflow + toutes les références
-  (browser-layer, consolidation, sites/). Seul artefact releasé.
-- `candidature-dev.skill` — stub dev, charge depuis le repo local via
-  Filesystem. Non releasé.
+- `candidature.skill` contient le dispatcher, le workflow et toutes les
+  références (browser-layer, consolidation, sites/). C'est le seul artefact
+  releasé.
+- `candidature-dev.skill` contient le stub dev, qui charge depuis le repo
+  local via Filesystem. Non releasé.
 
-`./build/build.sh --bump minor` : incrémente VERSION, commite, tague,
-crée une release GitHub avec `candidature.skill` uniquement.
+`./build/build.sh --bump minor` incrémente VERSION, commite, tague, et crée
+une release GitHub avec `candidature.skill` uniquement.
 
-Le repo source ne change pas : `SKILL.md` reste le workflow complet.
-Le dispatcher n'existe que dans le build output.
+Le repo source ne change pas : `SKILL.md` reste le workflow complet. Le
+dispatcher n'existe que dans le build output.
 
 ### Deux skills d'utilisation
 
-- **Public** (`candidature.skill`) — Workflow bundlé. Détecte Chrome
-  et charge la couche navigateur si disponible. Vérifie les mises à
-  jour au démarrage.
-- **Dev** (`candidature-dev.skill`) — Stub minimal, charge le
-  workflow depuis le repo local via Filesystem. Chemin configuré en
-  mémoire projet (`candidature: dev — <chemin>`).
+Le skill public (`candidature.skill`) contient le workflow bundlé. Il détecte
+Chrome et charge la couche navigateur si disponible. Il vérifie les mises à
+jour au démarrage.
 
-## Prose Quality
+Le skill dev (`candidature-dev.skill`) est un stub minimal qui charge le
+workflow depuis le repo local via Filesystem. Le chemin est configuré en
+mémoire projet (`candidature: dev <chemin>`).
 
-- State information directly, no hedging, framing, or preamble
-- Reference, never recap. Assume the reader has context
-- Let results speak, no framing around visible output
-- Commit to answers, no hedging qualifiers
+## Qualité de la prose
 
-## Style Contamination
+Énoncer l'information directement, sans précautions, sans cadrage, sans
+préambule. Référencer, ne pas résumer. Supposer que le lecteur a le contexte.
+Laisser les résultats parler, ne pas cadrer la sortie visible. S'engager sur
+les réponses, pas de qualificatifs dilatoires.
 
-The style of every file in this repo contaminates the agent's output.
-The agent writes like it reads. If the instructions use emdashes,
-"**Label:** contenu" patterns, or bulleted fragments, the agent
-reproduces these in letters, messages, and every generated text.
+## Contamination de style
 
-Rules for all skill content (SKILL.md, references/, DESIGN.md) :
+Le style de chaque fichier de ce repo contamine la sortie de l'agent. L'agent
+écrit comme il lit. Si les instructions utilisent des tirets cadratins, des
+motifs « Mot en gras. contenu » ou des fragments à puces sans sujet, l'agent
+les reproduit dans les lettres, les messages et tout texte généré.
 
-- No emdashes or endashes. Use periods, commas, or restructure.
-- No "**Label:** contenu" or "**Label.** contenu". Write prose.
-  The agent copies the label pattern into generated text.
-- No bulleted fragments as sentence substitutes. Write sentences.
-- No semicolons. Rare in natural French or English writing.
-- Examples and templates are the most dangerous vectors. The agent
-  copies them verbatim. Every example must look like the desired
-  output.
+Règles pour tout le contenu du skill (SKILL.md, references/, DESIGN.md) :
 
-All skill content is in French. Use natural French — no anglicisms where
-a common French equivalent exists. Exception: terms without common equivalents
-(commit, widget, markdown).
+- Pas de tirets cadratins ni de tirets demi-cadratins. Utiliser des points,
+  des virgules, ou restructurer la phrase.
+- Pas de motifs « Mot en gras. contenu » ni « Mot en gras : contenu ». Écrire
+  des phrases complètes. L'agent copie le motif dans le texte généré.
+- Pas de fragments à puces qui remplacent des phrases. Écrire des phrases.
+- Pas de points-virgules. Rares dans l'écriture naturelle en français ou en
+  anglais.
+- Les exemples et les templates sont les vecteurs les plus dangereux. L'agent
+  les copie quasi verbatim. Chaque exemple doit ressembler au résultat
+  souhaité.
+
+Tout le contenu du skill est en français. Utiliser un français naturel, sans
+anglicismes quand un équivalent courant existe. Exception : les termes sans
+équivalent courant (commit, widget, markdown).
 
 ## Branches
 
-- `main` reçoit des livrables, pas des brouillons.
-- `dev` pour le travail en cours, les explorations, les plans.
-- Merge `dev → main` en `--no-ff` pour les livrables de plus d'un
-  commit, avec un message de merge rédigé (pas le message par défaut).
-  La friction est faible, le signal est élevé — si quelqu'un regarde
-  l'historique, il voit des livrables nommés.
-- Un commit unique peut aller directement sur `main`.
+`main` reçoit des livrables, pas des brouillons. `dev` sert au travail en
+cours, aux explorations, aux plans.
 
-## Commit Messages
+Merger `dev` vers `main` en `--no-ff` pour les livrables de plus d'un commit,
+avec un message de merge rédigé (pas le message par défaut). La friction est
+faible, le signal est élevé. Si quelqu'un regarde l'historique, il voit des
+livrables nommés.
 
-Gitmoji prefix. Short, dense messages focused on "why" not "what."
-Chaque commit est une unité thématique cohérente, pas un découpage par
-fichier. Un commit peut toucher plusieurs fichiers s'ils participent au
-même changement logique.
+Un commit unique peut aller directement sur `main`.
 
-Select the most specific emoji matching the commit's primary intent:
+## Messages de commit
 
-| Emoji | When |
-|-------|------|
-| 🎉 | Initial commit |
-| ✨ | New feature or content section |
-| 📝 | Documentation changes |
-| ♻️ | Restructure without changing meaning |
-| 🔥 | Remove content or files |
-| 🐛 | Fix an error (factual, structural, reference) |
-| 💡 | Improve clarity or phrasing |
-| 🔍 | Add or update source references |
-| 🌐 | Localization or translation |
-| 🚚 | Move or rename files |
-| 🔀 | Merge branches |
+Préfixe gitmoji. Messages courts et denses, centrés sur le « pourquoi » et
+non le « quoi ». Chaque commit est une unité thématique cohérente, pas un
+découpage par fichier. Un commit peut toucher plusieurs fichiers s'ils
+participent au même changement logique.
 
-## Content Rules
+| Emoji | Quand |
+|-------|-------|
+| 🎉 | Commit initial |
+| ✨ | Nouvelle fonctionnalité ou section de contenu |
+| 📝 | Modifications de documentation |
+| ♻️ | Restructuration sans changement de sens |
+| 🔥 | Suppression de contenu ou de fichiers |
+| 🐛 | Correction d'une erreur (factuelle, structurelle, de référence) |
+| 💡 | Amélioration de la clarté ou de la formulation |
+| 🔍 | Ajout ou mise à jour de sources |
+| 🌐 | Localisation ou traduction |
+| 🚚 | Déplacement ou renommage de fichiers |
+| 🔀 | Merge de branches |
 
-- Every factual affirmation must trace to a source (file path, citation,
-  search result)
-- Affirmations without sources must be marked `[non étayé]` or removed
-- DESIGN.md appendix tracks affirmation grounding — update when adding
-  affirmations
-- `references/recruitment-science.md` is the stable theoretical
-  foundation — changes here are rare and require source verification
+## Règles de contenu
 
-## Model Constraint
+Chaque affirmation factuelle doit être traçable vers une source (chemin de
+fichier, citation, résultat de recherche). Les affirmations sans source doivent
+être marquées `[non étayé]` ou retirées.
 
-All modifications to SKILL.md, DESIGN.md, and references/*.md must be
-redacted in an Opus session. Do not modify these files in Sonnet sessions
-— the prose quality of agentic instructions requires Opus-level
-attention.
+L'appendice de DESIGN.md trace l'étayage des affirmations. Le mettre à jour
+quand on ajoute des affirmations.
+
+`references/recruitment-science.md` est le socle théorique stable. Les
+modifications y sont rares et nécessitent une vérification des sources.
+
+## Contrainte de modèle
+
+Toutes les modifications de SKILL.md, DESIGN.md et references/*.md doivent
+être rédigées dans une session Opus. Ne pas modifier ces fichiers dans des
+sessions Sonnet. La qualité de prose des instructions agentiques nécessite
+le niveau d'attention d'Opus.

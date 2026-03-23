@@ -42,7 +42,8 @@ les outils rapidement, je le fais depuis 25 ans" est factuellement
 défendable, mais le recruteur ne peut pas le vérifier. La passe
 d'étayage détecte ces cas.
 
-**Sources :**
+### Sources
+
 - Spence, M. (1973). Job market signaling. *QJE*, 87(3), 355-374.
 - Voir `references/recruitment-science.md` §1 pour le cadre complet.
 
@@ -105,10 +106,10 @@ régénération, c'est probablement une régénération.
 
 ## Périmètre
 
-La passe s'applique à **tout artefact** produit par l'agent, pas
-seulement aux lettres de motivation. Un questionnaire de feedback, un
-post LinkedIn, un message de relance, une réponse formulaire : tout
-texte contenant des affirmations passe par le même processus.
+La passe s'applique à tout artefact produit par l'agent, pas seulement
+aux lettres de motivation. Un questionnaire de feedback, un post
+LinkedIn, un message de relance, une réponse formulaire : tout texte
+contenant des affirmations passe par le même processus.
 
 Un skill fondé sur la crédibilité des signaux qui produit lui-même des
 signaux gratuits dans ses propres communications détruit sa proposition

@@ -1,4 +1,4 @@
-# Candidature — Document de conception
+# Candidature, document de conception
 
 Historique des besoins, décisions de conception, alternatives écartées et
 sources de référence pour le skill `candidature`. Sert de contexte aux
@@ -14,10 +14,10 @@ de lettres de motivation dans Claude.ai. Au fil de la conversation, le
 scope s'est élargi d'un outil de relecture à un workflow complet de
 candidature en 4 phases.
 
-**Repo source :** `ddaanet/agent-core` (privé) — skill `proof` (SKILL.md
+Le repo source est `ddaanet/agent-core` (privé), skill `proof` (SKILL.md
 + references/item-review.md).
 
-**Contexte utilisateur :** David Allouche, ingénieur backend senior Python,
+Le contexte utilisateur est David Allouche, ingénieur backend senior Python,
 en recherche d'emploi active depuis plusieurs mois. Le skill a été conçu
 à partir de son expérience concrète de candidature assistée par IA, puis
 généralisé pour tout métier et tout niveau.
@@ -31,72 +31,72 @@ généralisé pour tout métier et tout niveau.
 Le skill collecte le profil du candidat une fois et l'enrichit au fil du
 temps. Le CV est le seul élément indispensable.
 
-**Mécanisme :** Conversation ouverte après lecture du CV. Pas de checklist —
-les sources pertinentes dépendent du métier (un dev a un GitHub, un ouvrier
-non). Le skill demande ce que le candidat a, pas ce qu'il devrait avoir.
+Le mécanisme est une conversation ouverte après lecture du CV. Pas de
+checklist. Les sources pertinentes dépendent du métier (un dev a un GitHub,
+un ouvrier non). Le skill demande ce que le candidat a, pas ce qu'il
+devrait avoir.
 
-**Décision :** Le corpus de style est optionnel. Le skill fonctionne sans,
-mais s'améliore avec. Les lettres approuvées après relecture sont proposées
-comme ajout au corpus (boucle d'apprentissage).
+Le corpus de style est optionnel. Le skill fonctionne sans, mais s'améliore
+avec. Les lettres approuvées après relecture sont proposées comme ajout au
+corpus (boucle d'apprentissage).
 
 ### FR-2 : Recherche contextuelle avec archive
 
 Avant de demander des documents au candidat, le skill recherche ce qui est
 attendu pour ce type de poste (documents, ton, conventions sectorielles).
 
-**Mécanisme :** L'agent vérifie en mémoire projet si une recherche
-précédente couvre ce type de poste, puis lance `web_search` si rien ne
-correspond. Les résultats sont stockés en mémoire projet pour
-réutilisation (une entrée mémoire par type de poste).
+L'agent vérifie en mémoire projet si une recherche précédente couvre ce type
+de poste, puis lance `web_search` si rien ne correspond. Les résultats sont
+stockés en mémoire projet pour réutilisation (une entrée mémoire par type
+de poste).
 
-**Critère de réutilisation :** Match exact sur type de poste + secteur +
-taille d'entreprise + pays. Match approximatif = le candidat décide. Jamais
-de réutilisation silencieuse.
+Le critère de réutilisation est un match exact sur type de poste + secteur +
+taille d'entreprise + pays. Un match approximatif est signalé au candidat
+qui décide. Jamais de réutilisation silencieuse.
 
 ### FR-3 : Génération de candidature
 
 Analyse du poste, alignement sur les axes avec le candidat, génération des
 artefacts (lettre, CV adapté, réponses formulaire).
 
-**Mécanisme :** L'alignement distingue explicitement P-J fit (compétences)
-et P-O fit (motivation, valeurs) — deux dimensions issues de la recherche
-en psychologie organisationnelle. La lettre est le véhicule principal du
-P-O fit ; une lettre qui ne fait que résumer le CV rate sa cible.
+L'alignement distingue explicitement P-J fit (compétences) et P-O fit
+(motivation, valeurs), deux dimensions issues de la recherche en psychologie
+organisationnelle. La lettre est le véhicule principal du P-O fit. Une
+lettre qui ne fait que résumer le CV rate sa cible.
 
 ### FR-4 : Adaptation du CV
 
 Modification du CV DOCX du candidat en préservant la mise en forme.
 
-**Mécanisme :** python-docx, travail au niveau du run (pas du paragraphe).
-Ajustements ciblés, pas de réécriture. Le candidat décide si l'adaptation
-est faite.
+Le mécanisme utilise python-docx, avec un travail au niveau du run (pas du
+paragraphe). Ajustements ciblés, pas de réécriture. Le candidat décide si
+l'adaptation est faite.
 
-**Contrainte :** Les zones de texte flottantes, les mises en page
-multi-colonnes et les images positionnées sont des limites connues de
-python-docx. Si le CV est trop complexe, proposer des modifications
-manuelles.
+Les zones de texte flottantes, les mises en page multi-colonnes et les images
+positionnées sont des limites connues de python-docx. Si le CV est trop
+complexe, proposer des modifications manuelles.
 
 ### FR-5 : Relecture structurée
 
 Revue item-par-item de chaque artefact généré avant envoi.
 
-**Mécanisme :** Adapté du protocole `proof` d'agent-core (inspection Fagan).
+Le mécanisme est adapté du protocole `proof` d'agent-core (inspection Fagan).
 Segmentation, analyse par item, verdict forcé, accumulation, application
-batch. Interface conversationnelle — le candidat parle naturellement,
+batch. Interface conversationnelle : le candidat parle naturellement,
 l'agent interprète.
 
-**Décision clé :** Pas de vocabulaire imposé (approve/revise/skip/kill).
-Le candidat dit "ok", "change ça", "enlève", "passe" — l'agent infère le
-verdict. Pas de traçage formel des verdicts.
+Pas de vocabulaire imposé (approve/revise/skip/kill). Le candidat dit "ok",
+"change ça", "enlève", "passe". L'agent infère le verdict. Pas de traçage
+formel des verdicts.
 
-**Grille de lecture :** 7 critères universels, fondés sur la recherche.
+La grille de lecture contient 7 critères universels, fondés sur la recherche.
 Deux critères ajoutés après la recherche de fond : crédibilité des signaux
 (Spence) et accroche comme point critique (biais d'ancrage).
 
-**Orientation condensée.** Avant le premier item, l'agent résume en une
+L'orientation est condensée. Avant le premier item, l'agent résume en une
 phrase le contexte : quel texte, pour quel poste, combien de paragraphes.
 Pas de ligne d'état formatée, pas de liste de critères, pas de vocabulaire
-de protocole. Exemple : "Je relis votre lettre pour Doctolib — 4
+de protocole. Exemple : "Je relis votre lettre pour Doctolib, 4
 paragraphes. On y va ?" Voir D-11.
 
 ### FR-6 : Suivi des candidatures et comptes rendus d'entretien
@@ -104,10 +104,10 @@ paragraphes. On y va ?" Voir D-11.
 Enregistrement des retours, comptes rendus d'entretien, analyse de
 patterns.
 
-**Mécanisme :** Chaque candidature est enregistrée comme une entrée de
-mémoire projet (`memory_user_edits`) contenant : date, entreprise, poste,
-canal, axes, statut. Le statut est mis à jour in-place (`replace`) quand
-le candidat signale un retour.
+Chaque candidature est enregistrée comme une entrée de mémoire projet
+(`memory_user_edits`) contenant : date, entreprise, poste, canal, axes,
+statut. Le statut est mis à jour in-place (`replace`) quand le candidat
+signale un retour.
 
 Les comptes rendus d'entretien sont conversationnels. 3 niveaux (informel,
 guidé, structuré) choisis au premier CR via widget. Ajustement dynamique
@@ -117,8 +117,8 @@ stockés en mémoire projet.
 L'analyse de patterns se fait en lisant les mémoires existantes, pas en
 parsant des fichiers. Proposée après 5+ candidatures, jamais automatique.
 
-**Fondement :** Orientation apprentissage > orientation performance
-(Kanfer et al., 2001 ; Van Hooft & Van Hoye, 2022). Le suivi extrait des
+L'ensemble repose sur l'orientation apprentissage plutôt que performance
+(Kanfer et al., 2001, Van Hooft & Van Hoye, 2022). Le suivi extrait des
 apprentissages transférables, pas des statistiques.
 
 ### FR-7 : Enrichissement continu
@@ -135,10 +135,9 @@ s'enrichissent au fil des candidatures. Tout est stocké en mémoire projet.
 Le skill fonctionne pour tout métier et tout niveau. Pas de sources en dur,
 pas de checklist imposée, pas de vocabulaire technique.
 
-**Décision écartée :** La première version contenait des critères
-spécifiques au profil de David (3 questions implicites du recruteur pour
-un fondateur → IC). Retirés du skill, conservés dans les mémoires du
-projet personnel.
+La première version contenait des critères spécifiques au profil de David
+(3 questions implicites du recruteur pour un fondateur qui revient en IC).
+Retirés du skill, conservés dans les mémoires du projet personnel.
 
 ### NFR-2 : Ancrage des décisions
 
@@ -146,8 +145,8 @@ Chaque point de décision est ancré par un résultat visible ou un appel
 d'outil. Trois niveaux : `[choix]` (widget), `[outil]` (tool call),
 `[état]` (ligne visible).
 
-**Fondement :** Protocole `proof` d'agent-core — une porte sans ancrage est
-une porte que l'agent saute (anti-pattern prose-only gate).
+Le fondement vient du protocole `proof` d'agent-core : une porte sans
+ancrage est une porte que l'agent saute (anti-pattern prose-only gate).
 
 ### NFR-3 : Interface simple
 
@@ -155,12 +154,12 @@ Pas de vocabulaire de protocole exposé à l'utilisateur. Le candidat parle
 naturellement. L'agent interprète. Pas de jargon technique dans les
 messages de l'agent.
 
-**Décision écartée :** La version initiale (héritée de `proof`) imposait
-des raccourcis (a/r/k/s). Retiré — le public cible n'est pas des
-développeurs familiers avec des CLI.
+La version initiale (héritée de `proof`) imposait des raccourcis
+(a/r/k/s). Retiré. Le public cible n'est pas des développeurs familiers
+avec des CLI.
 
-**Extension (v2) :** L'étape d'orientation de la relecture exposait du
-vocabulaire de protocole. Condensée en un résumé d'une phrase. Voir D-11.
+L'étape d'orientation de la relecture exposait du vocabulaire de protocole.
+Condensée en un résumé d'une phrase. Voir D-11.
 
 ### NFR-4 : Français sans anglicismes superflus
 
@@ -176,19 +175,19 @@ plateforme. Fonctionne sur Claude.ai (projet), ChatGPT (GPT), Gemini
 
 ### NFR-6 : Installation minimale
 
-Claude.ai : 4 étapes — import GitHub (ou ZIP), upload du CV, et une
+Sur Claude.ai : 4 étapes. Import GitHub (ou ZIP), upload du CV, et une
 instruction projet qui force le déclenchement sur `/candidature`.
 L'instruction est nécessaire parce que les fichiers importés depuis
 GitHub arrivent dans le project knowledge (documents de référence
 indexés), pas comme skills avec déclenchement automatique. Sans
 l'instruction, rien ne garantit que le modèle cherchera SKILL.md quand
 l'utilisateur tape la commande. L'instruction doit nommer l'outil
-`project_knowledge_search` explicitement — « chercher dans les fichiers
+`project_knowledge_search` explicitement. « Chercher dans les fichiers
 du projet » est ambigu et l'agent le confond avec une recherche
 filesystem (`view /mnt/project/`). Voir D-19.
 
-Autres plateformes : coller une URL dans un chat. Pas de terminal, pas
-de build, pas de config.
+Sur les autres plateformes : coller une URL dans un chat. Pas de terminal,
+pas de build, pas de config.
 
 ### NFR-7 : Stockage en mémoire projet
 
@@ -197,12 +196,10 @@ Toutes les données persistantes (suivi des candidatures, préférences,
 archive de recherche, patterns) sont stockées via la mémoire du projet
 (`memory_user_edits`), pas dans des fichiers markdown.
 
-**Avantages :** Accessible dans toutes les conversations du projet sans
-manipulation. Pas de fichiers à gérer.
-
-**Limites :** La mémoire a un budget limité. Les comptes rendus
-d'entretien détaillés sont stockés sous forme de synthèse, pas de
-verbatim. Voir D-6 pour les détails.
+Cette approche est accessible dans toutes les conversations du projet sans
+manipulation. Pas de fichiers à gérer. La mémoire a un budget limité. Les
+comptes rendus d'entretien détaillés sont stockés sous forme de synthèse,
+pas de verbatim. Voir D-6 pour les détails.
 
 ### NFR-8 : Étayage réflexif
 
@@ -213,17 +210,16 @@ de communication, ou toute autre sortie contenant des affirmations doit
 passer par la même vérification : chaque affirmation est-elle sourcée
 ou qualifiée ?
 
-**Fondement :** Un skill fondé sur la crédibilité des signaux (Spence)
-qui produit lui-même des signaux gratuits dans ses propres communications
-détruit sa proposition de valeur. L'étayage n'est pas un protocole de
-relecture — c'est une propriété de tout texte produit par le système.
+Un skill fondé sur la crédibilité des signaux (Spence) qui produit
+lui-même des signaux gratuits dans ses propres communications détruit
+sa proposition de valeur. L'étayage n'est pas un protocole de relecture,
+c'est une propriété de tout texte produit par le système.
 
-**Incident fondateur :** Session 2026-03-17. L'agent a produit un
-Google Form (questions présupposant un usage qui n'avait pas encore eu
-lieu, question orientée négative, pas de NPS) et un post LinkedIn
-(4 affirmations non étayées sur 8, dont un signal gratuit au sens de
-Spence) sans appliquer sa propre procédure d'étayage. Corrigé après
-revue utilisateur.
+Incident fondateur : session 2026-03-17. L'agent a produit un Google Form
+(questions présupposant un usage qui n'avait pas encore eu lieu, question
+orientée négative, pas de NPS) et un post LinkedIn (4 affirmations non
+étayées sur 8, dont un signal gratuit au sens de Spence) sans appliquer
+sa propre procédure d'étayage. Corrigé après revue utilisateur.
 
 ---
 
@@ -231,300 +227,318 @@ revue utilisateur.
 
 ### D-1 : Nom du skill
 
-**Choisi :** `candidature`
+Choix retenu : `candidature`.
 
-**Processus :** Brainstorm Opus planifié mais exécuté en direct (l'API
-Opus n'était pas accessible sans clé depuis l'environnement Claude.ai).
-Trois finalistes proposés : `refine`, `relecture`, `redline`. L'utilisateur
-a choisi `relecture` pour la transparence. Renommé `candidature` quand le
-scope s'est élargi au-delà de la relecture.
+Brainstorm Opus planifié mais exécuté en direct (l'API Opus n'était pas
+accessible sans clé depuis l'environnement Claude.ai). Trois finalistes
+proposés : `refine`, `relecture`, `redline`. L'utilisateur a choisi
+`relecture` pour la transparence. Renommé `candidature` quand le scope
+s'est élargi au-delà de la relecture.
 
-**Écarté :** `relecture` (devenu une phase interne), `refine` (anglais),
+Écartés : `relecture` (devenu une phase interne), `refine` (anglais),
 `redline` (connoté "couper"), `postuler` (verbe, moins naturel comme nom
 de skill), `apply` (anglais et ambigu).
 
-### D-2 : Scope — relecture seule vs workflow complet
+### D-2 : Scope, relecture seule vs workflow complet
 
-**Choisi :** Workflow complet en 4 phases.
+Choix retenu : workflow complet en 4 phases.
 
-**Raison :** La relecture seule ne résout pas le problème de fond — une
-lettre générique bien relue reste une lettre générique. La valeur est dans
-la chaîne complète : profil → recherche → axes → génération → relecture →
-suivi.
+La relecture seule ne résout pas le problème de fond. Une lettre générique
+bien relue reste une lettre générique. La valeur est dans la chaîne
+complète : profil, recherche, axes, génération, relecture, suivi.
 
-**Écarté :** Skill de relecture standalone. L'ancien `relecture` a été
-absorbé comme Phase 3.
+Écarté : skill de relecture standalone. L'ancien `relecture` a été absorbé
+comme Phase 3.
 
-### D-3 : Interface de relecture — vocabulaire imposé vs conversationnel
+### D-3 : Interface de relecture, vocabulaire imposé vs conversationnel
 
-**Choisi :** Interface conversationnelle. Le candidat parle naturellement.
+Choix retenu : interface conversationnelle. Le candidat parle naturellement.
 
-**Raison :** Le public cible est "tout le monde", pas des développeurs.
-Un protocole avec des raccourcis (a/r/k/s) est une barrière à l'adoption.
+Le public cible est "tout le monde", pas des développeurs. Un protocole
+avec des raccourcis (a/r/k/s) est une barrière à l'adoption.
 
-**Écarté :** Vocabulaire imposé hérité de `proof` (approve/revise/kill/skip
+Écarté : vocabulaire imposé hérité de `proof` (approve/revise/kill/skip
 avec raccourcis). Pas de traçage formel des verdicts.
 
-**Compromis accepté :** L'interprétation du langage naturel est moins
-fiable que des raccourcis explicites. Risque de malentendu sur les
-verdicts. Atténué par la reformulation systématique.
+Compromis accepté : l'interprétation du langage naturel est moins fiable
+que des raccourcis explicites. Risque de malentendu sur les verdicts.
+Atténué par la reformulation systématique.
 
-### D-4 : Grille de lecture — spécifique au profil vs universelle
+### D-4 : Grille de lecture, spécifique au profil vs universelle
 
-**Choisi :** Grille universelle dans le skill. Critères spécifiques dans
+Choix retenu : grille universelle dans le skill. Critères spécifiques dans
 les mémoires du projet personnel.
 
-**Raison :** La première version contenait des critères David-spécifiques
-(3 questions implicites du recruteur, anti-patterns issus de l'expérience).
-Duplication avec les instructions du projet et les mémoires. Le skill
-doit fonctionner pour tout profil.
+La première version contenait des critères David-spécifiques (3 questions
+implicites du recruteur, anti-patterns issus de l'expérience). Duplication
+avec les instructions du projet et les mémoires. Le skill doit fonctionner
+pour tout profil.
 
-### D-5 : Format du CV — Markdown vs DOCX vs natif
+### D-5 : Format du CV, Markdown vs DOCX vs natif
 
-**Choisi :** DOCX comme format de référence.
+Choix retenu : DOCX comme format de référence.
 
-**Raison :** python-docx permet de modifier le texte en préservant les
-styles, polices, couleurs du candidat. Markdown perd toute information
-visuelle. Les formats natifs (Pages, Canva) ne sont pas manipulables
-programmatiquement.
+python-docx permet de modifier le texte en préservant les styles, polices,
+couleurs du candidat. Markdown perd toute information visuelle. Les formats
+natifs (Pages, Canva) ne sont pas manipulables programmatiquement.
 
-**Écarté :** Markdown (perte de mise en forme), édition directe via
+Écartés : Markdown (perte de mise en forme), édition directe via
 AppleScript dans Pages (fragile et limité), PDF (lecture seule).
 
-**Compromis accepté :** python-docx ne gère pas les zones de texte
-flottantes ni les mises en page très complexes. Le candidat qui a un CV
-avec un design élaboré recevra des suggestions de modifications manuelles.
+Compromis accepté : python-docx ne gère pas les zones de texte flottantes
+ni les mises en page très complexes. Le candidat qui a un CV avec un design
+élaboré recevra des suggestions de modifications manuelles.
 
-### D-6 : Données persistantes — mémoire projet vs fichiers
+### D-6 : Données persistantes, mémoire projet vs fichiers
 
-**Choisi :** Mémoire projet (`memory_user_edits`) pour toutes les données
-persistantes : archive de recherche, suivi des candidatures, comptes
-rendus, patterns.
+Choix retenu : mémoire projet (`memory_user_edits`) pour toutes les données
+persistantes. Archive de recherche, suivi des candidatures, comptes rendus,
+patterns.
 
-**Raison :** La v1 utilisait des fichiers markdown (archive dans
-`recherche/index.md` + fichiers par type de poste, suivi dans
-`candidatures/suivi.md`, CR dans `candidatures/entretiens/`, patterns
-dans `candidatures/patterns.md`). En pratique, cela implique que le
-candidat sache manipuler des fichiers dans un projet IA — télécharger,
-re-uploader, maintenir la cohérence. Le public cible ne sait pas faire ça.
+La v1 utilisait des fichiers markdown (archive dans `recherche/index.md` +
+fichiers par type de poste, suivi dans `candidatures/suivi.md`, CR dans
+`candidatures/entretiens/`, patterns dans `candidatures/patterns.md`). En
+pratique, cela implique que le candidat sache manipuler des fichiers dans un
+projet IA : télécharger, re-uploader, maintenir la cohérence. Le public
+cible ne sait pas faire ça.
 
 La mémoire projet est accessible dans toutes les conversations sans
 manipulation. Pour l'archive de recherche : une entrée par type de poste.
 Pour le suivi : une entrée par candidature, mise à jour in-place.
 
-**Écarté :** Fichiers markdown (complexe pour le grand public), base de
-données externe (surdimensionné).
+Écartés : fichiers markdown (complexe pour le grand public), base de données
+externe (surdimensionné).
 
-**Compromis accepté :** La mémoire a un budget limité. Le suivi de 50+
+Compromis accepté : la mémoire a un budget limité. Le suivi de 50+
 candidatures peut saturer. Solution à terme : condensation périodique.
 Les CR d'entretien détaillés sont stockés sous forme de synthèse.
 
-### D-7 : Suivi — automatique vs proposé
+### D-7 : Suivi, automatique vs proposé
 
-**Choisi :** L'analyse de patterns est proposée, jamais automatique.
+Choix retenu : l'analyse de patterns est proposée, jamais automatique.
 
-**Raison :** L'orientation apprentissage fonctionne quand le candidat
-décide quand prendre du recul. Un tableau de bord automatique avec des
-stats risque de décourager (la recherche d'emploi est émotionnellement
-difficile — Wanberg et al., 2012).
+L'orientation apprentissage fonctionne quand le candidat décide quand
+prendre du recul. Un tableau de bord automatique avec des stats risque de
+décourager (la recherche d'emploi est émotionnellement difficile, Wanberg
+et al., 2012).
 
-### D-8 : Compte rendu d'entretien — niveau fixe vs adaptatif
+### D-8 : Compte rendu d'entretien, niveau fixe vs adaptatif
 
-**Choisi :** 3 niveaux avec adaptation dynamique.
+Choix retenu : 3 niveaux avec adaptation dynamique.
 
-**Raison :** Certains candidats veulent juste dire "ça s'est bien passé",
-d'autres veulent une analyse question par question. Imposer un seul
-niveau frustre l'un ou l'autre. L'adaptation observe le comportement
-réel du candidat plutôt que de demander à chaque fois.
+Certains candidats veulent juste dire "ça s'est bien passé", d'autres
+veulent une analyse question par question. Imposer un seul niveau frustre
+l'un ou l'autre. L'adaptation observe le comportement réel du candidat
+plutôt que de demander à chaque fois.
 
-### D-9 : Distribution — plateforme spécifique vs repo GitHub
+### D-9 : Distribution, plateforme spécifique vs repo GitHub
 
-**Choisi :** Repo GitHub public (`ddaanet/candidature`).
+Choix retenu : repo GitHub public (`ddaanet/candidature`).
 
-**Raison :** Pas de marketplace skills sur Claude.ai. Pas d'import GitHub
-sur ChatGPT/Gemini/Mistral. Le plus petit dénominateur commun est un
-dossier de fichiers markdown. GitHub permet le download ZIP pour les
-non-techniques et "Ajouter depuis GitHub" pour Claude.ai.
+Pas de marketplace skills sur Claude.ai. Pas d'import GitHub sur
+ChatGPT/Gemini/Mistral. Le plus petit dénominateur commun est un dossier
+de fichiers markdown. GitHub permet le download ZIP pour les non-techniques
+et "Ajouter depuis GitHub" pour Claude.ai.
 
-**Écarté :** Intégration dans claudeutils/Edify (trop orienté développeurs),
+Écartés : intégration dans claudeutils/Edify (trop orienté développeurs),
 GPT Store (spécifique ChatGPT), marketplace Claude Code (le skill est
 conçu pour Claude.ai, pas Claude Code).
 
 ### D-10 : Séparation du document fondamental
 
-**Choisi :** `references/recruitment-science.md` comme document stable,
+Choix retenu : `references/recruitment-science.md` comme document stable,
 séparé des recherches par type de poste.
 
-**Raison :** Les cadres théoriques (Spence, P-J/P-O fit, Kahneman, biais
-cognitifs, autorégulation) ne changent pas selon qu'on postule comme dev
-ou comme commercial. Les séparer des recherches contextuelles évite la
-duplication et permet la mise à jour indépendante.
+Les cadres théoriques (Spence, P-J/P-O fit, Kahneman, biais cognitifs,
+autorégulation) ne changent pas selon qu'on postule comme dev ou comme
+commercial. Les séparer des recherches contextuelles évite la duplication
+et permet la mise à jour indépendante.
 
-### D-11 : Orientation relecture — condensée
+### D-11 : Orientation relecture, condensée
 
-**Choisi :** Orientation réduite à un résumé d'une phrase avant le
+Choix retenu : orientation réduite à un résumé d'une phrase avant le
 premier item.
 
-**Raison :** En test utilisateur, l'orientation complète produisait un
-message incompréhensible pour un non-technicien : ligne d'état avec
-crochets, liste de critères, vocabulaire de protocole (« actions:
-feedback, proceed, skip-to-end »). Le candidat n'a pas besoin de
-connaître la mécanique — mais il a besoin de savoir ce qu'on relit.
+En test utilisateur, l'orientation complète produisait un message
+incompréhensible pour un non-technicien : ligne d'état avec crochets,
+liste de critères, vocabulaire de protocole ("actions: feedback, proceed,
+skip-to-end"). Le candidat n'a pas besoin de connaître la mécanique, mais
+il a besoin de savoir ce qu'on relit.
 
-L'orientation reste, condensée en un résumé : quel texte, pour qui,
-combien d'éléments. L'agent attend la confirmation puis passe au
-premier item.
+L'orientation reste, condensée en un résumé : quel texte, pour qui, combien
+d'éléments. L'agent attend la confirmation puis passe au premier item.
 
-**Écarté :** Suppression totale (le candidat ne sait plus ce qu'on
-relit). Orientation complète v1 (jargon, tour de conversation inutile).
+Écarté : suppression totale (le candidat ne sait plus ce qu'on relit).
+Orientation complète v1 (jargon, tour de conversation inutile).
 
 ### D-12 : Archivage des artefacts en mémoire
 
-**Choisi :** Résumé structuré dans l'entrée `candidature:` (axes, accroche,
-ton, prétentions). Pas le texte intégral.
+Choix retenu : résumé structuré dans l'entrée `candidature:` (axes,
+accroche, ton, prétentions). Pas le texte intégral.
 
-**Raison :** La mémoire projet a un budget limité. Le texte complet reste
-accessible via `conversation_search` si besoin. Le résumé suffit pour
-l'analyse de patterns (§4.3) et la réutilisation d'axes lors de
-candidatures similaires.
+La mémoire projet a un budget limité. Le texte complet reste accessible
+via `conversation_search` si besoin. Le résumé suffit pour l'analyse de
+patterns (§4.3) et la réutilisation d'axes lors de candidatures similaires.
 
-### D-13 : Porte mémoire — écriture systématique
+### D-13 : Porte mémoire, écriture systématique
 
-**Choisi :** Toujours écrire en mémoire sur le chemin autonome (y compris
-quand la recherche contextuelle ne trouve rien — c'est une décision de
+Choix retenu : toujours écrire en mémoire sur le chemin autonome (y compris
+quand la recherche contextuelle ne trouve rien, c'est une décision de
 typologie). Sur le chemin interactif, la conversation suffit.
 
-**Raison :** Intégrité structurelle. La porte est ancrée `[outil]`. Sans
-l'appel obligatoire même sur « rien trouvé », l'agent a un prose-only
-escape hatch : il rationalise « RAS, pas besoin d'écrire » et évite
-l'appel d'outil, ce qui casse l'ancrage. Bénéfice secondaire : le
-résultat négatif est une information utile pour les candidatures
-suivantes.
+L'intégrité structurelle le justifie. La porte est ancrée `[outil]`. Sans
+l'appel obligatoire même sur "rien trouvé", l'agent a un prose-only escape
+hatch : il rationalise "RAS, pas besoin d'écrire" et évite l'appel d'outil,
+ce qui casse l'ancrage. Bénéfice secondaire : le résultat négatif est une
+information utile pour les candidatures suivantes.
 
-### D-14 : Shortlist → candidature — transition par replace
+### D-14 : Shortlist vers candidature, transition par replace
 
-**Choisi :** Quand le candidat lance la Phase 2 sur une offre shortlistée,
+Choix retenu : quand le candidat lance la Phase 2 sur une offre shortlistée,
 l'entrée `shortlist:` est remplacée (`replace`) par une entrée
 `candidature:` enrichie.
 
-**Raison :** Une seule entrée par offre en mémoire. Pas de duplication.
-Le préfixe change pour refléter l'état d'avancement.
+Une seule entrée par offre en mémoire. Pas de duplication. Le préfixe change
+pour refléter l'état d'avancement.
 
 ### D-15 : Benchmark salarial = dimension de la recherche contextuelle
 
-**Choisi :** Le benchmark salarial est une dimension de §2.2 (recherche
+Choix retenu : le benchmark salarial est une dimension de §2.2 (recherche
 contextuelle), pas une procédure séparée. Les sources ne sont pas codées
 en dur.
 
-**Raison :** Les sources de benchmark varient selon le pays, le secteur
-et le type de poste. Coder des URLs spécifiques (Glassdoor, levels.fyi)
-rend le skill fragile. L'agent recherche les sources pertinentes au
-moment de la recherche.
+Les sources de benchmark varient selon le pays, le secteur et le type de
+poste. Coder des URLs spécifiques (Glassdoor, levels.fyi) rend le skill
+fragile. L'agent recherche les sources pertinentes au moment de la
+recherche.
 
 ### D-16 : Deux skills complémentaires
 
-**Supersédé par D-20.** Un seul skill avec détection de capacités.
+Supersédé par D-20. Un seul skill avec détection de capacités.
 
-~~**Choisi :** `candidature` (claude.ai) et `candidate-desktop` (Claude
-Desktop) sont deux skills séparés partageant un workflow commun.~~
+### D-17 : Cycle rappel, capture, consolidation pour les sites ATS
 
-~~**Raison :** Le workflow (méthodologie) est identique. Les différences
-sont dans le substrat : stockage (memory_user_edits vs Filesystem),
-capacités (pas de navigateur dans claude.ai), et contraintes (30 slots
-mémoire vs fichiers structurés). La séparation de substrat justifie
-deux points d'entrée.~~
+Choix retenu : cycle en trois temps intégré dans le skill.
 
-### D-17 : Cycle rappel → capture → consolidation pour les sites ATS
+Le rappel (§2.6, avant rédaction) est une consultation obligatoire des
+entrées `site:` en mémoire projet. Porte `[outil]` : l'agent lit la
+mémoire même s'il pense connaître le site.
 
-**Choisi :** Cycle en trois temps intégré dans le skill.
+La capture (§2.6, après soumission) est une question systématique +
+écriture obligatoire (même "RAS"). Porte `[outil]` cohérente avec D-13.
 
-**Rappel** (§2.6, avant rédaction) — consultation obligatoire des entrées
-`site:` en mémoire projet. Porte `[outil]` : l'agent lit la mémoire
-même s'il pense connaître le site.
+La consolidation (candidate-desktop, différée) lit les entrées `site:`,
+les déduplique, et les intègre dans
+`candidate-desktop/references/sites/<site>.md`. Les entrées consolidées
+sont supprimées de la mémoire projet.
 
-**Capture** (§2.6, après soumission) — question systématique + écriture
-obligatoire (même « RAS »). Porte `[outil]` cohérente avec D-13.
-
-**Consolidation** (candidate-desktop, différée) — les entrées `site:`
-sont lues, dédupliquées, et intégrées dans
-`candidate-desktop/references/sites/<site>.md`. Les entrées
-consolidées sont supprimées de la mémoire projet.
-
-**Fondement :** Pattern `codify` d'agent-core (staging → maturation →
-consolidation). La mémoire projet joue le rôle de staging, les
+Ce cycle suit le pattern `codify` d'agent-core (staging vers maturation
+vers consolidation). La mémoire projet joue le rôle de staging, les
 références candidate-desktop sont la documentation permanente.
 
-**Prototype :** 4 entrées `site:` écrites en mémoire projet (Teamtailor,
-LinkedIn, WTTJ, SmartRecruiters) à partir du minage des conversations
-passées. L'auteur traité comme premier utilisateur.
+Le prototype contient 4 entrées `site:` écrites en mémoire projet
+(Teamtailor, LinkedIn, WTTJ, SmartRecruiters) à partir du minage des
+conversations passées. L'auteur traité comme premier utilisateur.
 
-**Raison du canal `site:` :** L'expérience d'intégration avec les ATS
-s'accumule naturellement au fil des candidatures. Sans structuration,
-elle reste éparpillée dans les conversations et la mémoire utilisateur.
-Le préfixe `site:` permet le rappel et la consolidation systématiques.
+L'expérience d'intégration avec les ATS s'accumule naturellement au fil des
+candidatures. Sans structuration, elle reste éparpillée dans les
+conversations et la mémoire utilisateur. Le préfixe `site:` permet le
+rappel et la consolidation systématiques.
+
+### D-18 : Étayage après le draft, pas avant
+
+Choix retenu : générer un draft d'abord (`create_file`), puis auditer les
+affirmations présentes dans le texte réel.
+
+L'approche précédente (étayage avant génération) auditait des affirmations
+que l'agent prévoyait d'écrire, dans l'abstrait, et rien ne garantissait
+que le texte final correspondrait. Avec le draft d'abord, l'audit porte sur
+du concret : le texte existe, on vérifie ce qu'il dit effectivement.
+
+L'avantage est double : anti-hallucination (l'agent ne peut pas simuler un
+étayage sur des intentions) et ancrage plus fort (le `create_file`
+matérialise l'artefact avant l'audit).
+
+La correction s'adapte : `str_replace` ciblé pour les corrections factuelles
+isolées, régénération complète si le problème est structurel (avec nouvelle
+passe d'étayage). Pas de règle rigide.
+
+Écarté : étayage avant génération (v1, abstrait). Règle de correction fixée
+(trop rigide pour la diversité des cas).
+
+### D-19 : Instruction projet, nommer l'outil explicitement
+
+Choix retenu : l'instruction projet dit "utiliser
+`project_knowledge_search` pour chercher SKILL.md".
+
+Les fichiers GitHub importés dans un projet Claude.ai sont indexés dans le
+project knowledge, accessible uniquement via `project_knowledge_search`.
+Ils ne sont pas dans `/mnt/project/` (qui ne contient que les fichiers
+uploadés manuellement). L'instruction initiale ("chercher SKILL.md dans les
+fichiers du projet") était ambiguë. L'agent cherchait via
+`view /mnt/project/`, ne trouvait rien, et abandonnait.
+
+Incident : session 2026-03-18. Premier test du skill dans un nouveau chat.
+L'agent a cherché dans `/mnt/project/`, échoué, puis demandé l'offre
+d'emploi sans avoir chargé le skill. Le skill n'a été trouvé qu'après
+redirection manuelle vers `project_knowledge_search`.
+
+Écarté : formulations vagues ("dans les fichiers du projet", "dans le
+projet"). Toute formulation qui ne nomme pas l'outil laisse le modèle
+deviner, et il devine mal.
 
 ### D-20 : Dispatcher unique avec détection de capacités
 
-**Choisi :** Implémenté (v0.2). Supersède D-16.
+Choix retenu : implémenté (v0.2). Supersède D-16.
 
-**Réalisation :** Un seul `.skill` public (`candidature.skill`). Le
-dispatcher charge le workflow bundlé, puis détecte si Chrome est
-disponible (présence d'outils `Control Chrome:*` dans le contexte).
-Si oui, charge `references/browser-layer.md` qui contient les
-instructions de navigation, cookies, et le cycle
-rappel→capture→consolidation. Les fichiers
+Un seul `.skill` public (`candidature.skill`). Le dispatcher charge le
+workflow bundlé, puis détecte si Chrome est disponible (présence d'outils
+`Control Chrome:*` dans le contexte). Si oui, il charge
+`references/browser-layer.md` qui contient les instructions de navigation,
+cookies, et le cycle rappel vers capture vers consolidation. Les fichiers
 `references/sites/*.md` sont chargés à la demande.
 
-Un dev stub séparé (`candidature-dev.skill`) charge le workflow
-depuis le repo local via Filesystem. Non releasé.
+Un dev stub séparé (`candidature-dev.skill`) charge le workflow depuis le
+repo local via Filesystem. Non releasé.
 
-**Écarté :** Détection par plateforme (claude.ai vs Desktop). Chrome
-est disponible sur claude.ai web (beta). Seul Filesystem est
-spécifique à Desktop, et le dev stub le gère.
+Écarté : détection par plateforme (claude.ai vs Desktop). Chrome est
+disponible sur claude.ai web (beta). Seul Filesystem est spécifique à
+Desktop, et le dev stub le gère.
 
-### D-22 : Extraction de l'étayage — isolation des instructions
+### D-22 : Extraction de l'étayage, isolation des instructions
 
-**Choisi :** Implémenté (v0.2.1). Première étape vers le
-séquençage scripté (brief-sequencage.md).
+Choix retenu : implémenté (v0.2.1).
 
-**Problème :** L'agent qui lit le workflow complet anticipe l'audit
-pendant la génération. Il pré-nettoie le texte au lieu de se faire
-auditer. L'étayage devient une formalité — l'agent vérifie ce qu'il a
-déjà consciemment choisi de rendre vérifiable. Le résultat est plus
-prudent mais pas plus honnête.
+L'agent qui lit le workflow complet anticipe l'audit pendant la génération.
+Il pré-nettoie le texte au lieu de se faire auditer. L'étayage devient une
+formalité : l'agent vérifie ce qu'il a déjà consciemment choisi de rendre
+vérifiable. Le résultat est plus prudent mais pas plus honnête.
 
-C'est le même problème que le TDD dans Edify : un agent qui voit les
-tests futurs code la solution directement au lieu de respecter le cycle
-red-green.
+C'est le même problème que le TDD dans Edify : un agent qui voit les tests
+futurs code la solution directement au lieu de respecter le cycle red-green.
 
-**Réalisation :** Le protocole d'étayage est extrait dans
-`references/etayage.md`, fichier autonome. SKILL.md §2.6 dit
-`view references/etayage.md` après le draft. L'agent découvre le
-protocole d'audit après avoir généré. L'isolation des instructions est
-réelle même si le contexte conversationnel reste.
+Le protocole d'étayage est extrait dans `references/etayage.md`, fichier
+autonome. SKILL.md §2.6 dit `view references/etayage.md` après le draft.
+L'agent découvre le protocole d'audit après avoir généré. L'isolation des
+instructions est réelle même si le contexte conversationnel reste.
 
-**Littérature :**
-- StateFlow (Wu et al., 2024, Microsoft/AutoGen) — FSM pour contrôler
-  un LLM avec des instructions différentes par état. +13-28% succès,
-  3-5x moins cher que ReAct.
-- VOXAM (2026-03) — les transitions d'état doivent être du code
-  déterministe, pas une décision LLM.
-
-**Écarté :** Séquençage complet du dispatcher (toutes les phases
-découpées). Reporté à 0.3.0.
+Littérature : StateFlow (Wu et al., 2024, Microsoft/AutoGen), FSM pour
+contrôler un LLM avec des instructions différentes par état. +13-28%
+succès, 3-5x moins cher que ReAct. VOXAM (2026-03), les transitions
+d'état doivent être du code déterministe, pas une décision LLM.
 
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
-**Choisi :** Reporté (en conception).
+Reporté (en conception).
 
-**Problème :** Sur claude.ai la mémoire projet est le seul stockage,
-avec ses limites (30 slots, condensation). Sur Desktop avec Filesystem,
-on peut stocker les textes complets, les CR détaillés, l'historique
-structuré — tout ce que la mémoire projet oblige à résumer.
+Sur claude.ai la mémoire projet est le seul stockage, avec ses limites
+(30 slots, condensation). Sur Desktop avec Filesystem, on peut stocker les
+textes complets, les CR détaillés, l'historique structuré, tout ce que la
+mémoire projet oblige à résumer.
 
-**Questions ouvertes :** Source de vérité (fichiers ou mémoire ?
-duplication ? condensation vers mémoire ?). Structure de dossiers.
-Relation avec le suivi existant en mémoire projet.
+Questions ouvertes : source de vérité (fichiers ou mémoire, duplication,
+condensation vers mémoire), structure de dossiers, relation avec le suivi
+existant en mémoire projet.
 
 ---
 
@@ -535,13 +549,13 @@ Relation avec le suivi existant en mémoire projet.
 Le skill `proof` original utilise le Task tool, les planstates lifecycle,
 les corrector sub-agents, les recall-artifacts. Tout ça est spécifique à
 Claude Code et n'existe pas dans Claude.ai. Le skill `candidature` est
-autonome — pas de dépendances infrastructure.
+autonome, pas de dépendances infrastructure.
 
 ### Génération de PDF avec mise en forme
 
-L'agent n'est pas bon en création graphique (reconnu par l'utilisateur
-et l'agent). La stratégie est de modifier le DOCX du candidat plutôt que
-de générer un nouveau document. La mise en forme est la responsabilité du
+L'agent n'est pas bon en création graphique (reconnu par l'utilisateur et
+l'agent). La stratégie est de modifier le DOCX du candidat plutôt que de
+générer un nouveau document. La mise en forme est la responsabilité du
 candidat.
 
 ### Traçage formel des candidatures (CRM-like)
@@ -555,11 +569,13 @@ mémoire par candidature suffit.
 ## Sources de référence
 
 ### Théorie du signal
+
 - Spence, M. (1973). Job market signaling. *QJE*, 87(3), 355-374.
 - Connelly, B. L. et al. (2011). Signaling theory: A review. *Journal of
   Management*, 37(1), 39-67.
 
 ### Adéquation personne-poste / personne-organisation
+
 - Kristof-Brown, A. L. et al. (2005). Consequences of individuals' fit.
   *Personnel Psychology*, 58(2), 281-342.
 - Rivera, L. A. (2012). Hiring as cultural matching. *ASR*, 77(6).
@@ -567,6 +583,7 @@ mémoire par candidature suffit.
   *Personnel Psychology*, 76(4).
 
 ### Biais cognitifs et eye-tracking
+
 - Tversky, A. & Kahneman, D. (1974). Judgment under uncertainty.
   *Science*, 185, 1124-1131.
 - Ladders, Inc. (2018). Eye-Tracking Study (7,4 secondes).
@@ -576,6 +593,7 @@ mémoire par candidature suffit.
   screening. *HRMJ*, 29(2).
 
 ### Autorégulation de la recherche d'emploi
+
 - Kanfer, R., Wanberg, C. R., & Kantrowitz, T. M. (2001). Job search and
   employment. *JAP*, 86(5), 837-855.
 - Van Hooft, E. A. J. & Van Hoye, G. (2022). Job Search Quality Scale.
@@ -585,6 +603,7 @@ mémoire par candidature suffit.
 - Wanberg, C. R. et al. (2012). Explicating layers of job search context.
 
 ### Inspection Fagan (protocole proof)
+
 - Fagan, M. E. (1976). Design and code inspections to reduce errors in
   program development. *IBM Systems Journal*, 15(3), 182-211.
 - Cowan, N. (2001). The magical number 4 in short-term memory. *BBS*,
@@ -596,28 +615,28 @@ mémoire par candidature suffit.
 
 ```
 candidature/
-  README.md                       — Installation et proposition de valeur
-  SKILL.md                        — Méthode complète (4 phases, portes ancrées)
-  DESIGN.md                       — Ce document
+  README.md
+  SKILL.md
+  DESIGN.md
   references/
-    recruitment-science.md        — 5 cadres théoriques (stable)
-    cover-letter.md               — Principes de rédaction
-    cv-handling.md                — Protocole python-docx
-    review-items.md               — Découpage pour la relecture
-    feedback-tracking.md          — Suivi, CR d'entretien, patterns
-    interview-prep.md             — Préparation d'entretien, négociation
-    etayage.md                    — Protocole d'audit des affirmations
-    browser-layer.md              — Couche navigateur (Chrome)
-    consolidation.md              — Processus de consolidation (groundé)
+    recruitment-science.md
+    cover-letter.md
+    cv-handling.md
+    review-items.md
+    feedback-tracking.md
+    interview-prep.md
+    etayage.md
+    browser-layer.md
+    consolidation.md
     sites/
-      smartrecruiters.md          — Contraintes SmartRecruiters
-      teamtailor.md               — Contraintes Teamtailor
-      wttj.md                     — Contraintes WTTJ
-      linkedin.md                 — Contraintes LinkedIn
+      smartrecruiters.md
+      teamtailor.md
+      wttj.md
+      linkedin.md
   build/
-    build.sh                      — Assemblage des .skill + release
-    dispatcher.md                 — Dispatcher public
-    dev-stub.md                   — Stub de développement
+    build.sh
+    dispatcher.md
+    dev-stub.md
 ```
 
 Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le
@@ -625,87 +644,20 @@ suivi et l'archive sont en mémoire projet.
 
 ---
 
-## Portes SKILL.md — état actuel
+## Portes SKILL.md, état actuel
 
 Toutes les portes ont été résolues dans la version courante du SKILL.md.
 Conservé comme référence historique.
 
 | Section | Porte initiale | Résolution |
 |---------|---------------|------------|
-| §2.2 | `view index` fichier | ✅ Consultation mémoire projet (`recherche:`) |
-| §2.2 | `create_file` recherche | ✅ `memory_user_edits` |
-| §3.1 | Ligne d'état jargonneuse | ✅ Résumé d'une phrase (D-11) |
-| §4.1 | `create_file ou str_replace` | ✅ `memory_user_edits` |
-| §4.2 | CR dans fichiers | ✅ CR conversationnel, synthèse en mémoire |
-| §4.3 | `candidatures/patterns.md` | ✅ Mémoire projet (`tendance:`) |
-| §Archive | Structure fichiers | ✅ Section supprimée, archive en mémoire |
-
-### D-19 : Instruction projet — nommer l'outil explicitement
-
-**Choisi :** L'instruction projet dit « utiliser
-`project_knowledge_search` pour chercher SKILL.md ».
-
-**Raison :** Les fichiers GitHub importés dans un projet Claude.ai sont
-indexés dans le *project knowledge*, accessible uniquement via
-`project_knowledge_search`. Ils ne sont **pas** dans `/mnt/project/`
-(qui ne contient que les fichiers uploadés manuellement). L'instruction
-initiale (« chercher SKILL.md dans les fichiers du projet ») était
-ambigu — l'agent cherchait via `view /mnt/project/`, ne trouvait rien,
-et abandonnait.
-
-**Incident :** Session 2026-03-18. Premier test du skill dans un
-nouveau chat. L'agent a cherché dans `/mnt/project/`, échoué, puis
-demandé l'offre d'emploi sans avoir chargé le skill. Le skill n'a été
-trouvé qu'après redirection manuelle vers `project_knowledge_search`.
-
-**Écarté :** Formulations vagues (« dans les fichiers du projet »,
-« dans le projet »). Toute formulation qui ne nomme pas l'outil laisse
-le modèle deviner — et il devine mal.
-
-### D-18 : Étayage après le draft, pas avant
-
-**Choisi :** Générer un draft d'abord (`create_file`), puis auditer les
-affirmations présentes dans le texte réel.
-
-**Raison :** L'approche précédente (étayage avant génération) auditait
-des affirmations que l'agent *prévoyait* d'écrire — abstrait, et rien ne
-garantissait que le texte final correspondrait. Avec le draft d'abord,
-l'audit porte sur du concret : le texte existe, on vérifie ce qu'il dit
-effectivement.
-
-Avantages : anti-hallucination (l'agent ne peut pas simuler un étayage
-sur des intentions), ancrage plus fort (le `create_file` matérialise
-l'artefact avant l'audit).
-
-**Correction :** L'agent évalue la gravité et décide : `str_replace`
-ciblé pour les corrections factuelles isolées, régénération complète si
-le problème est structurel (avec nouvelle passe d'étayage). Pas de règle
-rigide.
-
-**Écarté :** Étayage avant génération (v1, abstrait). Règle de
-correction fixée (trop rigide pour la diversité des cas).
-
----
-
-## Axes d'évolution identifiés (non implémentés)
-
-- **Test sur d'autres profils :** Le skill a été conçu à partir d'un seul
-  cas d'usage (dev backend senior). Il faudrait le tester avec des profils
-  radicalement différents (commercial, ouvrier, graphiste) pour valider
-  l'universalité.
-- **Intégration plateforme :** ChatGPT/Gemini/Mistral n'ont pas d'import
-  GitHub. Si une de ces plateformes ajoute cette fonctionnalité,
-  l'installation devient triviale partout.
-- **Localisation :** Le skill est en français. Une version anglaise
-  élargirait l'audience. Les principes sont universels, seuls l'interface
-  et les conventions sectorielles changent.
-- **Environnement hybride candidate-desktop + Claude.ai :** Le skill a été conçu
-  pour Claude.ai (projet), mais le workflow complet de candidature
-  (navigation sites d'emploi, remplissage de formulaires, tri des
-  recommandations) nécessite un contrôle du navigateur disponible
-  uniquement sur Claude Desktop. Documenter le tandem.
-- **Saturation mémoire :** Avec 50+ candidatures, la mémoire projet peut
-  saturer. Prévoir un mécanisme de condensation.
+| §2.2 | `view index` fichier | Consultation mémoire projet (`recherche:`) |
+| §2.2 | `create_file` recherche | `memory_user_edits` |
+| §3.1 | Ligne d'état jargonneuse | Résumé d'une phrase (D-11) |
+| §4.1 | `create_file ou str_replace` | `memory_user_edits` |
+| §4.2 | CR dans fichiers | CR conversationnel, synthèse en mémoire |
+| §4.3 | `candidatures/patterns.md` | Mémoire projet (`tendance:`) |
+| §Archive | Structure fichiers | Section supprimée, archive en mémoire |
 
 ---
 
@@ -717,21 +669,21 @@ concernés.
 
 ### Légende
 
-- **Étayé** — source primaire identifiée et vérifiée dans les
-  résultats de recherche de cette session
-- **Étayé (réserves)** — source identifiée mais avec des limites
-  méthodologiques documentées
-- **Faiblement étayé** — inférence raisonnable à partir d'un cadre
+- « Étayé » : source primaire identifiée et vérifiée dans les résultats
+  de recherche de cette session.
+- « Étayé (réserves) » : source identifiée mais avec des limites
+  méthodologiques documentées.
+- « Faiblement étayé » : inférence raisonnable à partir d'un cadre
   théorique, pas de citation directe. Qualifié dans le fichier source
   avec une note explicite.
-- **Non étayé** — affirmation non soutenue par la recherche. Corrigée ou
+- « Non étayé » : affirmation non soutenue par la recherche. Corrigée ou
   retirée.
 
 ### Affirmations académiques
 
 | # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 1 | Théorie du signal — signaux coûteux vs gratuits | recruitment-science.md §1 | Spence 1973 | Étayé |
+| 1 | Théorie du signal, signaux coûteux vs gratuits | recruitment-science.md §1 | Spence 1973 | Étayé |
 | 2 | P-J fit / P-O fit distinction | recruitment-science.md §2 | Edwards 1991, Kristof-Brown 2005 | Étayé |
 | 3 | Biais de similarité culturelle en recrutement | recruitment-science.md §4 | Rivera 2012 | Étayé |
 | 4 | Tri initial CV ~7,4 secondes | recruitment-science.md §3 | Ladders 2018 | Étayé (réserves) |
@@ -747,10 +699,10 @@ concernés.
 
 | # | Affirmation | Fichier | Dérivation | Statut | Action |
 |---|-------|---------|------------|--------|--------|
-| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV→P-J, lettre→P-O | Faiblement étayé | Qualifié avec note |
+| 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV vers P-J, lettre vers P-O | Faiblement étayé | Qualifié avec note |
 | 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Faiblement étayé | Qualifié avec note |
 | 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Faiblement étayé | Qualifié avec note |
-| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | **Non étayé** | **Corrigé** — retiré |
+| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | Non étayé | Corrigé, retiré |
 
 ### Affirmations factuelles (plateformes)
 
@@ -763,8 +715,7 @@ concernés.
 
 ### Bilan
 
-- **15 affirmations étayées** (dont 1 avec réserves méthodologiques)
-- **3 affirmations faiblement étayées** — qualifiées avec notes,
-  inférences raisonnables documentées comme telles
-- **1 affirmation non étayée** — corrigée (retirée du SKILL.md)
-- **0 affirmation non auditée**
+15 affirmations étayées (dont 1 avec réserves méthodologiques). 3
+affirmations faiblement étayées, qualifiées avec notes, inférences
+raisonnables documentées comme telles. 1 affirmation non étayée, corrigée
+(retirée du SKILL.md). 0 affirmation non auditée.

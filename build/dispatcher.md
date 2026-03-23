@@ -7,7 +7,7 @@ description: >-
   offre d'emploi à traiter.
 ---
 
-# Candidature — Dispatcher
+# Candidature, dispatcher
 
 Point d'entrée. Charge les instructions, vérifie les mises à jour,
 détecte les capacités disponibles.

@@ -5,8 +5,8 @@ set -euo pipefail
 # from the repo sources.
 #
 # Usage:
-#   ./build/build.sh                  — build both .skill in dist/
-#   ./build/build.sh --bump patch     — build, bump version, tag, release
+#   ./build/build.sh                  ▸ build both .skill in dist/
+#   ./build/build.sh --bump patch     ▸ build, bump version, tag, release
 #   ./build/build.sh --bump minor       (only candidature.skill is released)
 #   ./build/build.sh --bump major
 

@@ -527,6 +527,25 @@ contrôler un LLM avec des instructions différentes par état. +13-28%
 succès, 3-5x moins cher que ReAct. VOXAM (2026-03), les transitions
 d'état doivent être du code déterministe, pas une décision LLM.
 
+### D-23 : Liens directs vers le .skill, pas vers la page de release
+
+Choix retenu : tous les liens pointent vers le fichier `.skill`, pas vers
+la page de release GitHub.
+
+Quand la version distante est connue (mise à jour détectée), l'URL est
+versionnée (`/releases/download/vA.B.C/candidature.skill`). Quand la
+version est inconnue (erreur de fetch, réinstallation), l'URL utilise
+`/releases/latest/download/candidature.skill`.
+
+Le public cible est non technique. Une page GitHub avec des notes de
+version, des listes de fichiers et des checksums est un obstacle. Le lien
+direct télécharge le fichier sans intermédiaire. Claude.ai accepte les
+fichiers `.skill` par drag-and-drop.
+
+Écarté : lien vers `/releases/latest` (page de release). Le candidat doit
+trouver le bon fichier parmi les assets, comprendre ce qu'est une release,
+et cliquer au bon endroit.
+
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
 Reporté (en conception).

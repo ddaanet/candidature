@@ -32,13 +32,12 @@ psychologie du recrutement.
 4. Créer un **Projet**, y uploader votre CV (DOCX de préférence)
 5. Ouvrir un chat dans le projet et taper `/candidature`
 
-C'est tout. Pas besoin d'instructions spéciales dans le projet.
 
 ## Mises à jour
 
 Le skill vérifie automatiquement si une version plus récente est
 disponible sur GitHub. Si c'est le cas, il vous le signale avec un lien
-vers le téléchargement. Il suffit de réinstaller le nouveau `.skill`.
+vers le téléchargement. Télécharger le fichier et le réimporter dans le projet.
 
 ## Pour commencer
 
@@ -52,8 +51,7 @@ l'alignement avec votre profil et vous aide à prioriser.
 
 Si Claude in Chrome est connecté, le skill détecte automatiquement la
 capacité et charge les instructions de navigation par site
-(SmartRecruiters, Teamtailor, WTTJ, LinkedIn...). Pas d'installation
-supplémentaire.
+(SmartRecruiters, Teamtailor, WTTJ, LinkedIn...).
 
 ## Mode développement
 

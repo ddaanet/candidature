@@ -54,16 +54,16 @@ les réponses, pas de qualificatifs dilatoires.
 ## Contamination de style
 
 Le style de chaque fichier de ce repo contamine la sortie de l'agent. L'agent
-écrit comme il lit. Si les instructions utilisent des tirets cadratins, des
-motifs « Mot en gras. contenu » ou des fragments à puces sans sujet, l'agent
-les reproduit dans les lettres, les messages et tout texte généré.
+écrit comme il lit. Si les instructions utilisent du gras, des tirets
+cadratins ou des fragments à puces sans sujet, l'agent les reproduit dans les
+lettres, les messages et tout texte généré.
 
 Règles pour tout le contenu du skill (SKILL.md, references/, DESIGN.md) :
 
+- Pas de gras markdown (`**`). L'agent reproduit les motifs de mise en forme
+  dans le texte généré. Écrire des phrases qui portent leur propre emphase.
 - Pas de tirets cadratins ni de tirets demi-cadratins. Utiliser des points,
   des virgules, ou restructurer la phrase.
-- Pas de motifs « Mot en gras. contenu » ni « Mot en gras : contenu ». Écrire
-  des phrases complètes. L'agent copie le motif dans le texte généré.
 - Pas de fragments à puces qui remplacent des phrases. Écrire des phrases.
 - Pas de points-virgules. Rares dans l'écriture naturelle en français ou en
   anglais.

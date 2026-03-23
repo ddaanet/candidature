@@ -87,7 +87,7 @@ technique, valeur concrète. Pas les valeurs génériques du site corporate.
 
 Investir 10-15 minutes de recherche sur l'entreprise avant de rédiger.
 
-**L'accroche P-O doit être factuelle, pas narrative.** Si c'est l'agent
+L'accroche P-O doit être factuelle, pas narrative. Si c'est l'agent
 qui a trouvé un article de blog ou une fonctionnalité pendant la
 recherche, ne pas simuler une découverte organique du candidat. Écrire
 "GitGuardian builds developer security tools, and I build developer

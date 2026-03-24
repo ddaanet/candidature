@@ -3,5 +3,8 @@
 # Fichiers opérationnels (pas dans la distribution)
 2026-*.md
 
+# Configuration locale
+CLAUDE.local.md
+
 # Build output
 dist/

@@ -39,8 +39,9 @@ Si la version distante est plus récente, proposer au candidat
 
 > Une mise à jour est disponible (X.Y.Z vers A.B.C).
 >
-> 1. [Télécharger la mise à jour](https://github.com/ddaanet/candidature/releases/download/vA.B.C/candidature.skill)
-> 2. Téléverser dans Personnaliser → Compétences → +
+> [Télécharger la mise à jour](https://github.com/ddaanet/candidature/releases/download/vA.B.C/candidature.skill)
+>
+> Téléverser dans [Personnaliser → Compétences](https://claude.ai/customize/skills) → +
 
 > Sinon, on peut continuer avec la version actuelle.
 
@@ -52,8 +53,9 @@ direct au candidat :
 
 > Impossible de vérifier les mises à jour automatiquement.
 >
-> 1. [Télécharger la dernière version](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
-> 2. Téléverser dans Personnaliser → Compétences → +
+> [Télécharger la dernière version](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
+>
+> Téléverser dans [Personnaliser → Compétences](https://claude.ai/customize/skills) → +
 
 > Sinon, on peut continuer avec la version actuelle.
 

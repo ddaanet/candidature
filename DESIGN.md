@@ -203,7 +203,7 @@ pas de verbatim. Voir D-6 pour les détails.
 
 ### NFR-8 : Étayage réflexif
 
-La passe d'étayage (§2.6) s'applique à tout artefact produit par
+La passe d'étayage (references/etayage.md) s'applique à tout artefact produit par
 l'agent, pas seulement aux artefacts destinés au candidat. Un agent
 qui produit un questionnaire de feedback, un post LinkedIn, un message
 de communication, ou toute autre sortie contenant des affirmations doit
@@ -378,7 +378,7 @@ accroche, ton, prétentions). Pas le texte intégral.
 
 La mémoire projet a un budget limité. Le texte complet reste accessible
 via `conversation_search` si besoin. Le résumé suffit pour l'analyse de
-patterns (§4.3) et la réutilisation d'axes lors de candidatures similaires.
+patterns (references/phase-4-suivi.md) et la réutilisation d'axes lors de candidatures similaires.
 
 ### D-13 : Porte mémoire, écriture systématique
 
@@ -403,9 +403,9 @@ pour refléter l'état d'avancement.
 
 ### D-15 : Benchmark salarial = dimension de la recherche contextuelle
 
-Choix retenu : le benchmark salarial est une dimension de §2.2 (recherche
-contextuelle), pas une procédure séparée. Les sources ne sont pas codées
-en dur.
+Choix retenu : le benchmark salarial est une dimension de la recherche
+contextuelle (references/phase-2-preparation.md), pas une procédure séparée.
+Les sources ne sont pas codées en dur.
 
 Les sources de benchmark varient selon le pays, le secteur et le type de
 poste. Coder des URLs spécifiques (Glassdoor, levels.fyi) rend le skill
@@ -414,17 +414,18 @@ recherche.
 
 ### D-16 : Deux skills complémentaires
 
-Supersédé par D-20. Un seul skill avec détection de capacités.
+Supersédé par D-20, puis D-25. Un seul skill avec détection de capacités.
+Le stockage persistant utilise Notion (D-25), pas la mémoire projet.
 
 ### D-17 : Cycle rappel, capture, consolidation pour les sites ATS
 
 Choix retenu : cycle en trois temps intégré dans le skill.
 
-Le rappel (§2.6, avant rédaction) est une consultation obligatoire des
-entrées `site:` en mémoire projet. Porte `[outil]` : l'agent lit la
-mémoire même s'il pense connaître le site.
+Le rappel (references/phase-2-soumission.md, avant rédaction) est une
+consultation obligatoire des entrées `site:` en mémoire projet. Porte
+`[outil]` : l'agent lit la mémoire même s'il pense connaître le site.
 
-La capture (§2.6, après soumission) est une question systématique +
+La capture (references/phase-2-soumission.md, après soumission) est une question systématique +
 écriture obligatoire (même "RAS"). Porte `[outil]` cohérente avec D-13.
 
 La consolidation (candidate-desktop, différée) lit les entrées `site:`,
@@ -518,9 +519,9 @@ C'est le même problème que le TDD dans Edify : un agent qui voit les tests
 futurs code la solution directement au lieu de respecter le cycle red-green.
 
 Le protocole d'étayage est extrait dans `references/etayage.md`, fichier
-autonome. SKILL.md §2.6 dit `view references/etayage.md` après le draft.
-L'agent découvre le protocole d'audit après avoir généré. L'isolation des
-instructions est réelle même si le contexte conversationnel reste.
+autonome. `references/phase-2-soumission.md` charge etayage.md après le
+draft. L'agent découvre le protocole d'audit après avoir généré. L'isolation
+des instructions est réelle même si le contexte conversationnel reste.
 
 Littérature : StateFlow (Wu et al., 2024, Microsoft/AutoGen), FSM pour
 contrôler un LLM avec des instructions différentes par état. +13-28%
@@ -555,16 +556,98 @@ l'agent télécharge via web_fetch" (le redirect est bloqué).
 
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
-Reporté (en conception).
+Supersédé par D-25. Le stockage persistant utilise Notion, pas Filesystem.
 
-Sur claude.ai la mémoire projet est le seul stockage, avec ses limites
-(30 slots, condensation). Sur Desktop avec Filesystem, on peut stocker les
-textes complets, les CR détaillés, l'historique structuré, tout ce que la
-mémoire projet oblige à résumer.
+### D-24 : Suppression de SKILL.md, fichiers de phase comme source de vérité
 
-Questions ouvertes : source de vérité (fichiers ou mémoire, duplication,
-condensation vers mémoire), structure de dossiers, relation avec le suivi
-existant en mémoire projet.
+Choix retenu : implémenté (v0.4).
+
+Les fichiers de phase dans references/ remplacent le workflow monolithique
+SKILL.md. Chaque fichier couvre une phase du workflow et est autonome (pas
+de référence croisée entre phases). Le dispatcher charge une phase à la
+fois selon le contexte de la conversation.
+
+Le workflow monolithique posait deux problèmes. Le contexte chargé en
+permanence (4 phases, toutes les instructions) consommait du budget
+d'attention sans bénéfice pour la phase en cours. L'agent qui voyait les
+instructions d'étayage pendant la génération anticipait l'audit au lieu de
+se faire auditer (voir D-22).
+
+Les fichiers de phase sont : phase-1-profil.md, phase-2-preparation.md,
+phase-2-soumission.md, phase-3-relecture.md, phase-4-suivi.md.
+
+Écarté : garder SKILL.md avec des directives de chargement partiel (le
+modèle ne respecte pas de manière fiable les instructions de ne pas lire
+ce qui est déjà dans son contexte).
+
+### D-25 : Notion requis, pages imbriquées comme stockage
+
+Choix retenu : implémenté (v0.4). Supersède D-6, D-21.
+
+Tout le stockage persistant est dans des pages Notion imbriquées sous une
+page racine configurée localement (mémoire projet ou utilisateur). Pas de
+base de données Notion (le MCP ne supporte pas les requêtes structurées de
+manière fiable). La mémoire projet (memory_user_edits) ne garde que
+l'entrée version-check pour la vérification de mise à jour.
+
+Le stockage Notion résout les limites de la mémoire projet (30 slots,
+condensation automatique, pas de structure). Les pages imbriquées
+permettent une organisation hiérarchique (une page par candidature, des
+sous-pages pour les artefacts et les CR).
+
+Notion MCP est disponible nativement dans Claude.ai (pas de clé API, pas
+de configuration côté utilisateur au-delà de l'autorisation initiale).
+
+Écarté : mémoire projet seule (D-6, limites de budget). Filesystem sur
+Desktop (D-21, pas disponible sur claude.ai). Base de données Notion (le
+MCP ne supporte pas les filtres et les tris côté serveur).
+
+Compromis accepté : Notion MCP est requis. Les utilisateurs sans Notion
+ne peuvent pas utiliser le stockage persistant. Le skill fonctionne quand
+même pour une candidature ponctuelle, mais sans historique.
+
+### D-26 : Flux formulaire-driven
+
+Choix retenu : implémenté (v0.4).
+
+Le formulaire de candidature guide la génération. L'agent ouvre le
+formulaire (ou le reçoit de l'utilisateur), découvre les champs, et génère
+les artefacts adaptés à chaque champ. La lettre de motivation n'est pas
+préparée avant de connaître le formulaire, parce que certains formulaires
+n'en demandent pas, d'autres demandent des réponses courtes à des questions
+spécifiques.
+
+Le flux précédent (générer une lettre puis remplir le formulaire) produisait
+des artefacts inutilisés quand le formulaire ne comportait pas de champ
+lettre, ou des artefacts mal calibrés quand le formulaire posait des
+questions spécifiques au lieu de demander une lettre libre.
+
+Écarté : génération avant découverte du formulaire (v1). Lettre par défaut
+avec adaptation au formulaire (deux passes pour un résultat souvent
+différent du format attendu).
+
+### D-27 : Gate d'écriture backend (references/backend-write.md)
+
+Choix retenu : implémenté (v0.4).
+
+Avant toute écriture vers un backend externe (Notion, Filesystem), l'agent
+explore la cible et génère une procédure d'écriture. La procédure n'existe
+pas avant l'exploration. Ce mécanisme empêche l'agent d'écrire vers un
+backend qu'il ne connaît pas, avec une structure qu'il invente.
+
+Le problème fondateur est le même que D-18 (étayage après le draft) :
+un agent qui planifie une écriture dans l'abstrait produit une structure
+plausible mais déconnectée de la réalité du backend. L'exploration force
+la découverte de la structure existante avant toute modification.
+
+La procédure est un artifact conversationnel, pas un fichier persistant.
+Elle est générée, validée par l'utilisateur, exécutée, puis jetée. Le
+fichier backend-write.md contient les instructions pour générer la
+procédure, pas la procédure elle-même.
+
+Écarté : écriture directe avec instructions codées en dur (fragile, ne
+s'adapte pas aux structures Notion de chaque utilisateur). Procédure
+persistante (la structure Notion peut changer entre deux sessions).
 
 ---
 
@@ -642,14 +725,17 @@ mémoire par candidature suffit.
 ```
 candidature/
   README.md
-  SKILL.md
   DESIGN.md
   VERSION
-  check.sh
   TODO.md
   scripts/
     version_check.py
   references/
+    phase-1-profil.md
+    phase-2-preparation.md
+    phase-2-soumission.md
+    phase-3-relecture.md
+    phase-4-suivi.md
     recruitment-science.md
     cover-letter.md
     cv-handling.md
@@ -657,6 +743,7 @@ candidature/
     feedback-tracking.md
     interview-prep.md
     etayage.md
+    backend-write.md
     browser-layer.md
     consolidation.md
     sites/
@@ -670,15 +757,16 @@ candidature/
     dev-stub.md
 ```
 
-Pas de dossier `candidatures/` ni `recherche/` pour les données. Tout le
-suivi et l'archive sont en mémoire projet.
+Les fichiers de phase dans references/ remplacent le workflow monolithique
+SKILL.md (D-24). Le dispatcher charge une phase à la fois. Le stockage
+persistant est dans Notion (D-25), pas en mémoire projet.
 
 ---
 
-## Portes SKILL.md, état actuel
+## Portes du workflow, état actuel
 
-Toutes les portes ont été résolues dans la version courante du SKILL.md.
-Conservé comme référence historique.
+Toutes les portes ont été résolues dans la version courante des fichiers
+de phase. Conservé comme référence historique.
 
 | Section | Porte initiale | Résolution |
 |---------|---------------|------------|
@@ -723,7 +811,7 @@ concernés.
 | 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 | Étayé |
 | 8 | JSQS : 4 dimensions de qualité de recherche | recruitment-science.md §5 | Van Hooft & Van Hoye 2022 | Étayé |
 | 9 | Orientation apprentissage > performance | recruitment-science.md §5 | Kanfer 2001, Van Hooft 2021 | Étayé |
-| 10 | Inspection Fagan : détection par item | SKILL.md §Phase 3 | Fagan 1976 | Étayé |
+| 10 | Inspection Fagan : détection par item | phase-3-relecture.md | Fagan 1976 | Étayé |
 | 11 | ~4 items en mémoire de travail | proof/SKILL.md (source) | Cowan 2001 | Étayé |
 
 ### Affirmations dérivées (inférences)
@@ -733,7 +821,7 @@ concernés.
 | 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV vers P-J, lettre vers P-O | Faiblement étayé | Qualifié avec note |
 | 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Faiblement étayé | Qualifié avec note |
 | 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Faiblement étayé | Qualifié avec note |
-| 15 | ~7 secondes pour une lettre | SKILL.md §3.4 (v1) | Extension non justifiée de Ladders | Non étayé | Corrigé, retiré |
+| 15 | ~7 secondes pour une lettre | phase-3-relecture.md (v1) | Extension non justifiée de Ladders | Non étayé | Corrigé, retiré |
 
 ### Affirmations factuelles (plateformes)
 
@@ -749,4 +837,4 @@ concernés.
 15 affirmations étayées (dont 1 avec réserves méthodologiques). 3
 affirmations faiblement étayées, qualifiées avec notes, inférences
 raisonnables documentées comme telles. 1 affirmation non étayée, corrigée
-(retirée du SKILL.md). 0 affirmation non auditée.
+(retirée du workflow, v1). 0 affirmation non auditée.

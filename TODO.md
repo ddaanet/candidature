@@ -1,18 +1,15 @@
 # À faire
 
-### Stockage par capacité (Notion / Filesystem)
+### Migration BDD Notion vers pages imbriquées
 
-La mémoire projet seule ne suffit pas pour stocker les textes complets,
-les CR détaillés et l'historique des candidatures.
+Le stockage Notion est implémenté (D-25). Les candidatures existantes dans
+la base de données Notion doivent être migrées vers des pages imbriquées
+sous la page racine.
 
-Bootstrap générique au démarrage : exploration des capacités disponibles
-(Notion MCP ? Filesystem MCP ?), recommendation à l'utilisateur,
-initialisation du bloc mémoire qui gère la mémoire de masse. Le schéma
-de stockage est configuré en prose dans la mémoire projet ou utilisateur.
-
-- [ ] Bootstrap : exploration de capacité + recommendation + initialisation
-- [ ] Adaptation des portes mémoire (§2.6 archivage, §4.1 retours, §4.2 CR)
-- [ ] DESIGN.md : documenter la décision (remplace D-16)
+- [ ] Lire les entrées existantes dans la BDD Notion
+- [ ] Créer les pages imbriquées correspondantes
+- [ ] Valider la migration avec l'utilisateur
+- [ ] Supprimer les entrées BDD une fois migrées
 
 ### Médium de remontée utilisateurs externes (D-17)
 

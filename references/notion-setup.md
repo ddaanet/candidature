@@ -1,7 +1,7 @@
 # Configuration Notion
 
 Initialisation de la page racine et conventions d'usage des outils
-Notion. Chargé par le dispatcher au démarrage.
+Notion. Chargé par SKILL.md au démarrage.
 
 ## Page racine `[outil: memory_user_edits, notion-fetch]`
 

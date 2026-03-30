@@ -1,58 +1,60 @@
-# Gate d'ecriture backend
+# Contrôle d'écriture backend
 
-Protocole obligatoire avant toute ecriture vers un backend (Notion ou
-autre). L'ecriture ne peut pas se produire sans l'etape d'exploration,
-parce que la procedure d'ecriture n'existe pas avant.
+Protocole obligatoire avant toute écriture vers un backend (Notion ou
+autre). L'écriture ne peut pas se produire sans l'étape d'exploration,
+parce que la procédure d'écriture n'existe pas avant.
 
 ## Principe
 
-Chaque cible d'ecriture a une structure propre : pages enfants, proprietes,
+Chaque cible d'écriture a une structure propre : pages enfants, propriétés,
 conventions de nommage, contenu existant. Cette structure n'est pas connue
-a l'avance. L'agent doit la decouvrir avant d'ecrire, puis construire une
-procedure adaptee a ce qu'il a trouve.
+à l'avance. L'agent doit la découvrir avant d'écrire, puis construire une
+procédure adaptée à ce qu'il a trouvé.
 
 ## Protocole
 
 ### 1. Explorer la cible `[outil: notion-fetch]`
 
-Avant d'ecrire, appeler `notion-fetch` sur la page cible ou son parent.
-Lire la structure complete : pages enfants, proprietes, contenu.
+Avant d'écrire, appeler `notion-fetch` sur la page cible ou son parent.
+Lire la structure complète : pages enfants, propriétés, contenu.
 
-Si la cible est une page enfant a creer, explorer le parent. Si la cible
-est une page existante a modifier, explorer la page elle-meme.
+Si la cible est une page enfant à créer, explorer le parent. Si la cible
+est une page existante à modifier, explorer la page elle-même.
+
+Une seule exploration par session suffit pour une cible donnée. La
+procédure générée est réutilisable pour toutes les écritures vers la
+même cible dans la même session.
 
 ### 2. Extraire les contraintes
 
-A partir de l'exploration, identifier :
+À partir de l'exploration, identifier la convention de nommage des pages
+enfants existantes, les propriétés présentes et leur format (texte, date,
+relation, select), la structure du contenu (titres, sections, listes), et
+les pages enfants déjà présentes (pour éviter les doublons).
 
-- La convention de nommage des pages enfants existantes.
-- Les proprietes presentes et leur format (texte, date, relation, select).
-- La structure du contenu (titres, sections, listes).
-- Les pages enfants deja presentes (pour eviter les doublons).
+### 3. Générer la procédure d'écriture
 
-### 3. Generer la procedure d'ecriture
+Formuler la procédure spécifique à cette cible : quel outil appeler, avec
+quels paramètres, dans quel ordre. La procédure est un artefact de
+l'exploration, pas un modèle préétabli.
 
-Formuler la procedure specifique a cette cible : quel outil appeler, avec
-quels parametres, dans quel ordre. La procedure est un artefact de
-l'exploration, pas un template pre-ecrit.
+Pour une création de page : titre conforme à la convention, propriétés
+conformes au schéma, contenu conforme à la structure observée.
 
-Pour une creation de page : titre conforme a la convention, proprietes
-conformes au schema, contenu conforme a la structure observee.
+Pour une modification : identifier les blocs à modifier, utiliser la
+modification ciblée plutôt que le remplacement complet.
 
-Pour une modification : identifier les blocs a modifier, utiliser la
-modification ciblee plutot que le remplacement complet.
+### 4. Exécuter
 
-### 4. Executer
-
-Executer la procedure generee. Verifier le resultat (`notion-fetch` sur
-la page ecrite).
+Exécuter la procédure générée. Vérifier le résultat (`notion-fetch` sur
+la page écrite).
 
 ## Cas particuliers
 
-Si la cible est vide (pas de pages enfants, pas de contenu), l'agent
-choisit une structure raisonnable et la documente dans la page. Les
-ecritures suivantes s'y conformeront.
+Si la cible est vide (pas de pages enfants, pas de contenu), utiliser le
+modèle de structure fourni dans `references/modele-notion.md`. Les
+écritures suivantes s'y conformeront.
 
-Si l'exploration revele une structure inattendue (proprietes inconnues,
-contenu dans un format non prevu), l'agent s'adapte a ce qu'il trouve.
-Ne pas forcer une structure differente de celle en place.
+Si l'exploration révèle une structure inattendue (propriétés inconnues,
+contenu dans un format non prévu), l'agent s'adapte à ce qu'il trouve.
+Ne pas forcer une structure différente de celle en place.

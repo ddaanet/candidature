@@ -22,6 +22,6 @@ validation (prompt injection, qualité).
 
 ### Simulation d'entretien
 
-Extension d'interview-prep.md. Exercice interactif de préparation.
+Extension de preparation-entretien.md. Exercice interactif de préparation.
 
 - [ ] Concevoir le format (conversationnel, scénarisé, mixte)

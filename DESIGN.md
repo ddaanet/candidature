@@ -817,14 +817,16 @@ candidature/
     phase-4-suivi.md
     recruitment-science.md
     cover-letter.md
-    cv-handling.md
+    adaptation-cv.md
     review-items.md
-    feedback-tracking.md
-    interview-prep.md
+    suivi-retours.md
+    preparation-entretien.md
     etayage.md
     backend-write.md
     browser-layer.md
     consolidation.md
+    notion-setup.md
+    modele-notion.md
     sites/
       smartrecruiters.md
       teamtailor.md
@@ -832,7 +834,7 @@ candidature/
       linkedin.md
   build/
     build.sh
-    dispatcher.md
+    build.sh
     dev-stub.md
 ```
 

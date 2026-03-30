@@ -19,10 +19,10 @@ warn() { printf '  WARN  %s\n' "$1"; warnings=$((warnings + 1)); }
 content_files=(
   SKILL.md
   references/cover-letter.md
-  references/cv-handling.md
+  references/adaptation-cv.md
   references/etayage.md
-  references/feedback-tracking.md
-  references/interview-prep.md
+  references/suivi-retours.md
+  references/preparation-entretien.md
   references/recruitment-science.md
   references/review-items.md
   references/browser-layer.md

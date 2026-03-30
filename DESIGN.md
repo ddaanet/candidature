@@ -373,6 +373,8 @@ Orientation complète v1 (jargon, tour de conversation inutile).
 
 ### D-12 : Archivage des artefacts en mémoire
 
+Supersédé par D-30.
+
 Choix retenu : résumé structuré dans l'entrée `candidature:` (axes,
 accroche, ton, prétentions). Pas le texte intégral.
 
@@ -419,32 +421,31 @@ Le stockage persistant utilise Notion (D-25), pas la mémoire projet.
 
 ### D-17 : Cycle rappel, capture, consolidation pour les sites ATS
 
-Choix retenu : cycle en trois temps intégré dans le skill.
+Choix retenu : cycle en trois temps intégré dans le skill. Mis à jour en
+v0.4 pour Notion (D-25) et la hiérarchie des sources (D-28).
 
-Le rappel (references/phase-2-soumission.md, avant rédaction) est une
-consultation obligatoire des entrées `site:` en mémoire projet. Porte
-`[outil]` : l'agent lit la mémoire même s'il pense connaître le site.
+Le rappel (references/phase-2-soumission.md, §2.6) consulte deux sources
+avant navigation. Notion est la source primaire (observations terrain
+datées et versionnées). Les fichiers `references/sites/*.md` du skill
+sont la source secondaire (directives consolidées). Porte `[outil]` :
+l'agent consulte les deux sources même s'il pense connaître le site.
 
-La capture (references/phase-2-soumission.md, après soumission) est une question systématique +
-écriture obligatoire (même "RAS"). Porte `[outil]` cohérente avec D-13.
+La capture (references/phase-2-soumission.md, §2.9) est une question
+systématique + écriture obligatoire (même "RAS"). Chaque observation
+est datée, associée à la version du skill, et porte sa source (feedback
+candidat ou observation autonome de l'agent). Quand l'agent adopte un
+contournement, il enregistre le problème, la solution et le résultat.
+Porte `[outil]` cohérente avec D-13.
 
-La consolidation (candidate-desktop, différée) lit les entrées `site:`,
-les déduplique, et les intègre dans
-`candidate-desktop/references/sites/<site>.md`. Les entrées consolidées
-sont supprimées de la mémoire projet.
+La consolidation (references/consolidation.md, différée) lit les
+sous-pages Sites/ dans Notion, les déduplique, et met à jour les
+fichiers `references/sites/*.md` du skill. Les observations consolidées
+restent dans Notion (source primaire).
 
-Ce cycle suit le pattern `codify` d'agent-core (staging vers maturation
-vers consolidation). La mémoire projet joue le rôle de staging, les
-références candidate-desktop sont la documentation permanente.
-
-Le prototype contient 4 entrées `site:` écrites en mémoire projet
-(Teamtailor, LinkedIn, WTTJ, SmartRecruiters) à partir du minage des
-conversations passées. L'auteur traité comme premier utilisateur.
-
-L'expérience d'intégration avec les ATS s'accumule naturellement au fil des
-candidatures. Sans structuration, elle reste éparpillée dans les
-conversations et la mémoire utilisateur. Le préfixe `site:` permet le
-rappel et la consolidation systématiques.
+L'expérience d'intégration avec les ATS s'accumule naturellement au fil
+des candidatures. Sans structuration, elle reste éparpillée dans les
+conversations. La hiérarchie Notion/skill et le datage/versionnage
+permettent le rappel et la consolidation systématiques.
 
 ### D-18 : Étayage après le draft, pas avant
 
@@ -626,7 +627,7 @@ questions spécifiques au lieu de demander une lettre libre.
 avec adaptation au formulaire (deux passes pour un résultat souvent
 différent du format attendu).
 
-### D-27 : Gate d'écriture backend (references/backend-write.md)
+### D-27 : Contrôle d'écriture backend (references/backend-write.md)
 
 Choix retenu : implémenté (v0.4).
 
@@ -648,6 +649,84 @@ procédure, pas la procédure elle-même.
 Écarté : écriture directe avec instructions codées en dur (fragile, ne
 s'adapte pas aux structures Notion de chaque utilisateur). Procédure
 persistante (la structure Notion peut changer entre deux sessions).
+
+### D-28 : Hiérarchie des sources sites (Notion primaire, skill secondaire)
+
+Choix retenu : implémenté (v0.4).
+
+Notion contient les observations terrain, datées et associées à la
+version du skill utilisée. Les fichiers `references/sites/*.md` du skill
+contiennent les directives consolidées. Notion prévaut en cas de
+divergence. À la mise à jour du skill, les notes Notion sont comparées
+aux fichiers de référence (eux aussi datés et versionnés) pour détecter
+les divergences. Les directives du skill ne font pas double emploi avec
+les observations Notion.
+
+Cette séparation résout le problème de la consolidation (D-17) : les
+observations terrain sont vivantes dans Notion, les directives du skill
+sont stables et versionnées. La mise à jour du skill est le moment de
+synchronisation.
+
+### D-29 : Distinction feedback autonome agent vs feedback candidat
+
+Choix retenu : implémenté (v0.4).
+
+La capture site (§2.9) distingue deux sources d'observation. Le feedback
+candidat est ce que l'utilisateur signale après soumission. L'observation
+autonome est ce que l'agent détecte pendant la soumission (contournement,
+comportement non standard). Chaque observation porte sa source.
+
+Quand l'agent adopte un contournement, il enregistre le problème, la
+solution adoptée, et le résultat (succès ou échec). Cette traçabilité
+permet de pondérer la fiabilité des observations et de retrouver les
+contournements automatisés lors des candidatures suivantes.
+
+### D-30 : Archivage restructuré (propriétés + prose sur page candidature)
+
+Choix retenu : implémenté (v0.4). Supersède D-12.
+
+La sous-page résumé est supprimée. Les champs factuels (date de
+soumission, canal, plateforme, prétentions salariales) sont des
+propriétés de la page candidature Notion. Les champs analytiques (axes
+retenus, accroche, ton) sont un court paragraphe de prose dans la page
+candidature. Les brouillons restent dans leurs sous-pages.
+
+La distinction est entre contenu (sous-pages de brouillon) et
+métadonnées (page candidature). Les champs factuels sont partagés entre
+tous les brouillons, les monter en propriétés évite l'arbitraire de les
+rattacher à un brouillon particulier.
+
+Écarté : sous-page résumé dédiée (D-12, trop de métadonnées pour
+justifier une sous-page). Résumé en tête du brouillon (arbitraire quand
+il y a plusieurs brouillons).
+
+### D-31 : Clôture comme checkpoint d'enregistrement
+
+Choix retenu : implémenté (v0.4).
+
+La clôture n'est pas un message de fin. C'est un checkpoint qui force
+l'agent à vérifier que tout est archivé dans Notion avant de proposer
+un nouveau chat. Si un élément manque, l'agent demande au candidat avant
+de créer la page.
+
+Le contexte conversationnel (échanges, corrections, décisions en temps
+réel) ne sera plus accessible dans un nouveau chat. Tout ce qui doit
+être retrouvé plus tard doit être dans Notion avant la clôture. Cette
+contrainte évite la perte silencieuse d'artefacts non enregistrés.
+
+### D-32 : Contamination de style dans le dispatcher
+
+Choix retenu : implémenté (v0.4).
+
+Tout texte dans le contexte de l'agent est un corpus qui influence la
+sortie. Le dispatcher n'est pas exempt des règles anti-contamination
+(pas de fragments à puces, pas de listes numérotées brutes, phrases
+complètes). La lisibilité machine (Sonnet) est préservée par des phrases
+courtes avec une action par phrase, pas par de la structure à reproduire.
+
+Ce principe étend la règle de contamination de CLAUDE.md (exemples et
+templates comme vecteurs) à tout texte chargé dans le contexte, y
+compris les fichiers techniques et le dispatcher.
 
 ---
 

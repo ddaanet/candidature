@@ -13,35 +13,46 @@ Notion, avec capture des observations sur le site.
 ### Rappel site (avant navigation) `[outil: notion-fetch]`
 
 Avant de naviguer sur un site de candidature, charger les contraintes
-connues de la plateforme. Chercher une sous-page du site sous Sites/
-dans Notion (`notion-fetch`). Cette sous-page contient les contraintes
-consolidées et les contournements validés. Si aucune sous-page n'existe
-pour ce site, procéder avec prudence et noter le nom pour la capture
-après soumission.
+connues de la plateforme depuis deux sources. La source primaire est
+Notion : chercher une sous-page du site sous Sites/ dans Notion
+(`notion-fetch`). Cette sous-page contient les observations terrain,
+datées et associées à la version du skill utilisée. La source secondaire
+est le fichier de référence du skill (`references/sites/*.md`), qui
+contient les directives consolidées.
+
+Si les deux sources existent, les observations Notion prévalent. Les
+directives du fichier de référence ne doivent pas faire double emploi
+avec les observations Notion. À la mise à jour du skill, comparer les
+notes Notion existantes avec les fichiers de référence (eux aussi datés
+et versionnés) pour détecter les divergences.
+
+Si aucune sous-page n'existe dans Notion pour ce site, procéder avec le
+fichier de référence s'il existe, ou avec prudence si aucune source
+n'est disponible. Noter le nom du site pour la capture après soumission.
 
 ### Navigation `[outil: open_url]`
 
 Si Chrome est disponible, ouvrir directement la page de candidature
 (`open_url`, `new_tab=false`). Refuser les cookies marketing et
-tracking. Accepter les cookies fonctionnels si nécessaire au bon
+pistage. Accepter les cookies fonctionnels si nécessaire au bon
 fonctionnement du site (session, CSRF, état multi-étapes). Les
 particularités des plateformes ATS (clipboard WTTJ, dropzone
-Teamtailor, native setter Lever) sont documentés dans
+Teamtailor, native setter Lever) sont documentées dans
 `references/browser-layer.md`, chargé par le dispatcher quand Chrome
 est détecté.
 
 Si Chrome n'est pas disponible, demander au candidat de décrire les
 champs du formulaire : libellés, type (texte libre, liste déroulante,
-upload), et taille visible des champs texte.
+téléversement), et taille visible des champs texte.
 
-### Exploration du formulaire `[outil: screenshot / prompt]`
+### Exploration du formulaire `[outil: capture d'écran / prompt]`
 
 Identifier chaque champ du formulaire : libellé, type, taille visible.
 Distinguer les champs texte libre (lettre de motivation, message,
 question ouverte) des champs factuels (CV upload, langues, prétentions
 salariales, liens, listes déroulantes).
 
-Si Chrome est disponible : utiliser des screenshots pour lire les
+Si Chrome est disponible : utiliser des captures d'écran pour lire les
 champs. Si le formulaire est multi-étapes, explorer chaque étape avant
 de rédiger.
 
@@ -58,7 +69,7 @@ d'accompagnement si le formulaire ne le demande pas.
 
 Si le formulaire n'a aucun champ texte libre (pas de lettre, pas de
 message, pas de question ouverte), les livrables se limitent au CV et
-aux champs factuels. Pas de draft à générer, pas d'étayage, pas de
+aux champs factuels. Pas de brouillon à générer, pas d'étayage, pas de
 relecture. Passer directement aux champs factuels (2.8), puis à la
 capture site (2.9) et à l'archivage (2.10).
 
@@ -73,23 +84,23 @@ formulaire :
    propres termes" est un test d'authenticité. La réponse doit sonner
    comme le candidat, pas comme un modèle.
 
-2. Produire un draft adapté au champ. Une lettre de motivation complète
+2. Produire un brouillon adapté au champ. Une lettre de motivation complète
    si le champ est prévu pour une lettre (voir
    `references/cover-letter.md`). Un message court si le champ attend
    quelques phrases. Une réponse ciblée si le champ pose une question
-   spécifique. Le draft est créé en sous-page de la candidature dans
+   spécifique. Le brouillon est créé en sous-page de la candidature dans
    Notion (`notion-create-pages`). Voir `references/backend-write.md`
-   pour la gate d'écriture. Ne jamais mettre le contenu directement
+   pour le contrôle d'écriture. Ne jamais mettre le contenu directement
    dans la page candidature : chaque artefact est une sous-page.
 
 3. Charger le protocole d'étayage (`view references/etayage.md`) et
-   auditer le draft. L'agent découvre le protocole après avoir généré
-   le draft. Cette séparation est intentionnelle (voir DESIGN.md
-   D-22). Corriger le draft selon les résultats de l'audit.
+   auditer le brouillon. L'agent découvre le protocole après avoir généré
+   le brouillon. Cette séparation est intentionnelle (voir DESIGN.md
+   D-22). Corriger le brouillon selon les résultats de l'audit.
 
 4. Charger le protocole de relecture
-   (`view references/phase-3-relecture.md`) et passer le draft en
-   revue item par item avec le candidat. La relecture est une boucle
+   (`view references/phase-3-relecture.md`) et passer le brouillon en
+   revue point par point avec le candidat. La relecture est une boucle
    interne à la soumission, pas une phase séquentielle. Chaque champ
    texte libre passe par la relecture avant d'être rempli.
 
@@ -121,15 +132,16 @@ de génération.
 
 Remplir les champs qui ne demandent pas de rédaction :
 
-- CV upload : utiliser le fichier CV du candidat (original ou adapté
-  en phase de préparation).
-- Langues : selon le profil candidat.
-- Prétentions salariales : selon le profil et le benchmark salarial
+- Le CV est celui du candidat, original ou adapté en phase de
+  préparation. Le téléverser via le champ prévu.
+- Les langues sont renseignées selon le profil candidat.
+- Les prétentions salariales suivent le profil et le référentiel salarial
   de la recherche contextuelle (phase de préparation, §2.2). Si le
   candidat n'a pas communiqué de fourchette, lui demander avant de
   remplir. Ne pas inventer.
-- Liens (LinkedIn, portfolio, GitHub) : selon le profil candidat.
-- Listes déroulantes, cases à cocher : selon le profil et le poste.
+- Les liens (LinkedIn, portfolio, GitHub) proviennent du profil candidat.
+- Les listes déroulantes et cases à cocher sont renseignées selon le
+  profil et le poste.
 
 Si Chrome n'est pas disponible, indiquer au candidat les valeurs à
 saisir pour chaque champ.
@@ -141,20 +153,26 @@ Après soumission, demander au candidat :
 > "Des difficultés avec le site de candidature ?"
 
 Créer ou mettre à jour une sous-page sous Sites/ dans Notion pour
-cette plateforme. Voir `references/backend-write.md` pour la gate
+cette plateforme. Voir `references/backend-write.md` pour le contrôle
 d'écriture. L'écriture est obligatoire, même si le candidat répond
-"non" ou "RAS".
+"non" ou "RAS". Chaque observation est datée et associée à la version
+du skill.
 
 Si aucune sous-page n'existe pour ce site, la créer avec le nom de
 la plateforme, la date de découverte et l'entreprise associée. Si une
 sous-page existe déjà, la compléter avec les nouvelles observations.
 
-Si le candidat signale un problème, le décrire factuellement avec le
-contournement s'il a été trouvé. Si Chrome est disponible et que
-l'agent a observé un comportement notable (champ non standard,
-formulaire multi-étapes inhabituel, comportement JavaScript
-particulier), l'inclure dans la capture même si le candidat n'a rien
-signalé.
+Chaque observation porte sa source. Le feedback candidat est ce que
+l'utilisateur signale après soumission. L'observation autonome est ce
+que l'agent détecte pendant la soumission (contournement, comportement
+non standard, formulaire multi-étapes inhabituel, comportement
+JavaScript particulier). Inclure les observations autonomes même si le
+candidat n'a rien signalé.
+
+Quand l'agent adopte un contournement pendant la soumission
+(remplissage, navigation, téléversement), l'enregistrer avec le
+problème rencontré, la solution adoptée, et le résultat (succès ou
+échec).
 
 La capture alimente directement le rappel (§2.6) des candidatures
 suivantes sur le même site. La consolidation périodique des
@@ -163,35 +181,35 @@ observations est décrite dans `references/consolidation.md`.
 ## 2.10 Archivage `[outil: notion-create-pages, notion-update-page]`
 
 Après la soumission et la capture site, enrichir la page candidature
-dans Notion avec un résumé structuré. Le résumé est une sous-page de
-la candidature (pas du contenu directement dans la page candidature).
-Voir `references/backend-write.md` pour la gate d'écriture.
+dans Notion. Les champs factuels (date de soumission, canal utilisé,
+nom de la plateforme, prétentions salariales si communiquées) sont
+des propriétés de la page candidature.
 
-Le résumé contient :
+Les champs analytiques complètent la page candidature en prose courte :
+les axes retenus (P-J, P-O, différenciation), l'accroche utilisée
+(premiers mots ou résumé), et le registre de ton. Ce paragraphe permet
+de retrouver rapidement ce qui a été envoyé sans relire les brouillons.
 
-- Les axes retenus (P-J, P-O, différenciation).
-- L'accroche (premiers mots ou résumé).
-- Le ton (registre utilisé).
-- Les prétentions salariales (si communiquées).
-- Le canal utilisé et le nom de la plateforme.
-- La date de soumission.
-
-Ce résumé permet de retrouver rapidement ce qui a été envoyé, sans
-stocker le texte intégral. Le texte complet reste dans les sous-pages
-de draft créées en 2.7.
+Le texte complet reste dans les sous-pages de brouillon créées en 2.7.
+Les sous-pages contiennent le contenu, la page candidature contient les
+métadonnées.
 
 ## 2.11 Clôture `[état]`
 
-La candidature est soumise, archivée, et le site est capturé. Le
-contexte de cette conversation contient la candidature complète : les
-échanges, les drafts, les corrections, les décisions du candidat. Ce
-contexte ne sera plus accessible dans un nouveau chat.
+Avant de clore, vérifier que tous les artefacts sont enregistrés dans
+Notion : brouillons en sous-pages, métadonnées sur la page candidature,
+observations site capturées. Si un élément manque, demander au candidat
+avant de créer la page.
+
+La conversation contient les échanges, les corrections et les décisions
+du candidat. Ces éléments ne seront plus accessibles dans un nouveau
+chat. Tout ce qui doit être retrouvé plus tard doit être dans Notion
+avant de clore.
 
 Proposer au candidat de démarrer un nouveau chat pour la prochaine
-action (nouvelle candidature, suivi, autre tâche). La séparation en
-conversations distinctes évite l'accumulation de contexte et réduit
-le risque de contamination entre candidatures.
+action. La séparation en conversations distinctes évite l'accumulation
+de contexte et réduit le risque de contamination entre candidatures.
 
-> "La candidature est envoyée. Pour la suite (nouvelle candidature,
-> suivi d'une réponse, autre chose), je recommande de démarrer un
-> nouveau chat."
+> "La candidature est enregistrée. Tous les documents sont dans Notion.
+> Pour la suite (nouvelle candidature, suivi d'une réponse, autre
+> chose), je recommande de démarrer un nouveau chat."

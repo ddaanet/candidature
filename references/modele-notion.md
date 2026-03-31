@@ -44,8 +44,9 @@ nom de l'entreprise et l'intitulé du poste.
 
 Le contenu de la page candidature porte les métadonnées : date de
 soumission, canal utilisé, plateforme, prétentions salariales si
-communiquées. Un paragraphe analytique résume les axes retenus (P-J, P-O,
-différenciation), l'accroche utilisée et le registre de ton.
+communiquées. Un paragraphe analytique résume les axes retenus (adéquation au poste,
+motivation pour l'entreprise, différenciation), l'accroche utilisée et
+le registre de ton.
 
 Chaque artefact texte (lettre, message, réponse à une question) est
 créé en sous-page de la candidature dès le premier brouillon. Les

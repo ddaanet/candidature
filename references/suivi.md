@@ -7,7 +7,7 @@ que ceux focalisés sur les résultats bruts (Kanfer et al., 2001,
 Van Hooft & Van Hoye, 2022). Voir `references/suivi-retours.md` pour
 le protocole détaillé.
 
-## 4.1 Enregistrement des retours `[outil: notion-update-page]`
+## 4.1 Enregistrement des retours
 
 Quand le candidat signale un retour (refus, entretien, offre), mettre à
 jour la page candidature correspondante dans Notion. Le statut est mis à
@@ -21,7 +21,7 @@ page candidature. Rien n'est imposé, tout est capté s'il est offert.
 
 Voir `references/suivi-retours.md` pour les statuts et le détail.
 
-## 4.2 Entretiens `[choix]`
+## 4.2 Entretiens
 
 Deux moments distincts.
 
@@ -33,7 +33,7 @@ Après un entretien, l'agent demande "Comment ça s'est passé ?" et adapte
 la profondeur selon ce que le candidat dit. Voir
 `references/suivi-retours.md` pour le protocole.
 
-### Compte rendu `[outil: notion-create-pages]`
+### Compte rendu
 
 Le compte rendu d'entretien est créé en sous-page de la candidature dans
 Notion (`notion-create-pages`). La sous-page contient la date, le tour
@@ -43,7 +43,7 @@ apprentissages transférables. Pas de verbatim, une synthèse compacte.
 L'objectif des deux moments (préparation et compte rendu) est l'extraction
 d'apprentissages transférables.
 
-## 4.3 Analyse des tendances `[choix]`
+## 4.3 Analyse des tendances
 
 Après 5+ candidatures enregistrées, l'agent peut proposer une analyse.
 L'analyse n'est jamais automatique. Le candidat décide quand il veut
@@ -69,7 +69,7 @@ L'analyse est conversationnelle, pas un rapport. Pas de tableau de bord
 déprimant. L'objectif est d'identifier des ajustements concrets pour les
 prochaines candidatures.
 
-### Stockage des observations `[outil: notion-create-pages, notion-update-page]`
+### Stockage des observations
 
 Les observations sont stockées dans la page Tendances sous la racine Notion
 du candidat (`notion-create-pages` pour la première analyse,

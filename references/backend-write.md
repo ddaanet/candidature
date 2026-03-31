@@ -13,7 +13,7 @@ procédure adaptée à ce qu'il a trouvé.
 
 ## Protocole
 
-### 1. Explorer la cible `[outil: notion-fetch]`
+### 1. Explorer la cible
 
 Avant d'écrire, appeler `notion-fetch` sur la page cible ou son parent.
 Lire la structure complète : pages enfants, propriétés, contenu.

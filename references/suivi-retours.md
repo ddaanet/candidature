@@ -13,9 +13,9 @@ de meilleurs résultats que ceux qui se focalisent sur les résultats bruts
 (Van Hooft & Van Hoye, 2022, Job Search Quality Scale, dimension
 "learning and improvement").
 
-Le feedback le plus utile ne vient pas des réponses négatives (presque
+Le retour le plus utile ne vient pas des réponses négatives (presque
 toujours génériques) mais de la réflexion structurée après les entretiens
-et de l'analyse des patterns sur plusieurs candidatures.
+et de l'analyse des tendances sur plusieurs candidatures.
 
 ### Sources
 
@@ -45,7 +45,7 @@ réponse), refus (réponse négative, avec ou sans entretien), entretien N
 
 ### Informations optionnelles
 
-Si le candidat donne plus de contexte (feedback du recruteur, hypothèse
+Si le candidat donne plus de contexte (retour du recruteur, hypothèse
 sur le refus, délai de réponse), l'agent l'ajoute à l'entrée mémoire.
 Rien n'est imposé, tout est capté s'il est offert.
 
@@ -82,10 +82,10 @@ propose ses observations. Le candidat valide ou non.
 
 ---
 
-## Analyse des patterns
+## Analyse des tendances
 
 Après 5+ candidatures enregistrées, l'agent peut proposer une analyse
-des patterns `[choix]`. L'analyse n'est pas automatique, le candidat
+des tendances. L'analyse n'est pas automatique, le candidat
 décide quand il veut prendre du recul.
 
 ### Axes d'analyse
@@ -120,7 +120,7 @@ Une entrée par candidature, format compact :
 
 ```
 candidature: 2026-03-16 / Doctolib / Senior SWE Agentic AI / WTTJ /
-axes: Python 25 ans, agentique actif, blog tech P-O fit / statut: en attente
+axes: Python 25 ans, agentique actif, blog tech motivation entreprise / statut: en attente
 ```
 
 Mise à jour in-place (`replace`) quand le statut change.

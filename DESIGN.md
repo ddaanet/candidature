@@ -380,7 +380,7 @@ accroche, ton, prétentions). Pas le texte intégral.
 
 La mémoire projet a un budget limité. Le texte complet reste accessible
 via `conversation_search` si besoin. Le résumé suffit pour l'analyse de
-patterns (references/phase-4-suivi.md) et la réutilisation d'axes lors de candidatures similaires.
+patterns (references/suivi.md) et la réutilisation d'axes lors de candidatures similaires.
 
 ### D-13 : Porte mémoire, écriture systématique
 
@@ -406,7 +406,7 @@ pour refléter l'état d'avancement.
 ### D-15 : Benchmark salarial = dimension de la recherche contextuelle
 
 Choix retenu : le benchmark salarial est une dimension de la recherche
-contextuelle (references/phase-2-preparation.md), pas une procédure séparée.
+contextuelle (references/preparation.md), pas une procédure séparée.
 Les sources ne sont pas codées en dur.
 
 Les sources de benchmark varient selon le pays, le secteur et le type de
@@ -424,13 +424,13 @@ Le stockage persistant utilise Notion (D-25), pas la mémoire projet.
 Choix retenu : cycle en trois temps intégré dans le skill. Mis à jour en
 v0.4 pour Notion (D-25) et la hiérarchie des sources (D-28).
 
-Le rappel (references/phase-2-soumission.md, §2.6) consulte deux sources
+Le rappel (references/soumission.md, §2.6) consulte deux sources
 avant navigation. Notion est la source primaire (observations terrain
 datées et versionnées). Les fichiers `references/sites/*.md` du skill
 sont la source secondaire (directives consolidées). Porte `[outil]` :
 l'agent consulte les deux sources même s'il pense connaître le site.
 
-La capture (references/phase-2-soumission.md, §2.9) est une question
+La capture (references/soumission.md, §2.9) est une question
 systématique + écriture obligatoire (même "RAS"). Chaque observation
 est datée, associée à la version du skill, et porte sa source (feedback
 candidat ou observation autonome de l'agent). Quand l'agent adopte un
@@ -527,7 +527,7 @@ C'est le même problème que le TDD dans Edify : un agent qui voit les tests
 futurs code la solution directement au lieu de respecter le cycle red-green.
 
 Le protocole d'étayage est extrait dans `references/etayage.md`, fichier
-autonome. `references/phase-2-soumission.md` charge etayage.md après le
+autonome. `references/soumission.md` charge etayage.md après le
 draft. L'agent découvre le protocole d'audit après avoir généré. L'isolation
 des instructions est réelle même si le contexte conversationnel reste.
 

@@ -4,7 +4,7 @@ Première phase du workflow de candidature. Collecte du profil candidat. Se
 fait une fois et s'enrichit au fil des candidatures. Le seul élément
 indispensable est le CV.
 
-## 1.1 CV `[outil: view]`
+## 1.1 CV
 
 Demander au candidat de fournir son CV.
 
@@ -20,7 +20,7 @@ toute ambiguïté.
 
 Voir `references/adaptation-cv.md` pour le protocole de modification.
 
-## 1.2 Profil `[prompt]`
+## 1.2 Profil
 
 Conversation ouverte pour comprendre le candidat au-delà du CV. Une seule
 question de départ :
@@ -52,7 +52,7 @@ Quand la conversation est suffisante, confirmer avec un widget :
 > "J'ai une bonne image de votre profil. On passe aux exemples de style ou
 > on commence à candidater directement ?"
 
-## 1.3 Exemples de style (optionnel) `[outil: view/web_fetch]`
+## 1.3 Exemples de style (optionnel)
 
 Des exemples de comment le candidat écrit quand il est à son meilleur. Le
 workflow fonctionne sans, mais produit de meilleurs résultats avec.
@@ -71,7 +71,7 @@ le ton naturel dans les échanges conversationnels et l'enrichit au fil
 des candidatures. Après la relecture d'une lettre, la phase 3 propose au
 candidat de conserver le ton comme référence pour les prochaines.
 
-## 1.4 Enregistrement du profil `[outil: notion-create-pages, notion-update-page]`
+## 1.4 Enregistrement du profil
 
 Enregistrer le profil dans la fiche candidat sur Notion. Les informations
 collectées (parcours, contraintes, fourchette salariale, métriques,

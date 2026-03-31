@@ -15,7 +15,7 @@ L'interface est conversationnelle : le candidat répond naturellement,
 l'agent interprète. Le protocole fonctionne même sur un texte de 3 lignes
 (un seul point).
 
-## 3.1 Orientation `[état]`
+## 3.1 Orientation
 
 Résumer en une phrase : quel texte, pour quel poste, combien de
 paragraphes. Exemple : "Je relis votre lettre pour Doctolib, 4
@@ -25,7 +25,7 @@ Pas de ligne d'état formatée, pas de liste de critères, pas de vocabulaire
 de protocole. Le candidat a besoin de savoir ce qu'on relit, pas comment
 la mécanique fonctionne.
 
-Voir `references/review-items.md` pour le découpage en éléments. Attendre
+Voir `references/decoupage-relecture.md` pour le découpage en éléments. Attendre
 la confirmation avant de commencer.
 
 ## 3.2 Point par point
@@ -111,7 +111,7 @@ a été respectée.
 Le format : respect des contraintes du canal (limite de caractères, format
 attendu).
 
-## 3.5 Enrichissement du corpus `[choix]`
+## 3.5 Enrichissement du corpus
 
 Quand le candidat est satisfait du ton d'un texte après relecture,
 proposer de l'ajouter aux exemples de style :

@@ -8,9 +8,9 @@ rien avant de connaître les champs du formulaire.
 Le livrable de cette phase est une candidature soumise, archivée dans
 Notion, avec capture des observations sur le site.
 
-## 2.6 Ouverture du formulaire `[outil: open_url / prompt]`
+## 2.6 Ouverture du formulaire
 
-### Rappel site (avant navigation) `[outil: notion-fetch]`
+### Rappel site (avant navigation)
 
 Avant de naviguer sur un site de candidature, charger les contraintes
 connues de la plateforme depuis deux sources. La source primaire est
@@ -30,7 +30,7 @@ Si aucune sous-page n'existe dans Notion pour ce site, procéder avec le
 fichier de référence s'il existe, ou avec prudence si aucune source
 n'est disponible. Noter le nom du site pour la capture après soumission.
 
-### Navigation `[outil: open_url]`
+### Navigation
 
 Si Chrome est disponible, ouvrir directement la page de candidature
 (`open_url`, `new_tab=false`). Refuser les cookies marketing et
@@ -45,7 +45,7 @@ Si Chrome n'est pas disponible, demander au candidat de décrire les
 champs du formulaire : libellés, type (texte libre, liste déroulante,
 téléversement), et taille visible des champs texte.
 
-### Exploration du formulaire `[outil: capture d'écran / prompt]`
+### Exploration du formulaire
 
 Identifier chaque champ du formulaire : libellé, type, taille visible.
 Distinguer les champs texte libre (lettre de motivation, message,
@@ -59,7 +59,7 @@ de rédiger.
 Si Chrome n'est pas disponible : travailler avec la description fournie
 par le candidat.
 
-## 2.7 Génération par champ `[outil: notion-create-pages]`
+## 2.7 Génération par champ
 
 Le formulaire détermine ce qui est généré. Pas de lettre de motivation
 si le formulaire n'a pas de champ pour une lettre. Pas de message
@@ -99,7 +99,7 @@ formulaire :
    D-22). Corriger le brouillon selon les résultats de l'audit.
 
 4. Charger le protocole de relecture
-   (`view references/phase-3-relecture.md`) et passer le brouillon en
+   (`view references/relecture.md`) et passer le brouillon en
    revue point par point avec le candidat. La relecture est une boucle
    interne à la soumission, pas une phase séquentielle. Chaque champ
    texte libre passe par la relecture avant d'être rempli.
@@ -128,7 +128,7 @@ champs testent la voix du candidat. Utiliser les exemples de style
 Un texte trop long ou trop structuré pour un champ court est un signal
 de génération.
 
-## 2.8 Champs factuels `[outil: form_input / prompt]`
+## 2.8 Champs factuels
 
 Remplir les champs qui ne demandent pas de rédaction :
 
@@ -146,7 +146,7 @@ Remplir les champs qui ne demandent pas de rédaction :
 Si Chrome n'est pas disponible, indiquer au candidat les valeurs à
 saisir pour chaque champ.
 
-## 2.9 Capture site `[outil: notion-create-pages]`
+## 2.9 Capture site
 
 Après soumission, demander au candidat :
 
@@ -162,7 +162,7 @@ Si aucune sous-page n'existe pour ce site, la créer avec le nom de
 la plateforme, la date de découverte et l'entreprise associée. Si une
 sous-page existe déjà, la compléter avec les nouvelles observations.
 
-Chaque observation porte sa source. Le feedback candidat est ce que
+Chaque observation porte sa source. Le retour du candidat est ce que
 l'utilisateur signale après soumission. L'observation autonome est ce
 que l'agent détecte pendant la soumission (contournement, comportement
 non standard, formulaire multi-étapes inhabituel, comportement
@@ -178,7 +178,7 @@ La capture alimente directement le rappel (§2.6) des candidatures
 suivantes sur le même site. La consolidation périodique des
 observations est décrite dans `references/consolidation.md`.
 
-## 2.10 Archivage `[outil: notion-create-pages, notion-update-page]`
+## 2.10 Archivage
 
 Après la soumission et la capture site, enrichir la page candidature
 dans Notion. Les champs factuels (date de soumission, canal utilisé,
@@ -186,7 +186,8 @@ nom de la plateforme, prétentions salariales si communiquées) sont
 des propriétés de la page candidature.
 
 Les champs analytiques complètent la page candidature en prose courte :
-les axes retenus (P-J, P-O, différenciation), l'accroche utilisée
+les axes retenus (adéquation au poste, motivation pour l'entreprise,
+différenciation), l'accroche utilisée
 (premiers mots ou résumé), et le registre de ton. Ce paragraphe permet
 de retrouver rapidement ce qui a été envoyé sans relire les brouillons.
 
@@ -194,7 +195,7 @@ Le texte complet reste dans les sous-pages de brouillon créées en 2.7.
 Les sous-pages contiennent le contenu, la page candidature contient les
 métadonnées.
 
-## 2.11 Clôture `[état]`
+## 2.11 Clôture
 
 Avant de clore, vérifier que tous les artefacts sont enregistrés dans
 Notion : brouillons en sous-pages, métadonnées sur la page candidature,

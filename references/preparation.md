@@ -8,7 +8,7 @@ Le livrable de cette phase est un ensemble validé : axes confirmés, CV prêt,
 recherche contextuelle exploitable. La phase suivante (soumission) prend le
 relais pour la navigation, la génération et l'envoi.
 
-## 2.1 Recherche d'offres `[outil: web_search, open_url]`
+## 2.1 Recherche d'offres
 
 Si le candidat n'a pas encore d'offre, rechercher des offres adaptées à
 son profil et son secteur. La recherche par Control Chrome directement
@@ -20,13 +20,13 @@ Si Chrome n'est pas disponible, utiliser `web_search` et recommander au
 candidat des plateformes adaptées à son profil. Le candidat revient avec
 des URLs.
 
-## 2.2 Fiche de poste `[outil: view/web_fetch]`
+## 2.2 Fiche de poste
 
 Le candidat fournit une ou plusieurs offres d'emploi (texte, URL, ou
 capture d'écran), ou l'agent les a trouvées en recherche. Lire chaque
 fiche de poste (appel d'outil). Si c'est une URL, aller la chercher.
 
-### Rappel site (avant navigation) `[outil: notion-fetch, view]`
+### Rappel site (avant navigation)
 
 Avant de naviguer sur un site de candidature, charger les contraintes
 connues de la plateforme depuis deux sources. La source primaire est
@@ -41,7 +41,7 @@ aucune sous-page n'existe dans Notion pour ce site, procéder avec le
 fichier de référence s'il existe, ou avec prudence si aucune source
 n'est disponible.
 
-### Shortlist `[outil: notion-create-pages, notion-fetch]`
+### Shortlist
 
 Pour chaque offre, analyser l'adéquation avec le profil du candidat sur
 trois dimensions :
@@ -75,7 +75,7 @@ Une offre shortlistée il y a plus de 3 mois est probablement pourvue.
 Signaler au candidat les pages shortlist dont la date de création dépasse
 3 mois. Le candidat décide de conserver ou supprimer.
 
-## 2.3 Canal de candidature `[choix]`
+## 2.3 Canal de candidature
 
 Quand le candidat lance une candidature sur une offre shortlistée,
 chercher le meilleur canal. Si l'offre a été trouvée via un agrégateur
@@ -91,7 +91,7 @@ canaux sont comparables.
 Si l'agent n'a pas accès au navigateur, demander au candidat de vérifier
 si un site carrière direct existe.
 
-## 2.4 Recherche contextuelle `[outil: notion-fetch, web_search]`
+## 2.4 Recherche contextuelle
 
 Avant de demander quoi que ce soit au candidat, rechercher ce qui est
 attendu pour ce type de poste. L'objectif est de savoir quels documents
@@ -113,7 +113,7 @@ recherche.
 Ne jamais réutiliser silencieusement une correspondance approximative ou
 une entrée de plus de 3 mois. Le candidat décide.
 
-### Recherche complète `[outil: web_search]`
+### Recherche complète
 
 Explorer les documents attendus pour ce type de poste (CV seul, lettre
 de motivation, portfolio, lettre manuscrite, références, tests techniques,
@@ -136,7 +136,7 @@ codées en dur, rechercher les plus pertinentes au moment de la recherche.
 Le référentiel sert de base pour le champ prétentions à la soumission et
 pour la préparation d'entretien (`references/preparation-entretien.md`).
 
-### Stockage des résultats `[outil: notion-create-pages]`
+### Stockage des résultats
 
 Les résultats sont stockés en page enfant sous Recherches/ dans Notion.
 Voir `references/backend-write.md` pour le contrôle d'écriture. La page
@@ -144,7 +144,7 @@ contient le type de poste, le secteur, la taille, le pays, la date, les
 résultats structurés, et un champ "Pas applicable" pour le périmètre
 d'exclusion.
 
-## 2.5 Documents et contexte candidat `[choix]`
+## 2.5 Documents et contexte candidat
 
 Maintenant qu'on sait ce qui est attendu, demander au candidat :
 
@@ -155,7 +155,7 @@ Proposer aussi d'aller chercher des informations sur l'employeur si le
 candidat donne un nom ou une URL : site web, page carrière, blog technique,
 actualités récentes, avis d'employés.
 
-## 2.6 Axes `[choix]`
+## 2.6 Axes
 
 Aligner avec le candidat sur deux dimensions distinctes, puis un
 différenciateur. Ces dimensions s'appuient sur la recherche en psychologie
@@ -179,7 +179,7 @@ claires ou avoir besoin d'aide pour formuler ses arguments. S'adapter.
 Confirmer les axes retenus avec un widget avant de rédiger. Le widget
 présente les axes choisis sous les deux dimensions pour validation.
 
-## 2.7 Personnalisation du CV `[choix]`
+## 2.7 Personnalisation du CV
 
 Si la recherche contextuelle ou l'analyse du poste indique qu'une
 adaptation du CV serait bénéfique : proposer au candidat. Pas imposer.

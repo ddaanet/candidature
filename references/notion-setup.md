@@ -3,7 +3,7 @@
 Initialisation de la page racine et conventions d'usage des outils
 Notion. Chargé par SKILL.md au démarrage.
 
-## Page racine `[outil: memory_user_edits, notion-fetch]`
+## Page racine
 
 Lire les mémoires (`memory_user_edits view`). Chercher une entrée
 `candidature-root: <URL ou ID>`. Si elle existe, utiliser cette

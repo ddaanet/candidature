@@ -4,7 +4,7 @@ Protocole de préparation avant un entretien d'embauche. Couvre la
 recherche, les questions probables, et la stratégie de négociation
 salariale.
 
-## Recherche pré-entretien `[outil: web_search]`
+## Recherche pré-entretien
 
 Avant tout entretien, rechercher :
 
@@ -26,7 +26,7 @@ Adapter au type d'entretien (RH, technique, manager). Bases communes :
 - La présentation ("Parlez-moi de vous"). Préparer une version de 2
   minutes alignée sur les axes identifiés en §2.4.
 - La motivation ("Pourquoi cette entreprise ?"). Reprendre les éléments
-  de P-O fit de la candidature.
+  de motivation pour l'entreprise retenus dans la candidature.
 - Les compétences : questions techniques liées au poste. Identifier les
   sujets probables à partir de la fiche de poste.
 - Les écarts : si la candidature mentionne des écarts honnêtes, préparer
@@ -85,7 +85,7 @@ précision des ancres).
 
 Le skill rappelle au candidat sa fourchette (collectée en §1.2) et les
 benchmarks du cache §2.2. Il présente les stratégies ci-dessus. Il
-prépare les formulations avec le candidat `[choix]`. Il n'impose jamais
+prépare les formulations avec le candidat. Il n'impose jamais
 une stratégie, le candidat choisit.
 
 ### Différence formulaire vs entretien

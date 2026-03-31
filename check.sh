@@ -18,11 +18,11 @@ warn() { printf '  WARN  %s\n' "$1"; warnings=$((warnings + 1)); }
 
 content_files=(
   SKILL.md
-  references/phase-1-profil.md
-  references/phase-2-preparation.md
-  references/phase-2-soumission.md
-  references/phase-3-relecture.md
-  references/phase-4-suivi.md
+  references/profil.md
+  references/preparation.md
+  references/soumission.md
+  references/relecture.md
+  references/suivi.md
   references/backend-write.md
   references/notion-setup.md
   references/modele-notion.md
@@ -32,7 +32,7 @@ content_files=(
   references/suivi-retours.md
   references/preparation-entretien.md
   references/recruitment-science.md
-  references/review-items.md
+  references/decoupage-relecture.md
   references/site-ouverture.md
   references/site-cloture.md
   references/consolidation.md

@@ -15,7 +15,7 @@ Version: __VERSION__
 Point d'entrée. Vérifie les mises à jour, vérifie les prérequis,
 détecte les capacités, charge la phase appropriée.
 
-## 1. Vérification de mise à jour `[outil: memory_user_edits, bash_tool]`
+## 1. Vérification de mise à jour
 
 Avant de charger quoi que ce soit, vérifier s'il existe une version
 plus récente. Une seule vérification par jour pour ne pas ralentir
@@ -64,7 +64,7 @@ direct au candidat :
 Ne passer à l'étape suivante que si le candidat le demande
 explicitement.
 
-## 2. Vérification Notion `[outil: aucun]`
+## 2. Vérification Notion
 
 Vérifier que des outils `notion-*` figurent dans les outils
 disponibles. Si aucun outil Notion n'est détecté :
@@ -73,18 +73,18 @@ disponibles. Si aucun outil Notion n'est détecté :
 
 S'arrêter. Ne pas proposer de contournement.
 
-## 3. Page racine Notion `[outil: view]`
+## 3. Page racine Notion
 
 Charger `view references/notion-setup.md` et suivre les instructions.
 
-## 4. Détection Chrome `[outil: view]`
+## 4. Détection Chrome
 
 Si des outils `Control Chrome:*` figurent dans les outils
 disponibles, charger `view references/site-ouverture.md`. Les fichiers
 `references/sites/*.md` sont chargés à la demande par les phases
 (rappel avant navigation sur un site).
 
-## 5. Détermination de la phase `[outil: aucun]`
+## 5. Détermination de la phase
 
 Déterminer la phase à charger selon le contexte de la conversation et
 l'état de la page racine Notion.
@@ -95,21 +95,21 @@ appliquée.
 1. Si le candidat signale un retour (refus, réponse, entretien à
    débriefer) ou utilise un déclencheur de suivi ("refus", "rejeté",
    "debrief", "compte rendu entretien"), charger
-   `view references/phase-4-suivi.md`.
+   `view references/suivi.md`.
 
 2. Si la sous-page "Fiche candidat" est vide ou absente dans la page
-   racine Notion, charger `view references/phase-1-profil.md`.
+   racine Notion, charger `view references/profil.md`.
 
 3. Si le candidat fournit une offre d'emploi ou demande à préparer une
    candidature ("postuler", "adapter mon CV", ou une URL/texte d'offre),
-   charger `view references/phase-2-preparation.md`.
+   charger `view references/preparation.md`.
 
 4. Si une page candidature existe sous la page racine avec une sous-page
    contenant des axes et une sous-page contenant une recherche
-   contextuelle, charger `view references/phase-2-soumission.md`.
+   contextuelle, charger `view references/soumission.md`.
 
 5. Si aucune des règles précédentes ne s'applique et que la fiche
-   candidat existe, charger `view references/phase-2-preparation.md`.
+   candidat existe, charger `view references/preparation.md`.
 
 Émettre une ligne de statut indiquant la phase chargée, par exemple :
 `Phase 2, préparation.`

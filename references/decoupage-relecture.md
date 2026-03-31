@@ -10,7 +10,7 @@ d'artefact de candidature.
 | Lettre de motivation (texte libre) | Paragraphes (lignes vides) | Paragraphe |
 | Lettre de motivation (PDF/DOCX) | Sections visuelles | Section |
 | Réponse formulaire (champ unique) | Groupes de phrases thématiques | Groupe |
-| Réponse formulaire (multi-champs) | Un item par champ | Champ |
+| Réponse formulaire (multi-champs) | Un élément par champ | Champ |
 | Message court (<100 mots) | Texte entier | Un seul élément |
 | CV (section modifiée) | Section du CV modifiée | Section |
 
@@ -29,12 +29,10 @@ Présenter les sous-éléments comme "N.1/N.K", "N.2/N.K".
 
 ### Lettre de motivation (150-250 mots)
 
-Typiquement 3-5 éléments :
-1. Accroche, pourquoi ce poste ou cette entreprise
-2. Argument principal, adéquation profil-poste
-3. Différenciation, ce qui sort du lot
-4. Projection, ce qu'on apporte, ce qu'on attend
-5. Clôture, disponibilité, appel à l'action
+Une lettre se découpe typiquement en 3-5 éléments. L'accroche dit pourquoi ce poste ou cette
+entreprise. L'argument principal montre l'adéquation profil-poste. La
+différenciation établit ce qui sort du lot. La projection couvre ce
+qu'on apporte et ce qu'on attend. La clôture indique la disponibilité.
 
 ### Réponse à un formulaire multi-champs
 

@@ -11,15 +11,16 @@ je devrais lire ce CV plutôt qu'un autre ?"
 Ce n'est pas un résumé du CV. C'est l'argument qui donne envie de le lire.
 
 En termes de recherche (voir `references/recruitment-science.md`) : le CV
-adresse l'adéquation personne-poste (compétences, expérience). La lettre
-adresse naturellement l'adéquation personne-organisation (valeurs,
+couvre l'adéquation personne-poste (compétences, expérience). La lettre
+couvre naturellement l'adéquation personne-organisation (valeurs,
 culture, motivation). Une lettre qui ne fait que résumer le CV double une
-dimension déjà couverte sans adresser l'autre.
+dimension déjà couverte sans traiter l'autre.
 
 ## Structure
 
 Pas de modèle rigide. Le contenu et la longueur s'adaptent au canal, au
-poste et au candidat. Mais toute lettre efficace contient ces éléments :
+poste et au candidat. Mais tout texte de candidature efficace contient
+ces éléments, dosés selon la longueur et le contexte du champ :
 
 L'accroche ouvre toujours la lettre. Elle dit pourquoi ce poste et
 pourquoi cette entreprise, avec un élément spécifique qui ne serait pas
@@ -48,25 +49,26 @@ qu'un pavé de 300.
 
 ## Principes de rédaction
 
-### La lettre n'est pas un résumé du CV
+### Le texte n'est pas un résumé du CV
 
-Le CV porte le P-J fit. La lettre porte le P-O fit. Si la lettre
-re-raconte le parcours du candidat, elle double le CV sans adresser la
-question que le recruteur attend : "pourquoi ici ?"
+Le CV porte l'adéquation au poste. Le texte porte la motivation pour
+l'entreprise. Si le texte re-raconte le parcours du candidat, il double
+le CV sans traiter la question que le recruteur attend : "pourquoi ici ?"
 
-Condenser le P-J en une phrase factuelle ("15 ans sur un même codebase
-Python SaaS"). Laisser le CV faire le travail. Le territoire de la
-lettre, c'est la projection dans l'entreprise.
+Condenser l'adéquation au poste en une phrase factuelle ("15 ans sur un
+même codebase Python SaaS"). Laisser le CV faire le travail. Le
+territoire du texte, c'est la projection dans l'entreprise.
 
 ### Spécificité plutôt que généralité
 
-Mauvais : "J'ai une solide expérience en gestion de projet."
-Bon : "J'ai piloté la refonte d'un SI de 200k lignes sur 3 ans."
+"J'ai une solide expérience en gestion de projet" est interchangeable
+entre mille candidats. "J'ai piloté la refonte d'un SI de 200k lignes
+sur 3 ans" ne l'est pas.
 
 ### Faits plutôt qu'adjectifs
 
-Mauvais : "Je suis passionné, rigoureux et motivé."
-Bon : Le parcours parle de lui-même. Pas besoin de se qualifier.
+"Je suis passionné, rigoureux et motivé" : le parcours parle de
+lui-même. Pas besoin de se qualifier.
 
 En théorie du signal (Spence, 1973) : les adjectifs auto-attribués sont
 des signaux gratuits. Tout candidat peut les émettre, ils n'ont donc
@@ -76,51 +78,59 @@ des signaux coûteux : ils engagent la crédibilité du candidat.
 ### Honnêteté plutôt que couverture
 
 Si le candidat ne maîtrise pas une compétence demandée, ne pas la cacher
-ni la prétendre. L'écart honnête est un signal de fiabilité pour le
-recruteur.
+ni prétendre la maîtriser. L'écart honnête est un signal de fiabilité
+pour le recruteur.
 
 ### Personnalisation plutôt que modèle
 
-Chaque lettre contient au moins un élément qui ne s'applique qu'à cette
-entreprise : fonctionnalité de leur produit, article de leur blog, choix
-technique, valeur concrète. Pas les valeurs génériques du site corporate.
+Quand le texte porte sur la motivation pour l'entreprise, il contient au
+moins un élément qui ne s'applique qu'à cette entreprise : fonctionnalité
+de leur produit, article de leur blog, choix technique, valeur concrète.
+Pas les valeurs génériques du site corporate. Les questions centrées sur
+le candidat (parcours, expérience, réussite) n'ont pas à forcer un lien
+avec l'entreprise.
 
 Investir 10-15 minutes de recherche sur l'entreprise avant de rédiger.
 
-L'accroche P-O doit être factuelle, pas narrative. Si c'est l'agent
-qui a trouvé un article de blog ou une fonctionnalité pendant la
+Le lien avec l'entreprise doit être factuel, pas narratif. Si c'est
+l'agent qui a trouvé un article de blog ou une fonctionnalité pendant la
 recherche, ne pas simuler une découverte organique du candidat. Écrire
-"GitGuardian builds developer security tools, and I build developer
-tools" (factuel), pas "Your Engineering Challenges post caught my
-attention" (narratif fabriqué). Le lien P-O est un fait, pas une
-histoire.
+"GitGuardian construit des outils de sécurité pour développeurs, et je
+construis des outils pour développeurs" (factuel), pas "Votre article
+Engineering Challenges a attiré mon attention" (narratif fabriqué). Le
+lien avec l'entreprise est un fait, pas une histoire.
 
 ### Ton et formalité
 
 Évaluer le registre de l'entreprise avant de rédiger. Sources : site web,
 blog technique, réseaux sociaux, page carrière, ton des offres d'emploi.
 Une startup qui tutoie sur sa page carrière attend un ton différent d'une
-ESN qui vouvoie dans ses communications. Le registre de la lettre doit
+ESN qui vouvoie dans ses communications. Le registre du texte doit
 être cohérent avec celui de l'entreprise, pas avec un modèle générique.
 
 ### Voix du candidat, pas de l'IA
 
-La lettre doit sonner comme le candidat. Si des exemples de style existent,
+Le texte doit sonner comme le candidat. Si des exemples de style existent,
 s'en servir. Sinon, capter le ton dans les échanges conversationnels.
 
-Signaux d'un ton artificiel à éviter :
-- Structures trop symétriques ("D'une part... d'autre part...")
-- Mots creux ("synergie", "proactif", "force de proposition")
-- Excès de connecteurs logiques ("En effet", "Par ailleurs", "De surcroît")
-- Ouvertures génériques ("Passionné par...", "Fort de mon expérience...")
-- Points-virgules dans du texte court. Rares dans l'écriture humaine
-  informelle, signal de prose générée.
-- Tirets longs et tirets cadratins. Signal IA immédiat, les humains
-  n'en mettent pas dans du texte courant.
-- Gras dans du texte brut. Signal de génération IA dans un formulaire web.
-- Ton défensif sur les écarts. "I should be transparent" sonne comme un
-  aveu préparé. Phrase négative en ouverture ("I have not used Django")
-  est défensif. Énoncer ce qui est, pas ce qui n'est pas : "My web
-  framework was CherryPy, not Django".
-- Labels de paragraphes. "What might set me apart:" est un label avant
-  le contenu, pattern LLM. Entrer directement dans le fait.
+Les structures trop symétriques ("D'une part... d'autre part...") sont
+un signal de génération. Les mots creux aussi ("synergie", "proactif",
+"force de proposition").
+
+L'excès de connecteurs logiques ("En effet", "Par ailleurs",
+"De surcroît") trahit une construction artificielle. Les ouvertures
+génériques ("Passionné par...", "Fort de mon expérience...") sont
+interchangeables entre tous les candidats.
+
+Les points-virgules dans du texte court sont rares dans l'écriture
+humaine informelle. Les tirets longs et tirets cadratins sont un signal
+IA immédiat. Le gras dans du texte brut trahit la génération dans un
+formulaire web.
+
+Le ton défensif sur les écarts est à éviter. "Je dois être transparent"
+sonne comme un aveu préparé. Une phrase négative en ouverture ("Je n'ai
+pas utilisé Django") est défensif. Énoncer ce qui est, pas ce qui n'est
+pas : "Mon framework web était CherryPy, pas Django".
+
+Les labels de paragraphes ("Ce qui pourrait me distinguer :") sont un
+pattern de génération. Entrer directement dans le fait.

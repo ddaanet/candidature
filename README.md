@@ -65,21 +65,20 @@ MCP Filesystem connecté au répertoire du repo.
 ## Contenu
 
 ```
-SKILL.md                      — Méthode complète (4 phases)
+SKILL.md                      — Point d'entrée (dispatcher)
 references/
   recruitment-science.md      — Fondements scientifiques
   cover-letter.md             — Principes de rédaction
-  cv-handling.md              — Modification de CV (DOCX)
+  adaptation-cv.md            — Modification de CV (DOCX)
   review-items.md             — Découpage pour la relecture
-  feedback-tracking.md        — Suivi et comptes rendus d'entretien
-  interview-prep.md           — Préparation d'entretien et négociation
+  suivi-retours.md            — Suivi et comptes rendus d'entretien
+  preparation-entretien.md    — Préparation d'entretien et négociation
   etayage.md                  — Protocole d'audit des affirmations
   browser-layer.md            — Couche navigateur (Chrome)
   consolidation.md            — Processus de consolidation (groundé)
   sites/*.md                  — Contraintes par plateforme ATS
 build/
   build.sh                    — Assemblage des .skill + release
-  dispatcher.md               — Dispatcher public
   dev-stub.md                 — Stub de développement
 ```
 

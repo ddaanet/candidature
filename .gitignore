@@ -1,5 +1,19 @@
 .DS_Store
 
+# Artefacts sandbox
+.bash_profile
+.bashrc
+.claude
+.gitconfig
+.gitmodules
+.idea
+.mcp.json
+.profile
+.ripgreprc
+.vscode
+.zprofile
+.zshrc
+
 # Configuration locale
 CLAUDE.local.md
 

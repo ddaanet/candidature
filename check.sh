@@ -18,14 +18,23 @@ warn() { printf '  WARN  %s\n' "$1"; warnings=$((warnings + 1)); }
 
 content_files=(
   SKILL.md
+  references/profil.md
+  references/preparation.md
+  references/soumission.md
+  references/relecture.md
+  references/suivi.md
+  references/backend-write.md
+  references/notion-setup.md
+  references/modele-notion.md
   references/cover-letter.md
-  references/cv-handling.md
+  references/adaptation-cv.md
   references/etayage.md
-  references/feedback-tracking.md
-  references/interview-prep.md
+  references/suivi-retours.md
+  references/preparation-entretien.md
   references/recruitment-science.md
-  references/review-items.md
-  references/browser-layer.md
+  references/decoupage-relecture.md
+  references/site-ouverture.md
+  references/site-cloture.md
   references/consolidation.md
   references/sites/*.md
 )
@@ -36,12 +45,12 @@ style_errors=0
 for f in "${content_files[@]}"; do
   [ -f "$f" ] || continue
   # Tirets cadratins (U+2014)
-  if grep -qP '\x{2014}' "$f" 2>/dev/null; then
+  if grep -qP '\x{2014}' "$f"; then
     fail "$f contient des tirets cadratins"
     style_errors=$((style_errors + 1))
   fi
   # Tirets demi-cadratins (U+2013)
-  if grep -qP '\x{2013}' "$f" 2>/dev/null; then
+  if grep -qP '\x{2013}' "$f"; then
     fail "$f contient des tirets demi-cadratins"
     style_errors=$((style_errors + 1))
   fi
@@ -66,9 +75,9 @@ fi
 echo "References internes"
 
 ref_errors_before=$errors
-for source in SKILL.md CLAUDE.md; do
+for source in SKILL.md CLAUDE.md references/*.md; do
   [ -f "$source" ] || continue
-  for ref in $(grep -oE 'references/[a-z/_-]+\.md' "$source" 2>/dev/null | sort -u); do
+  for ref in $(grep -oE '(^|[^/])references/[a-z/_-]+\.md' "$source" | grep -oE 'references/[a-z/_-]+\.md' | sort -u); do
     if [ ! -f "$ref" ]; then
       fail "$source reference $ref (introuvable)"
     fi
@@ -76,7 +85,7 @@ for source in SKILL.md CLAUDE.md; do
 done
 
 if [ "$errors" -eq "$ref_errors_before" ]; then
-  pass "toutes les references de SKILL.md et CLAUDE.md existent"
+  pass "toutes les references internes existent"
 fi
 
 # --- Build ---
@@ -106,7 +115,7 @@ fi
 
 echo "Version"
 
-version=$(cat VERSION 2>/dev/null | tr -d '[:space:]')
+version=$(cat VERSION | tr -d '[:space:]')
 if [ -z "$version" ]; then
   fail "VERSION vide ou absent"
 else

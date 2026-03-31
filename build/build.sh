@@ -53,16 +53,6 @@ else
     VERSION="dev"
 fi
 
-# --- Shared assembly helpers ---
-
-# Strip YAML frontmatter from SKILL.md
-make_workflow() {
-    local dest="$1"
-    awk 'BEGIN{n=0} /^---$/{n++; if(n==2){skip=1; next}} skip{print}' \
-        "$REPO_DIR/SKILL.md" \
-        > "$dest"
-}
-
 mkdir -p "$DIST_DIR"
 
 # --- Build candidature.skill (public) ---
@@ -71,9 +61,8 @@ CAND_DIR="$BUILD_DIR/candidature"
 CAND_OUTPUT="$DIST_DIR/candidature.skill"
 
 mkdir -p "$CAND_DIR/references" "$CAND_DIR/scripts"
-sed "s/__VERSION__/$VERSION/" "$SCRIPT_DIR/dispatcher.md" > "$CAND_DIR/SKILL.md"
+sed "s/__VERSION__/$VERSION/" "$REPO_DIR/SKILL.md" > "$CAND_DIR/SKILL.md"
 cp "$REPO_DIR/scripts/version_check.py" "$CAND_DIR/scripts/"
-make_workflow "$CAND_DIR/references/workflow.md"
 cp -r "$REPO_DIR"/references/* "$CAND_DIR/references/"
 
 (cd "$BUILD_DIR" && zip -r "$CAND_OUTPUT" candidature/ -x '*.DS_Store')

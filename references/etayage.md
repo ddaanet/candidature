@@ -5,8 +5,8 @@ candidature. S'applique à tout texte produit par l'agent : lettre de
 motivation, réponse formulaire, message court, CV adapté.
 
 L'audit porte sur le texte réel, pas sur des intentions. L'artefact
-existe déjà, le `create_file` a été effectué. L'objectif est de
-vérifier ce que le texte dit effectivement.
+existe déjà, la page Notion a été créée. L'objectif est de vérifier
+ce que le texte dit effectivement.
 
 ---
 
@@ -49,7 +49,7 @@ d'étayage détecte ces cas.
 
 ---
 
-## Exécution `[état]`
+## Exécution
 
 ### Bloc visible
 
@@ -86,16 +86,17 @@ composé de signaux gratuits a un problème structurel.
 
 ---
 
-## Correction du draft
+## Correction du brouillon
 
 L'agent évalue la gravité et décide.
 
 Une correction factuelle isolée (un fait incorrect, une date, un nom
-d'outil) se traite par `str_replace` ciblé sur le draft.
+d'outil) se traite par modification ciblée (`update_content`) sur la
+sous-page Notion du brouillon.
 
 Un problème structurel (axe entier mal fondé, trop de signaux gratuits,
 ton incohérent après corrections multiples) nécessite une régénération
-complète du draft suivie d'une nouvelle passe d'étayage.
+complète du brouillon suivie d'une nouvelle passe d'étayage.
 
 Le critère : le texte final reflète-t-il fidèlement ce qui a été étayé ?
 
@@ -106,14 +107,7 @@ régénération, c'est probablement une régénération.
 
 ## Périmètre
 
-La passe s'applique à tout artefact produit par l'agent, pas seulement
-aux lettres de motivation. Un questionnaire de feedback, un post
-LinkedIn, un message de relance, une réponse formulaire : tout texte
-contenant des affirmations passe par le même processus.
-
-Un skill fondé sur la crédibilité des signaux qui produit lui-même des
-signaux gratuits dans ses propres communications détruit sa proposition
-de valeur. L'étayage n'est pas un protocole de relecture. C'est une
-propriété de tout texte produit par le système.
-
-Voir DESIGN.md NFR-8 pour le fondement de cette décision.
+La passe s'applique à tout artefact produit par l'agent. Un
+questionnaire de retour, un post LinkedIn, un message de relance, une
+réponse formulaire : tout texte contenant des affirmations passe par
+le même processus.

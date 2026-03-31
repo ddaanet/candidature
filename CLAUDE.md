@@ -5,17 +5,12 @@
 Un skill Claude.ai autonome (fichiers markdown) pour la candidature assistée.
 Le public cible est non technique. Le contenu du skill est le produit.
 
-- `SKILL.md` est le workflow complet (4 phases), lu en mode dev.
-- `references/` contient les documents de support (recrutement, CV, relecture, etc.).
-- `references/etayage.md` contient le protocole d'audit, chargé après le draft.
-- `references/browser-layer.md` contient la couche navigateur (Chrome).
-- `references/sites/` contient un fichier par plateforme ATS.
-- `references/consolidation.md` contient le processus de consolidation des sites.
+- `SKILL.md` est le point d'entrée (dispatcher, charge une phase à la fois).
+- `references/` contient les fichiers de phase et les documents de support.
 - `scripts/` contient les scripts Python exécutés par le skill au runtime.
 - `VERSION` contient la version courante au format `ddaanet/candidature X.Y.Z`.
-- `build/dispatcher.md` est le dispatcher public (SKILL.md dans le `.skill`).
-- `build/dev-stub.md` est le stub dev, qui charge depuis le repo local.
 - `build/build.sh` assemble les `.skill` et crée les releases GitHub.
+- `build/dev-stub.md` est le stub dev, qui charge depuis le repo local.
 - `DESIGN.md` documente les décisions de conception et l'audit d'étayage.
 - `README.md` est le guide d'installation.
 
@@ -23,16 +18,13 @@ Le public cible est non technique. Le contenu du skill est le produit.
 
 `./build/build.sh` assemble deux `.skill` dans `dist/` :
 
-- `candidature.skill` contient le dispatcher, le workflow, les références
-  et les scripts. C'est le seul artefact releasé.
+- `candidature.skill` contient SKILL.md, les références et les scripts.
+  C'est le seul artefact releasé.
 - `candidature-dev.skill` contient le stub dev, qui charge depuis le repo
   local via Filesystem. Non releasé.
 
 `./build/build.sh --bump minor` incrémente VERSION, commite, tague, et crée
 une release GitHub avec `candidature.skill` uniquement.
-
-Le repo source ne change pas : `SKILL.md` reste le workflow complet. Le
-dispatcher n'existe que dans le build output.
 
 ### Deux skills d'utilisation
 

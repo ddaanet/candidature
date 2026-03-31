@@ -80,7 +80,7 @@ Charger `view references/notion-setup.md` et suivre les instructions.
 ## 4. Détection Chrome `[outil: view]`
 
 Si des outils `Control Chrome:*` figurent dans les outils
-disponibles, charger `view references/browser-layer.md`. Les fichiers
+disponibles, charger `view references/site-ouverture.md`. Les fichiers
 `references/sites/*.md` sont chargés à la demande par les phases
 (rappel avant navigation sur un site).
 

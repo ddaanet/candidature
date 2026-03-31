@@ -38,7 +38,7 @@ pistage. Accepter les cookies fonctionnels si nécessaire au bon
 fonctionnement du site (session, CSRF, état multi-étapes). Les
 particularités des plateformes ATS (clipboard WTTJ, dropzone
 Teamtailor, native setter Lever) sont documentées dans
-`references/browser-layer.md`, chargé par le dispatcher quand Chrome
+`references/site-ouverture.md`, chargé par le dispatcher quand Chrome
 est détecté.
 
 Si Chrome n'est pas disponible, demander au candidat de décrire les

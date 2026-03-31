@@ -447,6 +447,12 @@ des candidatures. Sans structuration, elle reste éparpillée dans les
 conversations. La hiérarchie Notion/skill et le datage/versionnage
 permettent le rappel et la consolidation systématiques.
 
+Sources du cycle consolidation : AWS Well-Architected, Operational
+Excellence Pillar (OPS07-BP03), runbooks comme procédures évoluant par
+boucles de retour. incident.io, What are runbooks. PagerDuty, What is a
+Runbook. upstat.io, Automating Runbook Execution ("before automating
+execution, automate tracking").
+
 ### D-18 : Étayage après le draft, pas avant
 
 Choix retenu : générer un draft d'abord (`create_file`), puis auditer les
@@ -496,8 +502,9 @@ Choix retenu : implémenté (v0.2). Supersède D-16.
 Un seul `.skill` public (`candidature.skill`). Le dispatcher charge le
 workflow bundlé, puis détecte si Chrome est disponible (présence d'outils
 `Control Chrome:*` dans le contexte). Si oui, il charge
-`references/browser-layer.md` qui contient les instructions de navigation,
-cookies, et le cycle rappel vers capture vers consolidation. Les fichiers
+`references/site-ouverture.md` qui contient les instructions de rappel,
+cookies et navigation. La clôture d'interaction (capture et consolidation)
+est dans `references/site-cloture.md`. Les fichiers
 `references/sites/*.md` sont chargés à la demande.
 
 Un dev stub séparé (`candidature-dev.skill`) charge le workflow depuis le
@@ -823,7 +830,8 @@ candidature/
     preparation-entretien.md
     etayage.md
     backend-write.md
-    browser-layer.md
+    site-ouverture.md
+    site-cloture.md
     consolidation.md
     notion-setup.md
     modele-notion.md

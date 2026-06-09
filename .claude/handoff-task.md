@@ -1,9 +1,9 @@
 ## Current task
 
-La spec et le plan du parcours de cartes LinkedIn sont committés sur dev, la prochaine session exécute le plan tâche par tâche, cœur pur en TDD d'abord puis vérification Playwright et Notion en réel.
+Le parcours de cartes LinkedIn (FR-3) est implémenté, vérifié en réel et commité sur `dev`, la suite immédiate est la correction de `modele-notion.md` et `notion-setup.md` pour refléter la vraie structure de la racine Recherche d'emploi.
 
 ## Open decisions
 
-- Confirmer que le jeton Notion est en place (NOTION_TOKEN ou ~/.config/candidature/notion.env) et que l'intégration est connectée à la page racine Recherche d'emploi avant la vérification réelle des tâches 7 à 9.
-- Persister ou non la position de page du flux dans l'état de run pour la reprise : retiré du plan par YAGNI, le navigateur tient la position, à trancher si la reprise multi-pages devient nécessaire.
-- Mode d'exécution du plan : subagent-driven (recommandé) ou inline executing-plans, à choisir au lancement.
+- Merger `dev` vers `main` en `--no-ff` maintenant pour livrer le parcours (huit commits, livrable cohérent), ou enchaîner d'abord la correction Notion sur `dev` et merger l'ensemble ensuite.
+- Portée exacte de la correction Notion, tracée dans `TODO.md` : la racine porte des sections Situation et Candidatures avec un résumé par offre, et il y a cinq sous-pages dont Passations, pas quatre.
+- Les commandes du harnais qui touchent le navigateur ou Notion REST tournent hors sandbox sur le serveur, voir la mémoire feedback-harness-sandbox avant de relancer un parcours.

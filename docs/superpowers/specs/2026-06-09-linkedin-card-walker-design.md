@@ -179,11 +179,11 @@ décision, la description brute n'est pas conservée.
 
 ## Décisions ouvertes pour la relecture
 
-Page par offre contre page de session. Le motif dominant de la racine est une
-page candidature par offre, ce que retient cette spec. La racine porte aussi une
-page Prospection LinkedIn datée d'une session passée, un journal de run distinct.
-À confirmer si le parcours doit aussi produire une page de session, ou seulement
-les pages par offre et le résumé de run rendu à l'agent.
+Le parcours ne produit que des pages par offre. La page Prospection LinkedIn
+datée de la racine est une anomalie d'une session passée, pas un motif à
+reproduire. Le parcours rend un résumé de run à l'agent en fin de boucle, sans
+créer de page de session. Si le candidat veut une trace de session, le skill de
+passation s'en charge.
 
 La rotation entre flux reste manuelle, sans marqueur persistant. Le résumé de
 run note le flux parcouru. Un flux par session, choisi à la main, pour ne pas

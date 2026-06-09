@@ -52,11 +52,11 @@ passer par le MCP (décision de l'utilisateur, facteur 8 mené à son terme).
 À chaque carte, le modèle rend une décision structurée (facteur 4, les outils
 sont des sorties structurées). Trois actions.
 
-L'action shortlist porte un objet `{title, content, summary}`. Le titre est
-celui de la page candidature, nom de l'entreprise plus intitulé du poste. Le
-contenu est l'analyse d'adéquation sur les trois dimensions de preparation.md
-§2.2 (correspondances et écarts honnêtes, motivation pour l'entreprise,
-différenciation). Le résumé est une ligne pour l'index sur la page racine.
+L'action shortlist porte un dossier de décision structuré, décrit plus bas. Créer
+la page candidature, écrire le corps, et ajouter la ligne d'index sur la racine
+demande plus qu'un titre et un résumé. Le dossier rassemble le titre, les
+métadonnées de l'offre, l'analyse d'adéquation et la ligne de résumé en un seul
+document que le driver consomme.
 
 L'action reject ne porte rien d'autre. Le driver tient déjà le titre de la
 carte courante pour le libellé du bouton Dismiss.
@@ -64,13 +64,40 @@ carte courante pour le libellé du bouton Dismiss.
 L'action stop est l'échappatoire. Elle termine la collecte avant la cible,
 quand le modèle ou le candidat juge que le flux ne vaut plus la peine.
 
+## Dossier de décision de shortlist
+
+Le dossier est un fichier JSON écrit par l'agent, lu par le driver. JSON plutôt
+que YAML, parce que node le lit sans dépendance, dans la ligne de playwright-core
+sans extra. La prose multiligne tient dans les champs chaîne.
+
+Champs attendus.
+
+- `title`, le titre de la page candidature, nom de l'entreprise plus intitulé du
+  poste, par exemple "Ornikar — Data Software Engineer".
+- `company`, `role`, `location`, `workplace`, les métadonnées d'en-tête de
+  l'offre, reportées dans le corps de la page.
+- `url`, le lien de l'offre LinkedIn, pour la traçabilité du canal.
+- `analysis`, un objet à trois champs, `fit` les correspondances et écarts
+  honnêtes, `company` la motivation pour l'entreprise, `differentiation` la
+  différenciation. Le driver les rend en trois sections titrées dans le corps de
+  la page, selon preparation.md §2.2.
+- `summary`, la phrase descriptive de la ligne d'index sur la racine. Le driver
+  préfixe la date du jour, l'agent ne devine pas la date.
+
+Le driver mappe le dossier vers Notion. Le titre devient le titre de la
+sous-page. Les métadonnées et l'analyse deviennent le corps. Le résumé daté
+devient le paragraphe d'index ajouté à la racine sous la sous-page.
+
 ## Déroulé de la boucle
 
-Le driver est un réducteur (facteur 12). Chaque invocation lit l'état, applique
-la décision, écrit le nouvel état, et rend le détail de la carte suivante.
-L'état vit dans un fichier de run sous tmp/ du harnais, ignoré par git. Il porte
-le flux, la cible, la liste des shortlists faites avec leur identifiant de page
-Notion, le compte des Dismiss, et la page courante du flux.
+L'agent est un réducteur sans état (facteur 12). À chaque tour il reçoit le
+détail de la carte et l'avancement, et rend une décision, sans rien retenir entre
+les cartes. Le driver est le runtime qui externalise l'état et exécute les
+effets. Chaque invocation lit l'état, applique la décision, écrit le nouvel état,
+et rend le détail de la carte suivante. L'état vit dans un fichier de run sous
+tmp/ du harnais, ignoré par git. Il porte le flux, la cible, la liste des
+shortlists faites avec leur identifiant de page Notion, le compte des Dismiss, et
+la page courante du flux.
 
 Une carte est un tour, parce que le jugement exige que le modèle lise la
 description, ce qui est incompressible. Après la première carte, chaque tour est
@@ -87,11 +114,11 @@ Sous-commandes du driver.
   épuisée, le driver clique View next page, ou recharge pour réalimenter la
   première page après des Dismiss. S'il ne reste aucune carte, il rend un état
   terminé avec la raison épuisement.
-- `walk.mjs decide --action shortlist --record <chemin>` lit l'objet de
-  décision, crée la sous-page Notion sous la racine, écrit le contenu dans le
-  corps de la page, ajoute une ligne d'index datée sur la racine, incrémente le
-  compte, puis avance et rend la carte suivante. Si le compte atteint la cible,
-  il rend un état terminé avec la raison cible atteinte.
+- `walk.mjs decide --action shortlist --record <chemin>` lit le dossier de
+  décision JSON, crée la sous-page Notion sous la racine, écrit le corps depuis
+  les métadonnées et l'analyse, ajoute le paragraphe d'index daté sur la racine,
+  incrémente le compte, puis avance et rend la carte suivante. Si le compte
+  atteint la cible, il rend un état terminé avec la raison cible atteinte.
 - `walk.mjs decide --action stop` termine et rend le résumé de run.
 - `walk.mjs status` rend l'état courant sans agir, pour la reprise (facteur 6).
 
@@ -157,8 +184,9 @@ formulaire.
 Facteur 8, posséder son flux de contrôle. Avance, pagination, rechargement,
 compte et arrêt sont dans le code. Le modèle ne décide ni page suivante ni fin.
 
-Facteur 12, réducteur sans état. Chaque itération est une fonction de l'état et
-de la carte vers un nouvel état, externalisé dans le fichier de run.
+Facteur 12, agent réducteur sans état. L'agent ne retient rien entre les cartes.
+Il rend une décision en fonction de la carte et de l'avancement. L'état de la
+boucle vit dans le fichier de run tenu par le driver, pas dans l'agent.
 
 Facteur 6, lancer, suspendre, reprendre. L'état de run et la sous-commande
 status rendent la boucle reprenable d'une session à l'autre.

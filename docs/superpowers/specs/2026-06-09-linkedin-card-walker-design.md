@@ -129,20 +129,24 @@ avec les capacités lecture, insertion et mise à jour de contenu. Elle est
 connectée à la page racine. La connexion se propage aux sous-pages, donc elle
 couvre la lecture de la Fiche candidat et la création d'enfants sous la racine.
 
-L'identifiant de la racine est passé au driver par l'agent via --root, l'agent
-le tenant de la configuration du workflow. Le driver ne résout pas la racine
-lui-même.
+La racine est la page hub Recherche d'emploi (32fec6ce980181558099fd4f5ac9ed46).
+Elle contient cinq sous-pages, la Fiche candidat qui porte les critères, plus
+Recherches, Tendances, Passations et Sites. Sous une section Candidatures, elle
+liste chaque candidature comme page enfant, suivie d'une ligne de résumé dans le
+corps de la racine. Son identifiant est passé au driver par l'agent via --root,
+l'agent le tenant de la configuration du workflow. Le driver ne résout pas la
+racine lui-même.
 
-La création d'une shortlist crée une page enfant de la racine, que Notion place
-à la fin des enfants, ce qui satisfait le besoin de garder les nouvelles offres
-en fin de page parente. Une ligne d'index datée, date plus résumé plus lien, est
-ajoutée au corps de la racine.
+La création d'une shortlist suit le motif déjà en place sur cette page. Elle crée
+une page enfant de la racine, que l'API Notion ajoute à la fin du contenu, ce qui
+satisfait le besoin de garder les nouvelles offres en fin de page parente. Elle
+ajoute ensuite un paragraphe de résumé daté juste après, dans le corps de la
+racine, comme les lignes de résumé existantes sous chaque candidature.
 
-Déviation à confirmer. modele-notion.md pose que la racine ne contient pas de
-contenu propre. L'index daté ajoute un contenu léger à la racine. Cette
-déviation est volontaire, pour donner une vue d'ensemble des offres parcourues,
-et doit être validée à la relecture de la spec. L'alternative est de ne porter
-l'index que dans le résumé de run rendu à l'agent, sans toucher la racine.
+Note de cohérence. modele-notion.md affirme que la racine ne contient pas de
+contenu propre. La page réelle le contredit, elle porte une section Situation et
+une section Candidatures avec un résumé par offre. La documentation du modèle est
+périmée. La corriger relève du câblage du skill, pas de cet incrément.
 
 ## Cartographie des 12 facteurs
 
@@ -175,8 +179,11 @@ décision, la description brute n'est pas conservée.
 
 ## Décisions ouvertes pour la relecture
 
-L'index daté sur la racine contre la règle de racine sans contenu propre, à
-confirmer ci-dessus.
+Page par offre contre page de session. Le motif dominant de la racine est une
+page candidature par offre, ce que retient cette spec. La racine porte aussi une
+page Prospection LinkedIn datée d'une session passée, un journal de run distinct.
+À confirmer si le parcours doit aussi produire une page de session, ou seulement
+les pages par offre et le résumé de run rendu à l'agent.
 
 La rotation entre flux reste manuelle, sans marqueur persistant. Le résumé de
 run note le flux parcouru. Un flux par session, choisi à la main, pour ne pas

@@ -31,3 +31,24 @@ test('buildIndexParagraph préfixe la date', () => {
   assert.equal(b.type, 'paragraph');
   assert.equal(b.paragraph.rich_text[0].text.content, '2026-06-09. Data Software Engineer, Python, Paris hybrid. Via LinkedIn.');
 });
+
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join as pjoin } from 'node:path';
+import { loadToken } from '../lib/notion.mjs';
+
+test('loadToken lit la variable d’environnement en priorité', () => {
+  assert.equal(loadToken({ env: { NOTION_TOKEN: 'ntn_env' }, file: '/non/existant' }), 'ntn_env');
+});
+
+test('loadToken lit le fichier en repli', () => {
+  const dir = mkdtempSync(pjoin(tmpdir(), 'walk-tok-'));
+  const f = pjoin(dir, 'notion.env');
+  writeFileSync(f, 'NOTION_TOKEN=ntn_file\n');
+  assert.equal(loadToken({ env: {}, file: f }), 'ntn_file');
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('loadToken sans source jette les instructions', () => {
+  assert.throws(() => loadToken({ env: {}, file: '/non/existant' }), /Définir NOTION_TOKEN/);
+});

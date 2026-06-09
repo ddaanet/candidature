@@ -8,6 +8,19 @@ const API = 'https://api.notion.com/v1';
 const NOTION_VERSION = '2022-06-28';
 const TOKEN_FILE = join(homedir(), '.config', 'candidature', 'notion.env');
 
+export function loadToken({ env = process.env, file = TOKEN_FILE } = {}) {
+  if (env.NOTION_TOKEN) return env.NOTION_TOKEN;
+  try {
+    const m = readFileSync(file, 'utf8').match(/^NOTION_TOKEN=(.+)$/m);
+    if (m) return m[1].trim();
+  } catch {
+    // fichier absent ou illisible, on tombe sur l'erreur explicite ci-dessous
+  }
+  throw new Error(
+    `Jeton Notion absent. Définir NOTION_TOKEN, ou écrire NOTION_TOKEN=ntn_... dans ${file} puis chmod 600.`,
+  );
+}
+
 function textBlock(type, content) {
   return { object: 'block', type, [type]: { rich_text: [{ type: 'text', text: { content } }] } };
 }

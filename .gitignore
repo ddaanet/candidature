@@ -6,3 +6,6 @@ CLAUDE.local.md
 # Build output
 dist/
 .claude/settings.local.json
+
+# Pointeur de session transitoire (handoff)
+.claude/handoff-session

@@ -1,0 +1,12 @@
+{
+  "name": "linkedin-harness",
+  "private": true,
+  "type": "module",
+  "description": "Harnais Playwright de contrôle navigateur pour le parcours d'offres LinkedIn (cible Claude Code).",
+  "scripts": {
+    "streams": "node streams.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.60.0"
+  }
+}

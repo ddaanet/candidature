@@ -735,6 +735,24 @@ Ce principe étend la règle de contamination de CLAUDE.md (exemples et
 templates comme vecteurs) à tout texte chargé dans le contexte, y
 compris les fichiers techniques et le dispatcher.
 
+### Note : couche navigateur Claude Code, réalisation de la spec §5
+
+La spec plugin du 2026-04-24 (§5) prévoit le contrôle navigateur par scripts
+Playwright lancés via Bash. Une session de validation a concrétisé cette couche
+et fixé deux choix que le scaffold initial laissait ouverts. Le navigateur est
+un chromium en tête à profil persistant, lancé une fois avec un port CDP,
+auquel chaque script se connecte par connectOverCDP. L'utilisateur se connecte
+à la main, la session survit entre les exécutions, et le harnais ne touche
+jamais aux identifiants. La navigation passe par l'arbre d'accessibilité (rôles
+et noms accessibles) plutôt que par les classes CSS, parce que LinkedIn fait
+tourner ses classes à chaque déploiement mais ne peut pas altérer la couche
+d'accessibilité sans casser les lecteurs d'écran.
+
+Le harnais et sa conception détaillée vivent dans tools/linkedin-harness/. Les
+décisions formelles D-33 à D-36 de la migration plugin seront rédigées avec la
+restructuration du dépôt, et D-35 (couche navigateur) intégrera ces choix
+validés. Le parcours des offres reste hors périmètre, conforme à la spec.
+
 ---
 
 ## Alternatives écartées globales

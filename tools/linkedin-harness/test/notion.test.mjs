@@ -52,3 +52,41 @@ test('loadToken lit le fichier en repli', () => {
 test('loadToken sans source jette les instructions', () => {
   assert.throws(() => loadToken({ env: {}, file: '/non/existant' }), /Définir NOTION_TOKEN/);
 });
+
+import { createShortlistPage } from '../lib/notion.mjs';
+
+function stubFetch(responses) {
+  const calls = [];
+  const fetch = async (url, opts) => {
+    calls.push({ url, opts });
+    const r = responses.shift();
+    return { ok: r.ok ?? true, status: r.status ?? 200, json: async () => r.json ?? {} };
+  };
+  return { fetch, calls };
+}
+
+test('createShortlistPage poste la page puis ajoute l’index', async () => {
+  const { fetch, calls } = stubFetch([
+    { json: { id: 'page123', url: 'https://notion.so/page123' } },
+    { json: {} },
+  ]);
+  const out = await createShortlistPage(record, { rootId: 'root1', token: 'ntn_x', dateStr: '2026-06-09', fetch });
+  assert.deepEqual(out, { pageId: 'page123', url: 'https://notion.so/page123' });
+  assert.equal(calls.length, 2);
+  assert.match(calls[0].url, /\/v1\/pages$/);
+  assert.equal(calls[0].opts.method, 'POST');
+  assert.equal(JSON.parse(calls[0].opts.body).parent.page_id, 'root1');
+  assert.equal(calls[0].opts.headers.Authorization, 'Bearer ntn_x');
+  assert.equal(calls[0].opts.headers['Notion-Version'], '2022-06-28');
+  assert.match(calls[1].url, /\/v1\/blocks\/root1\/children$/);
+  assert.equal(calls[1].opts.method, 'PATCH');
+  assert.equal(JSON.parse(calls[1].opts.body).children.length, 1);
+});
+
+test('createShortlistPage jette sur réponse non ok', async () => {
+  const { fetch } = stubFetch([{ ok: false, status: 401, json: { message: 'unauthorized' } }]);
+  await assert.rejects(
+    () => createShortlistPage(record, { rootId: 'root1', token: 'bad', dateStr: '2026-06-09', fetch }),
+    /401/,
+  );
+});

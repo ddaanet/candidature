@@ -43,3 +43,31 @@ export function buildPagePayload(rootId, record) {
 export function buildIndexParagraph(record, dateStr) {
   return textBlock('paragraph', `${dateStr}. ${record.summary}`);
 }
+
+async function notionFetch(path, { method = 'POST', body, token, fetch = globalThis.fetch }) {
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Notion-Version': NOTION_VERSION,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(`Notion ${method} ${path} a échoué (${res.status}) : ${JSON.stringify(json)}`);
+  }
+  return json;
+}
+
+export async function createShortlistPage(record, { rootId, token, dateStr, fetch = globalThis.fetch }) {
+  const page = await notionFetch('/pages', { body: buildPagePayload(rootId, record), token, fetch });
+  await notionFetch(`/blocks/${rootId}/children`, {
+    method: 'PATCH',
+    body: { children: [buildIndexParagraph(record, dateStr)] },
+    token,
+    fetch,
+  });
+  return { pageId: page.id, url: page.url };
+}

@@ -12,6 +12,12 @@ Référence de conception : `docs/superpowers/specs/2026-06-09-linkedin-card-wal
 
 ---
 
+## Découpage et exécution
+
+Les tâches 1 à 3 sont le cœur pur, test rouge puis vert, sans navigateur ni réseau. Elles forment un seul lot confié à un sous-agent, sans revue par tâche, parce que le code est entièrement spécifié ici et se vérifie par la suite de tests. Les tâches 4 à 6 touchent les systèmes vivants, LinkedIn et Notion, et exigent un humain dans la boucle, lancement du navigateur, connexion à la main, vérification visuelle. Elles se font en ligne dans la session principale, pas en sous-agent. La tâche 7, la documentation, dépend du résultat de la tâche 6 et se fait en ligne.
+
+---
+
 ## Structure de fichiers
 
 Tout sous `tools/linkedin-harness/`.
@@ -29,7 +35,9 @@ Les actions Playwright de `stream-page.mjs` ne sont pas testables sans session v
 
 ---
 
-## Task 1: Script de test et module d'état, réductions pures
+## Task 1: Module d'état, réductions pures et fichier de run
+
+Cœur pur. Les fonctions de réduction et la persistance du fichier de run vivent dans un même module et se testent ensemble, rouge puis vert. Pas de cycle factice, le module et ses tests arrivent d'un bloc.
 
 **Files:**
 - Modify: `tools/linkedin-harness/package.json`
@@ -48,15 +56,18 @@ Dans `tools/linkedin-harness/package.json`, remplacer le bloc `"scripts"` :
   },
 ```
 
-- [ ] **Step 2: Écrire le test des réductions pures**
+- [ ] **Step 2: Écrire le test, réductions pures et aller-retour fichier**
 
 Créer `tools/linkedin-harness/test/state.test.mjs` :
 
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import {
-  initState, setCurrent, addShortlist, addDismiss, targetMet,
+  initState, setCurrent, addShortlist, addDismiss, targetMet, loadState, saveState,
 } from '../lib/state.mjs';
 
 const base = () => initState({ stream: 'recommended', target: 3, root: 'root1', startedAt: '2026-06-09T00:00:00Z' });
@@ -93,6 +104,19 @@ test('targetMet vrai quand accepted atteint la cible', () => {
   assert.equal(targetMet(s), false);
   s = addShortlist(addShortlist(addShortlist(s, {}), {}), {});
   assert.equal(targetMet(s), true);
+});
+
+test('saveState puis loadState rend le même état', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'walk-state-'));
+  const path = join(dir, 'run.json');
+  const s = addShortlist(base(), { title: 'A', notionPageId: 'p1' });
+  saveState(path, s);
+  assert.deepEqual(loadState(path), s);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('loadState sur chemin absent jette un message clair', () => {
+  assert.throws(() => loadState('/non/existant/run.json'), /Lancer d'abord walk.mjs start/);
 });
 ```
 
@@ -146,61 +170,18 @@ export function saveState(path, state) {
 - [ ] **Step 5: Lancer le test, vérifier le succès**
 
 Run: `node --test tools/linkedin-harness/test/state.test.mjs`
-Expected: PASS, 5 tests.
+Expected: PASS, 7 tests.
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add tools/linkedin-harness/package.json tools/linkedin-harness/lib/state.mjs tools/linkedin-harness/test/state.test.mjs
-git commit -m "✨ parcours LinkedIn : état de run et réductions pures"
+git commit -m "✨ parcours LinkedIn : état de run, réductions pures et fichier de run"
 ```
 
 ---
 
-## Task 2: Lecture et écriture du fichier de run
-
-**Files:**
-- Test: `tools/linkedin-harness/test/state.test.mjs:append`
-
-- [ ] **Step 1: Ajouter le test d'aller-retour fichier**
-
-Ajouter en fin de `tools/linkedin-harness/test/state.test.mjs` :
-
-```js
-import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { loadState, saveState } from '../lib/state.mjs';
-
-test('saveState puis loadState rend le même état', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'walk-state-'));
-  const path = join(dir, 'run.json');
-  const s = addShortlist(base(), { title: 'A', notionPageId: 'p1' });
-  saveState(path, s);
-  assert.deepEqual(loadState(path), s);
-  rmSync(dir, { recursive: true, force: true });
-});
-
-test('loadState sur chemin absent jette un message clair', () => {
-  assert.throws(() => loadState('/non/existant/run.json'), /Lancer d'abord walk.mjs start/);
-});
-```
-
-- [ ] **Step 2: Lancer le test, vérifier le succès**
-
-Run: `node --test tools/linkedin-harness/test/state.test.mjs`
-Expected: PASS, 7 tests. Le code de Task 1 implémente déjà loadState et saveState, ces tests les couvrent.
-
-- [ ] **Step 3: Commit**
-
-```bash
-git add tools/linkedin-harness/test/state.test.mjs
-git commit -m "✅ parcours LinkedIn : couvrir l'aller-retour du fichier de run"
-```
-
----
-
-## Task 3: Validation du dossier de décision
+## Task 2: Validation du dossier de décision
 
 **Files:**
 - Create: `tools/linkedin-harness/lib/record.mjs`
@@ -306,7 +287,9 @@ git commit -m "✨ parcours LinkedIn : validation du dossier de décision"
 
 ---
 
-## Task 4: Construction pure des charges Notion
+## Task 3: Client Notion, charges pures, jeton et écriture REST
+
+Un seul module, `lib/notion.mjs`, construit en trois cycles rouge puis vert, les constructeurs purs puis le chargement du jeton puis l'écriture REST avec fetch simulé. Trois commits, un par couche, pour garder un historique lisible.
 
 **Files:**
 - Create: `tools/linkedin-harness/lib/notion.mjs`
@@ -401,22 +384,14 @@ export function buildIndexParagraph(record, dateStr) {
 Run: `node --test tools/linkedin-harness/test/notion.test.mjs`
 Expected: PASS, 3 tests.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Commit des constructeurs**
 
 ```bash
 git add tools/linkedin-harness/lib/notion.mjs tools/linkedin-harness/test/notion.test.mjs
 git commit -m "✨ parcours LinkedIn : construction des charges Notion"
 ```
 
----
-
-## Task 5: Chargement du jeton Notion
-
-**Files:**
-- Modify: `tools/linkedin-harness/lib/notion.mjs`
-- Test: `tools/linkedin-harness/test/notion.test.mjs:append`
-
-- [ ] **Step 1: Ajouter le test du chargement de jeton**
+- [ ] **Step 6: Ajouter le test du chargement de jeton**
 
 Ajouter en fin de `tools/linkedin-harness/test/notion.test.mjs` :
 
@@ -443,14 +418,14 @@ test('loadToken sans source jette les instructions', () => {
 });
 ```
 
-- [ ] **Step 2: Lancer le test, vérifier l'échec**
+- [ ] **Step 7: Lancer le test, vérifier l'échec**
 
 Run: `node --test tools/linkedin-harness/test/notion.test.mjs`
 Expected: FAIL, `loadToken is not a function` (export absent).
 
-- [ ] **Step 3: Ajouter loadToken au module**
+- [ ] **Step 8: Ajouter loadToken au module**
 
-Dans `tools/linkedin-harness/lib/notion.mjs`, ajouter après les constantes `TOKEN_FILE` :
+Dans `tools/linkedin-harness/lib/notion.mjs`, ajouter après la constante `TOKEN_FILE` :
 
 ```js
 export function loadToken({ env = process.env, file = TOKEN_FILE } = {}) {
@@ -467,27 +442,19 @@ export function loadToken({ env = process.env, file = TOKEN_FILE } = {}) {
 }
 ```
 
-- [ ] **Step 4: Lancer le test, vérifier le succès**
+- [ ] **Step 9: Lancer le test, vérifier le succès**
 
 Run: `node --test tools/linkedin-harness/test/notion.test.mjs`
 Expected: PASS, 6 tests.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 10: Commit du jeton**
 
 ```bash
 git add tools/linkedin-harness/lib/notion.mjs tools/linkedin-harness/test/notion.test.mjs
 git commit -m "✨ parcours LinkedIn : chargement du jeton Notion, env puis fichier"
 ```
 
----
-
-## Task 6: Écriture REST Notion, création de page et index
-
-**Files:**
-- Modify: `tools/linkedin-harness/lib/notion.mjs`
-- Test: `tools/linkedin-harness/test/notion.test.mjs:append`
-
-- [ ] **Step 1: Ajouter le test avec fetch simulé**
+- [ ] **Step 11: Ajouter le test avec fetch simulé**
 
 Ajouter en fin de `tools/linkedin-harness/test/notion.test.mjs` :
 
@@ -531,12 +498,12 @@ test('createShortlistPage jette sur réponse non ok', async () => {
 });
 ```
 
-- [ ] **Step 2: Lancer le test, vérifier l'échec**
+- [ ] **Step 12: Lancer le test, vérifier l'échec**
 
 Run: `node --test tools/linkedin-harness/test/notion.test.mjs`
 Expected: FAIL, `createShortlistPage is not a function`.
 
-- [ ] **Step 3: Ajouter l'écriture REST au module**
+- [ ] **Step 13: Ajouter l'écriture REST au module**
 
 Dans `tools/linkedin-harness/lib/notion.mjs`, ajouter en fin de fichier :
 
@@ -570,17 +537,17 @@ export async function createShortlistPage(record, { rootId, token, dateStr, fetc
 }
 ```
 
-- [ ] **Step 4: Lancer le test, vérifier le succès**
+- [ ] **Step 14: Lancer le test, vérifier le succès**
 
 Run: `node --test tools/linkedin-harness/test/notion.test.mjs`
 Expected: PASS, 8 tests.
 
-- [ ] **Step 5: Lancer toute la suite**
+- [ ] **Step 15: Lancer toute la suite**
 
 Run: `node --test tools/linkedin-harness/test/`
 Expected: PASS, 20 tests au total, 7 état, 5 dossier, 8 notion. Vérifier zéro échec.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 16: Commit de l'écriture REST**
 
 ```bash
 git add tools/linkedin-harness/lib/notion.mjs tools/linkedin-harness/test/notion.test.mjs
@@ -589,9 +556,9 @@ git commit -m "✨ parcours LinkedIn : écriture REST Notion, page et paragraphe
 
 ---
 
-## Task 7: Actions Playwright sur la page du flux, vérifiées en réel
+## Task 4: Actions Playwright sur la page du flux, vérifiées en réel
 
-Cette tâche touche le DOM vivant de LinkedIn. Les sélecteurs se confirment par observation, pas par supposition. La sonde `tmp/probe-stream.mjs` existe déjà. Le navigateur doit tourner, l'utilisateur connecté à la main.
+Cette tâche touche le DOM vivant de LinkedIn. Les sélecteurs se confirment par observation, pas par supposition. La sonde `tmp/probe-stream.mjs` existe déjà. Le navigateur doit tourner, l'utilisateur connecté à la main. En ligne dans la session principale, pas en sous-agent.
 
 **Files:**
 - Create: `tools/linkedin-harness/lib/stream-page.mjs`
@@ -688,7 +655,7 @@ git commit -m "✨ parcours LinkedIn : actions Playwright sur la page du flux"
 
 ---
 
-## Task 8: CLI walk.mjs, câblage des sous-commandes
+## Task 5: CLI walk.mjs, câblage des sous-commandes
 
 **Files:**
 - Create: `tools/linkedin-harness/walk.mjs`
@@ -812,9 +779,9 @@ git commit -m "✨ parcours LinkedIn : CLI start, decide, status"
 
 ---
 
-## Task 9: Vérification de bout en bout en réel
+## Task 6: Vérification de bout en bout en réel
 
-Un run réel avec cible 1, sur le flux recommended, qui crée une vraie page Notion et l'efface ensuite. Prérequis, navigateur connecté, jeton Notion en place, intégration connectée à la racine.
+Un run réel avec cible 1, sur le flux recommended, qui crée une vraie page Notion et l'efface ensuite. Prérequis, navigateur connecté, jeton Notion en place, intégration connectée à la racine. En ligne dans la session principale.
 
 **Files:** aucun fichier de code, vérification vivante.
 
@@ -875,7 +842,7 @@ git commit -m "🐛 parcours LinkedIn : sélecteurs ajustés sur le flux réel"
 
 ---
 
-## Task 10: Documentation du parcours
+## Task 7: Documentation du parcours
 
 **Files:**
 - Modify: `tools/linkedin-harness/README.md`
@@ -905,8 +872,8 @@ git commit -m "📝 parcours LinkedIn : usage du parcours et statut FR-3 réalis
 
 ## Notes d'exécution
 
-Les tâches 1 à 6 sont du test rouge puis vert pur, exécutables sans navigateur ni réseau. Les tâches 7 à 9 touchent les systèmes vivants, LinkedIn et Notion, et se vérifient à la main, navigateur connecté et jeton en place. Le rythme reste humain, un flux par session, conforme aux NFR du harnais.
+Les tâches 1 à 3 sont du test rouge puis vert pur, exécutables sans navigateur ni réseau, confiées d'un bloc à un sous-agent sans revue par tâche. Les tâches 4 à 6 touchent les systèmes vivants, LinkedIn et Notion, et se vérifient à la main, navigateur connecté et jeton en place, en ligne dans la session principale. Le rythme reste humain, un flux par session, conforme aux NFR du harnais.
 
-Les sélecteurs d'accessibilité de `stream-page.mjs` sont un premier jet aligné sur la carte des flux. Ils se confirment et s'ajustent à la sonde et à l'essai en réel de la Task 7, parce que le DOM de LinkedIn ne se suppose pas.
+Les sélecteurs d'accessibilité de `stream-page.mjs` sont un premier jet aligné sur la carte des flux. Ils se confirment et s'ajustent à la sonde et à l'essai en réel de la Task 4, parce que le DOM de LinkedIn ne se suppose pas.
 
 Suite après ce parcours, la tâche TODO de correction de modele-notion.md, la racine porte du contenu propre.

@@ -52,7 +52,7 @@ Dans `tools/linkedin-harness/package.json`, remplacer le bloc `"scripts"` :
   "scripts": {
     "streams": "node streams.mjs",
     "walk": "node walk.mjs",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.mjs"
   },
 ```
 

@@ -6,7 +6,7 @@
   "scripts": {
     "streams": "node streams.mjs",
     "walk": "node walk.mjs",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
     "playwright-core": "^1.60.0"

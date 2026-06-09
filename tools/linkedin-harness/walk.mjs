@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { attach } from './attach.mjs';
 import {
-  initState, setCurrent, addShortlist, addDismiss, targetMet, loadState, saveState,
+  initState, setCurrent, addShortlist, addDismiss, addSeen, targetMet, loadState, saveState,
 } from './lib/state.mjs';
 import { loadRecord } from './lib/record.mjs';
 import { loadToken, createShortlistPage } from './lib/notion.mjs';
@@ -24,7 +24,7 @@ function out(obj) {
 
 async function readAndStore(page, state) {
   const card = await readFocusedCard(page);
-  const next = setCurrent(state, card);
+  const next = addSeen(setCurrent(state, card), card.jobId);
   saveState(STATE_PATH, next);
   return { card, progress: { accepted: next.accepted.length, target: next.target, dismissed: next.dismissed } };
 }
@@ -59,8 +59,8 @@ async function cmdDecide() {
   try {
     if (action === 'reject') {
       await dismissCard(page, state.current.title);
-      const adv = await advance(page, state.stream);
       const after = addDismiss(state);
+      const adv = await advance(page, state.stream, after.seen);
       if (adv.done) { saveState(STATE_PATH, after); out({ done: true, reason: adv.reason, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
       out(await readAndStore(page, after));
       return;
@@ -69,9 +69,9 @@ async function cmdDecide() {
       const record = loadRecord(flag('record'));
       const dateStr = new Date().toISOString().slice(0, 10);
       const created = await createShortlistPage(record, { rootId: state.root, token: loadToken(), dateStr });
-      let after = addShortlist(state, { title: record.title, url: record.url, summary: record.summary, notionPageId: created.pageId });
+      let after = addShortlist(state, { jobId: state.current?.jobId ?? null, title: record.title, url: record.url, summary: record.summary, notionPageId: created.pageId });
       if (targetMet(after)) { saveState(STATE_PATH, after); out({ done: true, reason: 'target-met', created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
-      const adv = await advance(page, state.stream);
+      const adv = await advance(page, state.stream, after.seen);
       if (adv.done) { saveState(STATE_PATH, after); out({ done: true, reason: adv.reason, created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
       out({ created, ...(await readAndStore(page, after)) });
       return;

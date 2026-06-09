@@ -3,11 +3,18 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 export function initState({ stream, target, root, startedAt }) {
-  return { stream, target, root, startedAt, dismissed: 0, accepted: [], current: null };
+  return { stream, target, root, startedAt, dismissed: 0, accepted: [], seen: [], current: null };
 }
 
 export function setCurrent(state, card) {
   return { ...state, current: card };
+}
+
+// jobId des cartes déjà décidées. Le parcours avance vers la première carte non
+// vue, ce qui saute les écartées, les retenues, et les recyclées au rechargement.
+export function addSeen(state, jobId) {
+  if (jobId == null || state.seen.includes(jobId)) return state;
+  return { ...state, seen: [...state.seen, jobId] };
 }
 
 export function addShortlist(state, entry) {

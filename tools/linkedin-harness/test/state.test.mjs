@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  initState, setCurrent, addShortlist, addDismiss, targetMet, loadState, saveState,
+  initState, setCurrent, addShortlist, addDismiss, addSeen, targetMet, loadState, saveState,
 } from '../lib/state.mjs';
 
 const base = () => initState({ stream: 'recommended', target: 3, root: 'root1', startedAt: '2026-06-09T00:00:00Z' });
@@ -13,8 +13,18 @@ test('initState pose la forme de départ', () => {
   const s = base();
   assert.deepEqual(s, {
     stream: 'recommended', target: 3, root: 'root1', startedAt: '2026-06-09T00:00:00Z',
-    dismissed: 0, accepted: [], current: null,
+    dismissed: 0, accepted: [], seen: [], current: null,
   });
+});
+
+test('addSeen ajoute le jobId sans doublon ni mutation', () => {
+  const s = base();
+  const s2 = addSeen(s, '111');
+  assert.deepEqual(s.seen, []);
+  assert.deepEqual(s2.seen, ['111']);
+  assert.equal(addSeen(s2, '111'), s2);
+  assert.deepEqual(addSeen(s2, '222').seen, ['111', '222']);
+  assert.equal(addSeen(s, null), s);
 });
 
 test('setCurrent ne mute pas l’entrée', () => {

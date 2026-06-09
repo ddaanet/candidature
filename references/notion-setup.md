@@ -18,11 +18,15 @@ Stocker la réponse (`memory_user_edits add "candidature-root: <URL>"`).
 Appeler `notion-fetch` sur la page racine. Lire les sous-pages
 retournées et relever leurs titres.
 
-Quatre sous-pages sont attendues. La fiche candidat contient le profil
+Cinq sous-pages sont attendues. La fiche candidat contient le profil
 du candidat (CV, parcours, contraintes). La sous-page Sites rassemble
 les fiches de plateforme ATS consolidées. La sous-page Recherches
 archive les résultats de recherche contextuelle. La sous-page Tendances
-regroupe les observations transversales issues du suivi.
+regroupe les observations transversales issues du suivi. La sous-page
+Passations conserve les passations de session.
+
+La page racine porte aussi son propre contenu, une section Situation et
+une section Candidatures (`references/modele-notion.md`). Ne pas l'écraser.
 
 Si une sous-page attendue est absente, la créer comme sous-page vide
 de la page racine. Le contenu sera rempli par la phase concernée.

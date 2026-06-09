@@ -1,9 +1,9 @@
 ## Current task
 
-The LinkedIn browser-harness foundation is committed on `dev` (efc0b0c, `tools/linkedin-harness/`); next session builds the card-walker that iterates the job cards within a stream and extracts each card's content.
+La spec et le plan du parcours de cartes LinkedIn sont committés sur dev, la prochaine session exécute le plan tâche par tâche, cœur pur en TDD d'abord puis vérification Playwright et Notion en réel.
 
 ## Open decisions
 
-- Build the card-walker as more scripts inside `tools/linkedin-harness/`, or as the separate complementary triage skill the plugin spec §215 anticipates.
-- Sequence next: the card-walker first, or the plugin restructure (`src/`, `preprocess.awk`, `plugin.json`, writing D-33–D-36) before it.
-- Durable selector handles for the walker are already recorded in `tools/linkedin-harness/DESIGN.md` (stream map): cards via `getByRole('main')` list, identity via the `/jobs/collections/<slug>/` href segment.
+- Confirmer que le jeton Notion est en place (NOTION_TOKEN ou ~/.config/candidature/notion.env) et que l'intégration est connectée à la page racine Recherche d'emploi avant la vérification réelle des tâches 7 à 9.
+- Persister ou non la position de page du flux dans l'état de run pour la reprise : retiré du plan par YAGNI, le navigateur tient la position, à trancher si la reprise multi-pages devient nécessaire.
+- Mode d'exécution du plan : subagent-driven (recommandé) ou inline executing-plans, à choisir au lancement.

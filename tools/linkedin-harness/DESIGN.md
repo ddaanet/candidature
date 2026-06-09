@@ -22,8 +22,11 @@ de navigateur jetable.
 FR-2. Identifier les flux d'offres disponibles sur la page jobs. Un flux est
 une section de recommandations ou une collection navigable.
 
-FR-3. À venir, session suivante. Parcourir les cartes d'un flux une à une et en
-extraire le contenu.
+FR-3. Parcourir les cartes d'un flux une à une, décider de chacune, et écrire
+les retenues dans Notion. Le driver walk.mjs lit la carte au focus, attend une
+décision parmi shortlist, reject et stop, écarte les rejetées par Dismiss, crée
+une page candidature Notion par retenue, et avance jusqu'à une cible de
+shortlists ou l'épuisement du flux.
 
 ## Besoins non fonctionnels
 
@@ -68,6 +71,31 @@ Elle est donc le point d'accroche le plus durable.
 Choix retenu. attach.mjs centralise la connexion CDP et le test
 d'authentification. Les scripts de flux l'importent. Cela évite de réécrire la
 séquence de connexion et le test de page de login dans chaque script.
+
+### Parcours par réduction, état externalisé, écriture Notion directe
+
+Choix retenu. Le parcours suit le principe 12-factor-agents. L'agent est un
+réducteur sans état qui rend une décision par carte. Le driver walk.mjs tient
+le flux de contrôle, externalise l'état dans tmp/run.json, et exécute les
+effets. Trois sous-commandes, start, decide, status, chacune rend un JSON que
+l'agent lit avant de rappeler. La boucle vit dans le code, pas dans la tête de
+l'agent.
+
+L'avance vers la carte suivante se fait par jobId non encore décidé. Le clic
+sur un listitem nu ne change pas la carte au focus, et une carte écartée reste
+en tête sous un état Undo. Le driver liste donc les liens de carte du flux,
+dédupliqués par jobId, et met au focus la première carte dont le jobId n'est
+pas dans l'ensemble des cartes déjà vues. Cet ensemble vit dans l'état de run,
+ce qui rend le parcours insensible au rechargement et aux réordonnancements du
+flux. La bannière de consentement aux cookies est refusée au chargement, son
+titre de niveau 1 passait sinon avant celui du détail de l'offre.
+
+L'écriture Notion passe par l'API REST avec un jeton d'intégration, pas par le
+MCP. Le harnais tourne sur Claude Code où le MCP Notion authentifié via
+claude.ai n'est pas garanti présent. Le jeton se lit dans NOTION_TOKEN ou dans
+~/.config/candidature/notion.env. Une page candidature est créée par offre
+retenue sous la racine, avec un paragraphe d'index daté ajouté au corps de la
+racine.
 
 ### playwright-core et chromium système
 
@@ -127,5 +155,13 @@ de masse sort de ce cadre.
 
 Session des 2026-06-08 et 2026-06-09. Validation de l'attache CDP sur session
 persistante, de la navigation par accessibilité, et de l'identification des flux
-LinkedIn. Scripts d'abord prototypés en jetable, puis packagés ici. Le parcours
-des cartes est différé à la session suivante.
+LinkedIn. Scripts d'abord prototypés en jetable, puis packagés ici.
+
+Session du 2026-06-09. Implémentation du parcours de cartes, FR-3. Cœur pur
+testé en TDD pour l'état de run, la validation du dossier de décision, et la
+construction des charges Notion. Adaptateurs Playwright et Notion vérifiés en
+réel contre le flux recommended et la page racine Recherche d'emploi. L'avance
+par jobId non vu et le refus de la bannière de consentement ont été tranchés sur
+le DOM vivant, le premier jet par clic de listitem ne naviguait pas. Choix de
+l'écriture Notion directe par jeton REST plutôt que par le MCP, pour ne pas
+dépendre d'un MCP authentifié sur la cible Claude Code.

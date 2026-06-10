@@ -5,6 +5,7 @@ Notion. Chargé par SKILL.md au démarrage.
 
 ## Page racine
 
+<!-- target: claude-ai -->
 Lire les mémoires (`memory_user_edits view`). Chercher une entrée
 `candidature-root: <URL ou ID>`. Si elle existe, utiliser cette
 valeur.
@@ -14,6 +15,26 @@ Si aucune entrée n'existe, demander au candidat :
 > Quelle est l'URL de la page Notion qui servira de page racine pour les candidatures ?
 
 Stocker la réponse (`memory_user_edits add "candidature-root: <URL>"`).
+<!-- /target -->
+<!-- target: claude-code -->
+Lire `CLAUDE.local.md` à la racine du dépôt. Chercher une clé de
+frontmatter `candidature_root: <ID de page>`. Si elle existe, utiliser
+cette valeur.
+
+Si aucune clé n'existe, chercher dans Notion une page au titre
+« Candidatures » (`notion-search`, `page_size: 1`). Proposer la page
+trouvée au candidat et demander confirmation :
+
+> La page racine des candidatures est-elle « Candidatures » (<URL> ) ?
+
+Si le candidat confirme, écrire `candidature_root: <ID>` dans le
+frontmatter de `CLAUDE.local.md`. S'il refuse ou si aucune page n'est
+trouvée, demander :
+
+> Quelle est l'URL de la page Notion qui servira de page racine pour les candidatures ?
+
+puis écrire l'ID correspondant dans `candidature_root:`.
+<!-- /target -->
 
 Appeler `notion-fetch` sur la page racine. Lire les sous-pages
 retournées et relever leurs titres.

@@ -7,15 +7,19 @@ conforment à la structure établie par la première.
 
 ## Page racine
 
-La page racine est le conteneur principal. Elle contient quatre sous-pages
-créées au démarrage (`references/notion-setup.md`). La fiche candidat
-contient le profil. Sites rassemble les fiches de plateforme ATS. Recherches
-archive les résultats de recherche contextuelle. Tendances regroupe les
-observations transversales.
+La page racine est le hub de la recherche d'emploi. Elle contient cinq
+sous-pages créées au démarrage (`references/notion-setup.md`). La fiche
+candidat contient le profil. Sites rassemble les fiches de plateforme ATS.
+Recherches archive les résultats de recherche contextuelle. Tendances
+regroupe les observations transversales. Passations conserve les passations
+de session.
 
-La page racine ne contient pas de contenu propre. Les candidatures sont
-créées comme pages enfants directement sous la racine, au même niveau que
-les quatre sous-pages.
+La page racine porte aussi son propre contenu. Une section Situation résume
+l'état courant de la recherche : dernière passation, candidatures soumises et
+en attente, prochaines actions. Une section Candidatures liste chaque
+candidature retenue avec un résumé d'une ligne portant le statut et le canal.
+Les candidatures elles-mêmes sont des pages enfants directes de la racine,
+indexées par cette section.
 
 ## Fiche candidat
 
@@ -40,7 +44,8 @@ mettre en avant ou à ne pas mentionner.
 ## Page candidature
 
 Chaque candidature est une page enfant de la racine. Le titre contient le
-nom de l'entreprise et l'intitulé du poste.
+nom de l'entreprise et l'intitulé du poste. À sa création, un résumé d'une
+ligne est ajouté à la section Candidatures de la racine pour l'indexer.
 
 Le contenu de la page candidature porte les métadonnées : date de
 soumission, canal utilisé, plateforme, prétentions salariales si

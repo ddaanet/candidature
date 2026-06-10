@@ -15,54 +15,6 @@ Version: 0.4.0
 Point d'entrée. Vérifie les mises à jour, vérifie les prérequis,
 détecte les capacités, charge la phase appropriée.
 
-## 1. Vérification de mise à jour
-
-Avant de charger quoi que ce soit, vérifier s'il existe une version
-plus récente. Une seule vérification par jour pour ne pas ralentir
-le démarrage.
-
-Lire les mémoires (`memory_user_edits view`) et chercher une entrée
-`version-check: AAAA-MM-JJ`. Si la date correspond à aujourd'hui,
-passer directement aux prérequis.
-
-Lire la version installée (ligne `Version:` ci-dessus). Exécuter
-`python3 scripts/version_check.py` dans `bash_tool`. Le script retourne
-`VERSION_REMOTE=X.Y.Z` si la récupération réussit,
-`VERSION_REMOTE=UNKNOWN` si le format est inattendu, ou
-`VERSION_REMOTE=ERROR ...` si la récupération échoue. Comparer la
-version distante avec la locale en convertissant chaque partie en
-entier.
-
-Mettre à jour la mémoire (`memory_user_edits add` ou `replace`) avec
-`version-check: AAAA-MM-JJ` à la date du jour.
-
-Si la version distante est plus récente, proposer au candidat
-(remplacer A.B.C par la version distante, X.Y.Z par la locale) :
-
-> Une mise à jour est disponible (X.Y.Z vers A.B.C).
->
-> [Télécharger la mise à jour](https://github.com/ddaanet/candidature/releases/download/vA.B.C/candidature.skill)
->
-> Téléverser dans [Personnaliser → Compétences](https://claude.ai/customize/skills) → +
-
-> Sinon, on peut continuer avec la version actuelle.
-
-Si le candidat veut mettre à jour : s'arrêter.
-Si le candidat veut continuer : passer à l'étape suivante.
-
-Si la récupération échoue ou la version est inconnue, proposer le lien
-direct au candidat :
-
-> Impossible de vérifier les mises à jour automatiquement.
->
-> [Télécharger la dernière version](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
->
-> Téléverser dans [Personnaliser → Compétences](https://claude.ai/customize/skills) → +
-
-> Sinon, on peut continuer avec la version actuelle.
-
-Ne passer à l'étape suivante que si le candidat le demande
-explicitement.
 
 ## 2. Vérification Notion
 
@@ -77,12 +29,12 @@ S'arrêter. Ne pas proposer de contournement.
 
 Charger `view references/notion-setup.md` et suivre les instructions.
 
-## 4. Détection Chrome
+## 4. Détection du navigateur
 
-Si des outils `Control Chrome:*` figurent dans les outils
-disponibles, charger `view references/site-ouverture.md`. Les fichiers
-`references/sites/*.md` sont chargés à la demande par les phases
-(rappel avant navigation sur un site).
+La couche navigateur passe par le harnais Playwright local décrit dans
+`references/site-ouverture-playwright.md`. Charger ce fichier. Les
+fichiers `references/sites/*.md` sont chargés à la demande par les
+phases (rappel avant navigation sur un site).
 
 ## 5. Détermination de la phase
 

@@ -15,6 +15,7 @@ Version: {{VERSION}}
 Point d'entrée. Vérifie les mises à jour, vérifie les prérequis,
 détecte les capacités, charge la phase appropriée.
 
+<!-- target: claude-ai -->
 ## 1. Vérification de mise à jour
 
 Avant de charger quoi que ce soit, vérifier s'il existe une version
@@ -63,6 +64,7 @@ direct au candidat :
 
 Ne passer à l'étape suivante que si le candidat le demande
 explicitement.
+<!-- /target -->
 
 ## 2. Vérification Notion
 
@@ -77,12 +79,20 @@ S'arrêter. Ne pas proposer de contournement.
 
 Charger `view references/notion-setup.md` et suivre les instructions.
 
-## 4. Détection Chrome
+## 4. Détection du navigateur
 
+<!-- target: claude-ai -->
 Si des outils `Control Chrome:*` figurent dans les outils
 disponibles, charger `view references/site-ouverture.md`. Les fichiers
 `references/sites/*.md` sont chargés à la demande par les phases
 (rappel avant navigation sur un site).
+<!-- /target -->
+<!-- target: claude-code -->
+La couche navigateur passe par le harnais Playwright local décrit dans
+`references/site-ouverture-playwright.md`. Charger ce fichier. Les
+fichiers `references/sites/*.md` sont chargés à la demande par les
+phases (rappel avant navigation sur un site).
+<!-- /target -->
 
 ## 5. Détermination de la phase
 

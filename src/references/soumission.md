@@ -32,16 +32,16 @@ n'est disponible. Noter le nom du site pour la capture après soumission.
 
 ### Navigation
 
-Si Chrome est disponible, ouvrir directement la page de candidature
-(`open_url`, `new_tab=false`). Refuser les cookies marketing et
+Si le navigateur est disponible, ouvrir directement la page de
+candidature. Refuser les cookies marketing et
 pistage. Accepter les cookies fonctionnels si nécessaire au bon
 fonctionnement du site (session, CSRF, état multi-étapes). Les
 particularités des plateformes ATS (clipboard WTTJ, dropzone
-Teamtailor, native setter Lever) sont documentées dans
-`references/site-ouverture.md`, chargé par le dispatcher quand Chrome
-est détecté.
+Teamtailor, native setter Lever) sont documentées dans la couche
+navigateur chargée par le dispatcher quand le navigateur est
+disponible.
 
-Si Chrome n'est pas disponible, demander au candidat de décrire les
+Si le navigateur n'est pas disponible, demander au candidat de décrire les
 champs du formulaire : libellés, type (texte libre, liste déroulante,
 téléversement), et taille visible des champs texte.
 
@@ -52,11 +52,11 @@ Distinguer les champs texte libre (lettre de motivation, message,
 question ouverte) des champs factuels (CV upload, langues, prétentions
 salariales, liens, listes déroulantes).
 
-Si Chrome est disponible : utiliser des captures d'écran pour lire les
+Si le navigateur est disponible : utiliser des captures d'écran pour lire les
 champs. Si le formulaire est multi-étapes, explorer chaque étape avant
 de rédiger.
 
-Si Chrome n'est pas disponible : travailler avec la description fournie
+Si le navigateur n'est pas disponible : travailler avec la description fournie
 par le candidat.
 
 ## 2.7 Génération par champ
@@ -104,10 +104,10 @@ formulaire :
    interne à la soumission, pas une phase séquentielle. Chaque champ
    texte libre passe par la relecture avant d'être rempli.
 
-5. Remplir le champ. Si Chrome est disponible, utiliser `form_input`
-   ou l'approche appropriée à la plateforme. Si Chrome n'est pas
-   disponible, présenter le texte final au candidat pour qu'il le
-   copie.
+5. Remplir le champ. Si le navigateur est disponible, remplir le
+   champ par l'approche appropriée à la plateforme. Si le navigateur
+   n'est pas disponible, présenter le texte final au candidat pour
+   qu'il le copie.
 
 Quand la relecture d'un champ aboutit à des corrections, utiliser la
 modification ciblée Notion (`update_content`) sur la sous-page plutôt
@@ -143,7 +143,7 @@ Remplir les champs qui ne demandent pas de rédaction :
 - Les listes déroulantes et cases à cocher sont renseignées selon le
   profil et le poste.
 
-Si Chrome n'est pas disponible, indiquer au candidat les valeurs à
+Si le navigateur n'est pas disponible, indiquer au candidat les valeurs à
 saisir pour chaque champ.
 
 ## 2.9 Capture site

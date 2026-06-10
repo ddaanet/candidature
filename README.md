@@ -32,6 +32,27 @@ psychologie du recrutement.
 4. Créer un **Projet**, y uploader votre CV (DOCX de préférence)
 5. Ouvrir un chat dans le projet et taper `/candidature`
 
+## Installation sur Claude Code
+
+Le skill est aussi disponible comme plugin Claude Code, pour un usage
+local sans la limite de tours de Claude.ai.
+
+Depuis la marketplace ddaanet :
+
+    /plugin marketplace add ddaanet/claude-plugins
+    /plugin install candidature@ddaanet
+
+Pour le développement local, après un build, pointer Claude Code sur le
+dépôt :
+
+    ./build/build.sh
+    /plugin install /chemin/vers/candidature
+
+La racine Notion des candidatures est stockée dans `CLAUDE.local.md`,
+écrite au premier lancement. La couche navigateur utilise le harnais
+Playwright local décrit dans `tools/linkedin-harness/` et exige un
+chromium système.
+
 
 ## Mises à jour
 

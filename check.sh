@@ -17,26 +17,27 @@ warn() { printf '  WARN  %s\n' "$1"; warnings=$((warnings + 1)); }
 # --- Fichiers de contenu (ceux qui contaminent la sortie de l'agent) ---
 
 content_files=(
-  SKILL.md
-  references/profil.md
-  references/preparation.md
-  references/soumission.md
-  references/relecture.md
-  references/suivi.md
-  references/backend-write.md
-  references/notion-setup.md
-  references/modele-notion.md
-  references/cover-letter.md
-  references/adaptation-cv.md
-  references/etayage.md
-  references/suivi-retours.md
-  references/preparation-entretien.md
-  references/recruitment-science.md
-  references/decoupage-relecture.md
-  references/site-ouverture.md
-  references/site-cloture.md
-  references/consolidation.md
-  references/sites/*.md
+  src/SKILL.md
+  src/references/profil.md
+  src/references/preparation.md
+  src/references/soumission.md
+  src/references/relecture.md
+  src/references/suivi.md
+  src/references/backend-write.md
+  src/references/notion-setup.md
+  src/references/modele-notion.md
+  src/references/cover-letter.md
+  src/references/adaptation-cv.md
+  src/references/etayage.md
+  src/references/suivi-retours.md
+  src/references/preparation-entretien.md
+  src/references/recruitment-science.md
+  src/references/decoupage-relecture.md
+  src/references/site-ouverture.md
+  src/references/site-ouverture-playwright.md
+  src/references/site-cloture.md
+  src/references/consolidation.md
+  src/references/sites/*.md
 )
 
 echo "Contamination de style"
@@ -70,15 +71,27 @@ if [ "$style_errors" -eq 0 ]; then
   pass "aucun marqueur de contamination dans ${#content_files[@]} fichiers"
 fi
 
+# --- Preprocesseur ---
+
+echo "Préprocesseur"
+if preprocess_output=$(bash build/preprocess.test.sh 2>&1); then
+  pass "preprocess.test.sh OK"
+else
+  fail "preprocess.test.sh a échoué"
+  echo "$preprocess_output"
+fi
+
 # --- References internes ---
 
 echo "References internes"
 
 ref_errors_before=$errors
-for source in SKILL.md CLAUDE.md references/*.md; do
+for source in src/SKILL.md CLAUDE.md src/references/*.md; do
   [ -f "$source" ] || continue
   for ref in $(grep -oE '(^|[^/])references/[a-z/_-]+\.md' "$source" | grep -oE 'references/[a-z/_-]+\.md' | sort -u); do
-    if [ ! -f "$ref" ]; then
+    # Les references sont runtime-relatives (references/foo.md). La source
+    # canonique vit sous src/, donc verifier l'existence sous src/.
+    if [ ! -f "src/$ref" ]; then
       fail "$source reference $ref (introuvable)"
     fi
   done
@@ -109,6 +122,16 @@ if [ -f dist/candidature-dev.skill ]; then
   pass "candidature-dev.skill genere"
 else
   fail "candidature-dev.skill absent apres build"
+fi
+
+# --- Derive des artefacts versionnes ---
+
+echo "Dérive des artefacts versionnés"
+if git diff --quiet -- skills .claude-plugin/plugin.json; then
+  pass "skills/ et plugin.json à jour avec src/"
+else
+  fail "skills/ ou plugin.json divergent de src/ (lancer ./build/build.sh et committer)"
+  git --no-pager diff --stat -- skills .claude-plugin/plugin.json
 fi
 
 # --- VERSION ---

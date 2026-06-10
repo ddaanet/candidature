@@ -735,6 +735,45 @@ Ce principe étend la règle de contamination de CLAUDE.md (exemples et
 templates comme vecteurs) à tout texte chargé dans le contexte, y
 compris les fichiers techniques et le dispatcher.
 
+### D-33 : Double cible, sources canoniques et préprocesseur
+
+Choix retenu : le dépôt produit deux artefacts depuis une source unique
+`src/`. Les blocs `<!-- target: claude-ai|claude-code -->` isolent le
+contenu propre à chaque cible. Un préprocesseur awk portable
+(`build/preprocess.awk`) supprime les blocs hors cible et substitue
+`{{VERSION}}`. Évite la divergence entre deux arborescences éditées à la
+main. Spec 2026-04-24, sections 1, 3, 4.
+
+### D-34 : Artefacts Claude Code versionnés, garde-fou de dérive
+
+Choix retenu : `skills/candidature/` et `.claude-plugin/plugin.json`
+sont générés puis versionnés. Un plugin Claude Code n'a pas de lifecycle
+hook à l'installation, le cache est lu tel quel, un build au checkout
+est impossible. `check.sh` lance le build puis échoue sur tout diff dans
+les artefacts versionnés, ce qui interdit la dérive avec `src/`. Effet
+de bord accepté, un commit touchant `src/` produit aussi un diff dans
+`skills/`. Spec 2026-04-24, section 4.
+
+### D-35 : Couche navigateur Claude Code via harnais Playwright local
+
+Choix retenu : sur Claude Code, le contrôle navigateur passe par un
+harnais Playwright local lancé hors sandbox, pas par le MCP. La spec
+2026-04-24 prévoyait un scaffold de scripts ad hoc. Le harnais LinkedIn
+réel (`tools/linkedin-harness/`, livré 2026-06-09) a précisé cette
+intention, dont les choix validés notés ci-dessous (chromium à profil
+persistant et port CDP, navigation par arbre d'accessibilité).
+`references/site-ouverture-playwright.md` pointe sur le harnais pour
+LinkedIn et décrit l'approche ad hoc pour les autres sites. Le harnais
+reste hors du contenu skill, il vit dans une copie locale du dépôt, pas
+dans le cache plugin. Spec 2026-04-24, section 5, réconciliée.
+
+### D-36 : Suppression de la vérification de version sur Claude Code
+
+Choix retenu : le build Claude Code supprime la section 1 de SKILL.md et
+`scripts/version_check.py`. Les mises à jour sont gérées par la
+marketplace Claude Code. La logique de version reste isolée dans le
+bloc `claude-ai`. Spec 2026-04-24, section 6.
+
 ### Note : couche navigateur Claude Code, réalisation de la spec §5
 
 La spec plugin du 2026-04-24 (§5) prévoit le contrôle navigateur par scripts
@@ -749,9 +788,9 @@ tourner ses classes à chaque déploiement mais ne peut pas altérer la couche
 d'accessibilité sans casser les lecteurs d'écran.
 
 Le harnais et sa conception détaillée vivent dans tools/linkedin-harness/. Les
-décisions formelles D-33 à D-36 de la migration plugin seront rédigées avec la
-restructuration du dépôt, et D-35 (couche navigateur) intégrera ces choix
-validés. Le parcours des offres reste hors périmètre, conforme à la spec.
+décisions formelles de la migration plugin sont rédigées ci-dessus (D-33 à
+D-36), et D-35 (couche navigateur) reprend ces choix validés. Le parcours des
+offres reste hors périmètre, conforme à la spec.
 
 ---
 
@@ -939,9 +978,22 @@ concernés.
 | 18 | Gemini Gems : max 10 fichiers | README.md | Google Workspace Blog | Étayé |
 | 19 | Mistral Agents + Libraries | README.md | Mistral Help Center | Étayé |
 
+### Affirmations de migration plugin (décisions D-33 à D-36)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 20 | Double cible depuis `src/` via préprocesseur awk | DESIGN.md D-33 | spec 2026-04-24 §1, §3, §4 | Étayé |
+| 21 | Artefacts Claude Code versionnés, pas de lifecycle hook à l'installation | DESIGN.md D-34 | spec 2026-04-24 §4 | Étayé |
+| 22 | Couche navigateur via harnais Playwright local, hors sandbox, pas le MCP | DESIGN.md D-35 | spec 2026-04-24 §5, tools/linkedin-harness/README.md | Étayé |
+| 23 | Suppression de version_check sur Claude Code, mises à jour par la marketplace | DESIGN.md D-36 | spec 2026-04-24 §6 | Étayé |
+
 ### Bilan
 
 15 affirmations étayées (dont 1 avec réserves méthodologiques). 3
 affirmations faiblement étayées, qualifiées avec notes, inférences
 raisonnables documentées comme telles. 1 affirmation non étayée, corrigée
 (retirée du workflow, v1). 0 affirmation non auditée.
+
+Les quatre décisions de migration plugin (D-33 à D-36) tracent vers la
+spec approuvée du 2026-04-24, D-35 aussi vers le README du harnais
+LinkedIn. Toutes étayées.

@@ -11,12 +11,12 @@ relais pour la navigation, la génération et l'envoi.
 ## 2.1 Recherche d'offres
 
 Si le candidat n'a pas encore d'offre, rechercher des offres adaptées à
-son profil et son secteur. La recherche par Control Chrome directement
+son profil et son secteur. La recherche par le navigateur directement
 sur les sites d'emploi remonte davantage de résultats qu'une recherche
 web simple, car elle accède au contenu des pages de résultats et aux
 filtres des plateformes.
 
-Si Chrome n'est pas disponible, utiliser `web_search` et recommander au
+Si le navigateur n'est pas disponible, utiliser `web_search` et recommander au
 candidat des plateformes adaptées à son profil. Le candidat revient avec
 des URLs.
 

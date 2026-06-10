@@ -110,7 +110,8 @@ if [[ "${1:-}" == "--bump" ]]; then
     TAG="v$VERSION"
     cd "$REPO_DIR"
     git add VERSION skills .claude-plugin/plugin.json
-    git commit -m "v$VERSION"
+    # Le hook commit-msg gitmoji réécrit le préfixe release: en 🔖.
+    git commit -m "release: v$VERSION"
     git tag "$TAG"
     git push origin main --tags
     echo "Creating release $TAG..."

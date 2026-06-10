@@ -5,6 +5,8 @@ CLAUDE.local.md
 
 # Build output
 dist/
+# skills/ et .claude-plugin/plugin.json sont au contraire versionnés
+# (cible Claude Code lue telle quelle depuis le cache plugin, sans build au checkout)
 .claude/settings.local.json
 
 # Pointeur de session transitoire (handoff)

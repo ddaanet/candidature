@@ -10,7 +10,7 @@ description: >-
 
 # Candidature, dispatcher
 
-Version: __VERSION__
+Version: 0.4.0
 
 Point d'entrée. Vérifie les mises à jour, vérifie les prérequis,
 détecte les capacités, charge la phase appropriée.

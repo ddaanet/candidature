@@ -1,12 +1,15 @@
 # Phase 2, Préparation de la candidature
 
 Deuxième phase du workflow. Une itération par offre d'emploi. Recherche
-d'offres, analyse de la fiche de poste, recherche contextuelle, alignement
-des axes de candidature, et adaptation du CV si pertinent.
+d'offres, analyse de la fiche de poste, recherche contextuelle, et
+adaptation du CV si pertinent.
 
-Le livrable de cette phase est un ensemble validé : axes confirmés, CV prêt,
-recherche contextuelle exploitable. La phase suivante (soumission) prend le
-relais pour la navigation, la génération et l'envoi.
+Le livrable de cette phase est un ensemble validé : analyse d'adéquation
+faite à la shortlist, CV prêt, recherche contextuelle exploitable. La phase
+suivante (soumission) prend le relais pour la navigation, la génération et
+l'envoi. Les axes de candidature ne sont pas un livrable de la préparation.
+Ils sont alignés avec le candidat quand un consommateur les requiert,
+l'adaptation du CV ou un champ de texte libre découvert à la soumission.
 
 ## 2.1 Recherche d'offres
 
@@ -155,34 +158,12 @@ Proposer aussi d'aller chercher des informations sur l'employeur si le
 candidat donne un nom ou une URL : site web, page carrière, blog technique,
 actualités récentes, avis d'employés.
 
-## 2.6 Axes
-
-Aligner avec le candidat sur deux dimensions distinctes, puis un
-différenciateur. Ces dimensions s'appuient sur la recherche en psychologie
-organisationnelle (voir `references/recruitment-science.md`, §2) :
-
-1. Quelles compétences et expériences correspondent aux exigences du
-   poste ? Quels écarts honnêtes ? C'est le "peut-il faire le travail ?".
-   Le CV porte le gros de cette dimension, mais la lettre doit y faire
-   référence brièvement.
-2. Pourquoi cette entreprise ? Qu'est-ce qui, dans la culture, la mission,
-   le produit ou l'équipe, résonne avec le candidat ? C'est le "va-t-il
-   s'intégrer ?". La lettre est le véhicule principal de cette dimension.
-   Une lettre qui ne fait que résumer le CV rate sa cible.
-3. Qu'est-ce qui distingue ce candidat des autres pour ce poste précis ?
-   Peut être une expérience, un angle, une compétence rare, un parcours
-   atypique.
-
-Conversation courte, 2-3 échanges. Le candidat peut avoir des réponses
-claires ou avoir besoin d'aide pour formuler ses arguments. S'adapter.
-
-Confirmer les axes retenus avec un widget avant de rédiger. Le widget
-présente les axes choisis sous les deux dimensions pour validation.
-
-## 2.7 Personnalisation du CV
+## 2.6 Personnalisation du CV
 
 Si la recherche contextuelle ou l'analyse du poste indique qu'une
 adaptation du CV serait bénéfique : proposer au candidat. Pas imposer.
+L'angle vient de l'analyse d'adéquation faite à la shortlist (§2.2),
+ajusté avec le candidat au moment de l'adaptation.
 
 > "Votre CV est bon tel quel pour cette candidature / Je suggère d'adapter
 > [tel aspect] de votre CV pour mettre en avant [tel point]. On le fait ?"

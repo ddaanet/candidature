@@ -4,8 +4,7 @@ Phase continue, déclenchée par les retours du candidat. Fondée sur la
 recherche en autorégulation de la recherche d'emploi : les candidats qui
 adoptent une orientation d'apprentissage obtiennent de meilleurs résultats
 que ceux focalisés sur les résultats bruts (Kanfer et al., 2001,
-Van Hooft & Van Hoye, 2022). Voir `references/suivi-retours.md` pour
-le protocole détaillé.
+Van Hooft & Van Hoye, 2022).
 
 ## 4.1 Enregistrement des retours
 
@@ -19,7 +18,9 @@ Si le candidat fournit du contexte supplémentaire (retour du recruteur,
 hypothèse sur le refus, délai de réponse), l'ajouter au contenu de la
 page candidature. Rien n'est imposé, tout est capté s'il est offert.
 
-Voir `references/suivi-retours.md` pour les statuts et le détail.
+Les statuts possibles : en attente (envoyée, pas de réponse), refus (réponse
+négative, avec ou sans entretien), entretien N (convoqué ou passé au tour
+N), offre (offre reçue), accepté ou décliné (résolution finale).
 
 ## 4.2 Entretiens
 
@@ -30,8 +31,13 @@ l'entreprise et les interlocuteurs, questions probables, stratégie de
 négociation salariale.
 
 Après un entretien, l'agent demande "Comment ça s'est passé ?" et adapte
-la profondeur selon ce que le candidat dit. Voir
-`references/suivi-retours.md` pour le protocole.
+la profondeur selon ce que le candidat dit. Si le candidat est bref ("bien,
+on verra"), noter le statut et passer, pas de forcing. S'il est bavard,
+structurer la synthèse et extraire les apprentissages. Entre les deux, poser
+2-3 questions ciblées : qu'est-ce qui a bien marché, qu'est-ce qui a coincé
+ou surpris, quelque chose à retenir pour la suite. Clore par "qu'est-ce qui
+est utile pour les prochaines candidatures ?", et enregistrer la réponse,
+elle alimente l'analyse des tendances.
 
 ### Compte rendu
 
@@ -76,5 +82,5 @@ du candidat (`notion-create-pages` pour la première analyse,
 `notion-update-page` pour les suivantes). Chaque analyse met à jour cette
 page avec les nouvelles observations et les ajustements décidés.
 
-Cette page est consultée au lancement de la phase 2 (axes, §2.6) pour
+Cette page est consultée au lancement de la phase 2 (préparation) pour
 éclairer les choix des candidatures suivantes.

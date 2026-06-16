@@ -614,6 +614,19 @@ Compromis accepté : Notion MCP est requis. Les utilisateurs sans Notion
 ne peuvent pas utiliser le stockage persistant. Le skill fonctionne quand
 même pour une candidature ponctuelle, mais sans historique.
 
+Correction 2026-06-16 : le fichier `suivi-retours.md` avait échappé à cette
+migration et prescrivait encore le stockage en mémoire projet (préfixes
+`candidature:`, `entretien:`, `tendance:`), en contradiction avec `suivi.md`
+qui le citait pour le protocole détaillé tout en stockant dans Notion.
+`suivi-retours.md` n'était jamais chargé seul, lu en entier et toujours en
+même temps que `suivi.md`, sans le déclencheur conditionnel ou différé qui
+justifie les autres fichiers de support (etayage après le brouillon,
+relecture par champ, cover-letter conditionnelle). La séparation n'apportait
+pas de divulgation progressive et coûtait la divergence observée. Ses trois
+éléments uniques (liste des statuts, adaptation de profondeur du compte
+rendu, question d'extraction d'apprentissages) sont repliés dans `suivi.md`,
+et le fichier est supprimé.
+
 ### D-26 : Flux formulaire-driven
 
 Choix retenu : implémenté (v0.4).
@@ -633,6 +646,17 @@ questions spécifiques au lieu de demander une lettre libre.
 Écarté : génération avant découverte du formulaire (v1). Lettre par défaut
 avec adaptation au formulaire (deux passes pour un résultat souvent
 différent du format attendu).
+
+Correction 2026-06-16 : la section 2.6 Axes de la préparation présupposait
+encore une lettre comme livrable par défaut (CV qui « doit y faire
+référence », lettre « véhicule principal » du P-O fit, « avant de
+rédiger »). Le garde-fou formulaire-driven vit dans la soumission, et le
+dispatcher charge une phase à la fois (D-24), donc une session qui termine
+la préparation rédige sa passation sans jamais voir ce garde-fou et reporte
+l'hypothèse lettre. Symptôme observé sur la candidature Symbiotic Security,
+dont le formulaire Gem n'a aucun champ de texte libre. La correction,
+d'abord une neutralisation de la prose, a évolué en suppression de la
+section, voir D-37.
 
 ### D-27 : Contrôle d'écriture backend (references/backend-write.md)
 
@@ -791,6 +815,25 @@ Le harnais et sa conception détaillée vivent dans tools/linkedin-harness/. Les
 décisions formelles de la migration plugin sont rédigées ci-dessus (D-33 à
 D-36), et D-35 (couche navigateur) reprend ces choix validés. Le parcours des
 offres reste hors périmètre, conforme à la spec.
+
+### D-37 : Axes alignés à la demande, pas en livrable de préparation
+
+Choix retenu : la section 2.6 Axes de la préparation est supprimée. Les axes
+ne sont pas produits à l'avance. L'analyse d'adéquation de la shortlist
+(§2.2) reste la lecture de l'agent, stockée sur la page candidature, et sert
+un besoin manifeste, le candidat décide s'il postule. L'alignement des axes
+avec le candidat se fait au moment où un consommateur le requiert :
+l'adaptation du CV, qui tire son angle de l'analyse de shortlist, et un
+champ de texte libre du formulaire, découvert à la soumission, qui calibre
+le texte précis.
+
+La section supprimée produisait les mêmes trois dimensions que la shortlist,
+une seconde fois, confirmées au widget avant de rédiger. Cette seconde
+production présupposait un consommateur, une lettre, qui n'existe que si le
+formulaire a un champ de texte libre. C'est la même anti-anticipation que
+D-18, D-22, D-26 et D-27, ne rien produire dans l'abstrait avant que la
+cible concrète existe. Le routage du dispatcher (règle 4) ne teste plus la
+présence d'une sous-page d'axes. Supersède la correction notée sous D-26.
 
 ---
 

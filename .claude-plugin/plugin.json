@@ -1,6 +1,6 @@
 {
   "name": "candidature",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Candidature assistée : préparation, lettre de motivation, CV adapté, relecture, suivi des retours. Stockage Notion. Contenu français.",
   "author": { "name": "David Allouche" },
   "homepage": "https://github.com/ddaanet/candidature",

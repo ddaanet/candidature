@@ -5,6 +5,14 @@ L'agent utilise ces modèles quand la cible d'écriture est vide (pas de
 pages enfants, pas de contenu existant). Les écritures suivantes se
 conforment à la structure établie par la première.
 
+Dans toute collection de sous-pages (candidatures, recherches, sites,
+comptes rendus d'entretien), une nouvelle page s'ajoute à la fin, la plus
+récente en dernier. L'agent ne déplace pas les pages existantes pour
+insérer la nouvelle en tête. Le déplacement répété en tête est lent et
+lutte contre le comportement naturel de l'outil. L'état courant de la
+recherche se lit dans la section Situation de la page racine, pas dans
+l'ordre des sous-pages.
+
 ## Page racine
 
 La page racine est le hub de la recherche d'emploi. Elle contient cinq

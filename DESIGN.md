@@ -835,6 +835,39 @@ D-18, D-22, D-26 et D-27, ne rien produire dans l'abstrait avant que la
 cible concrète existe. Le routage du dispatcher (règle 4) ne teste plus la
 présence d'une sous-page d'axes. Supersède la correction notée sous D-26.
 
+### D-38 : Ordre d'insertion des collections Notion, append en fin
+
+Choix retenu : dans toute collection de sous-pages Notion (candidatures,
+recherches, sites, comptes rendus, passations), une nouvelle page s'ajoute
+à la fin, la plus récente en dernier. L'agent ne repositionne pas les pages
+existantes.
+
+La convention précédente plaçait la plus récente en tête, ce qui obligeait
+à déplacer chaque nouvelle page en position zéro après sa création.
+notion-move-pages est lent, et le tri manuel a dérivé. La cartographie du
+2026-06-16 a montré que sur les conteneurs anciens l'ordre n'était plus
+cohérent, la tête restait à peu près triée et la queue était mélangée.
+L'append est le comportement natif de la création de page, gratuit et
+déterministe.
+
+Le coût est que la page la plus récente n'est plus en haut à la lecture.
+C'est acceptable parce que l'état courant de la recherche se lit dans la
+section Situation de la page racine, qui pointe la dernière passation et le
+pipeline, et qu'une session qui reprend lit la dernière entrée, désormais
+en bas. Supersède la convention plus récente en premier, qui n'était écrite
+explicitement que sur la page conteneur Passations Recherche d'emploi.
+
+L'append est aussi le comportement le plus fiable côté outil. Le MCP Notion
+ne repositionne pas une page dans son parent en un seul appel, un
+déplacement vers le même parent est un no-op. Réordonner des pages enfants
+existantes reste possible en réécrivant le contenu, mais seulement par
+petits groupes où chaque entrée porte une description, les gros
+réordonnancements ou une entrée sans description orphelinant les
+descriptions. C'est lent et fragile. L'append en fin évite tout cela. La
+règle vaut pour les écritures à venir. Les conteneurs existants (passations
+et index des candidatures) ont été retriés une fois en ascendant le
+2026-06-16 pour partir d'une base cohérente.
+
 ---
 
 ## Alternatives écartées globales

@@ -56,9 +56,10 @@ appliquée.
    candidature ("postuler", "adapter mon CV", ou une URL/texte d'offre),
    charger `view references/preparation.md`.
 
-4. Si une page candidature existe sous la page racine avec une sous-page
-   contenant des axes et une sous-page contenant une recherche
-   contextuelle, charger `view references/soumission.md`.
+4. Si une page candidature existe sous la page racine, que la recherche
+   contextuelle pour ce type de poste est disponible, et que le candidat
+   passe à la soumission (ouvrir le formulaire, remplir, envoyer), charger
+   `view references/soumission.md`.
 
 5. Si aucune des règles précédentes ne s'applique et que la fiche
    candidat existe, charger `view references/preparation.md`.

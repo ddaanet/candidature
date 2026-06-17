@@ -32,6 +32,21 @@ reject écarte la carte, stop arrête le parcours. L'écriture Notion du
 harnais passe par un jeton d'intégration REST, pas par le MCP, voir le
 README du harnais pour la configuration du jeton.
 
+Avant de lancer un parcours, charger les contraintes dures de la fiche
+candidat (`references/preparation.md`). Le harnais laisse la décision
+shortlist ou reject au jugement de l'agent, qui doit donc avoir les
+contraintes en contexte avant de parcourir. Une offre hors contraintes, par
+exemple en télétravail intégral quand la fiche exige du présentiel, est un
+reject d'office.
+
+Pour écarter une carte hors d'un parcours, quand le candidat annule une
+shortlist plus tard, `node walk.mjs dismiss --jobId <id>`. La commande
+réutilise la navigation robuste et le Dismiss du parcours, sans toucher à
+l'état de run. La page candidature issue d'un parcours porte son jobId, ce
+qui relie la page Notion à la carte. À l'écartement d'une telle offre,
+archiver la page Notion et dismisser la carte gardent les deux états
+cohérents.
+
 ## Autres sites, Playwright ad hoc
 
 Pour un site sans harnais dédié, écrire un script Playwright dans

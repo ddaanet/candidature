@@ -49,6 +49,19 @@ modification ciblée plutôt que le remplacement complet.
 Exécuter la procédure générée. Vérifier le résultat (`notion-fetch` sur
 la page écrite).
 
+## Suppression et écartement
+
+Notion n'efface pas une page, il l'archive (suppression douce, `archived`
+à vrai). Pour écarter une offre, archiver sa page candidature plutôt que
+chercher une suppression définitive. L'archivage la retire de l'arborescence
+visible tout en gardant la trace récupérable.
+
+Avant d'archiver, vérifier qu'on cible la bonne page (`notion-fetch`).
+L'écartement d'une offre issue d'un parcours LinkedIn ne s'arrête pas à
+Notion. Sa page porte un jobId, et archiver la page seule laisse la carte
+dans le flux LinkedIn. Écarter aussi la carte par la couche navigateur, pour
+que Notion et le flux ne divergent pas.
+
 ## Cas particuliers
 
 Si la cible est vide (pas de pages enfants, pas de contenu), utiliser le

@@ -29,7 +29,6 @@ content_files=(
   src/references/cover-letter.md
   src/references/adaptation-cv.md
   src/references/etayage.md
-  src/references/suivi-retours.md
   src/references/preparation-entretien.md
   src/references/recruitment-science.md
   src/references/decoupage-relecture.md

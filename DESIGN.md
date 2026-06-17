@@ -614,6 +614,19 @@ Compromis accepté : Notion MCP est requis. Les utilisateurs sans Notion
 ne peuvent pas utiliser le stockage persistant. Le skill fonctionne quand
 même pour une candidature ponctuelle, mais sans historique.
 
+Correction 2026-06-16 : le fichier `suivi-retours.md` avait échappé à cette
+migration et prescrivait encore le stockage en mémoire projet (préfixes
+`candidature:`, `entretien:`, `tendance:`), en contradiction avec `suivi.md`
+qui le citait pour le protocole détaillé tout en stockant dans Notion.
+`suivi-retours.md` n'était jamais chargé seul, lu en entier et toujours en
+même temps que `suivi.md`, sans le déclencheur conditionnel ou différé qui
+justifie les autres fichiers de support (etayage après le brouillon,
+relecture par champ, cover-letter conditionnelle). La séparation n'apportait
+pas de divulgation progressive et coûtait la divergence observée. Ses trois
+éléments uniques (liste des statuts, adaptation de profondeur du compte
+rendu, question d'extraction d'apprentissages) sont repliés dans `suivi.md`,
+et le fichier est supprimé.
+
 ### D-26 : Flux formulaire-driven
 
 Choix retenu : implémenté (v0.4).
@@ -633,6 +646,17 @@ questions spécifiques au lieu de demander une lettre libre.
 Écarté : génération avant découverte du formulaire (v1). Lettre par défaut
 avec adaptation au formulaire (deux passes pour un résultat souvent
 différent du format attendu).
+
+Correction 2026-06-16 : la section 2.6 Axes de la préparation présupposait
+encore une lettre comme livrable par défaut (CV qui « doit y faire
+référence », lettre « véhicule principal » du P-O fit, « avant de
+rédiger »). Le garde-fou formulaire-driven vit dans la soumission, et le
+dispatcher charge une phase à la fois (D-24), donc une session qui termine
+la préparation rédige sa passation sans jamais voir ce garde-fou et reporte
+l'hypothèse lettre. Symptôme observé sur la candidature Symbiotic Security,
+dont le formulaire Gem n'a aucun champ de texte libre. La correction,
+d'abord une neutralisation de la prose, a évolué en suppression de la
+section, voir D-37.
 
 ### D-27 : Contrôle d'écriture backend (references/backend-write.md)
 
@@ -791,6 +815,152 @@ Le harnais et sa conception détaillée vivent dans tools/linkedin-harness/. Les
 décisions formelles de la migration plugin sont rédigées ci-dessus (D-33 à
 D-36), et D-35 (couche navigateur) reprend ces choix validés. Le parcours des
 offres reste hors périmètre, conforme à la spec.
+
+### D-37 : Axes alignés à la demande, pas en livrable de préparation
+
+Choix retenu : la section 2.6 Axes de la préparation est supprimée. Les axes
+ne sont pas produits à l'avance. L'analyse d'adéquation de la shortlist
+(§2.2) reste la lecture de l'agent, stockée sur la page candidature, et sert
+un besoin manifeste, le candidat décide s'il postule. L'alignement des axes
+avec le candidat se fait au moment où un consommateur le requiert :
+l'adaptation du CV, qui tire son angle de l'analyse de shortlist, et un
+champ de texte libre du formulaire, découvert à la soumission, qui calibre
+le texte précis.
+
+La section supprimée produisait les mêmes trois dimensions que la shortlist,
+une seconde fois, confirmées au widget avant de rédiger. Cette seconde
+production présupposait un consommateur, une lettre, qui n'existe que si le
+formulaire a un champ de texte libre. C'est la même anti-anticipation que
+D-18, D-22, D-26 et D-27, ne rien produire dans l'abstrait avant que la
+cible concrète existe. Le routage du dispatcher (règle 4) ne teste plus la
+présence d'une sous-page d'axes. Supersède la correction notée sous D-26.
+
+### D-38 : Ordre d'insertion des collections Notion, append en fin
+
+Choix retenu : dans toute collection de sous-pages Notion (candidatures,
+recherches, sites, comptes rendus, passations), une nouvelle page s'ajoute
+à la fin, la plus récente en dernier. L'agent ne repositionne pas les pages
+existantes.
+
+La convention précédente plaçait la plus récente en tête, ce qui obligeait
+à déplacer chaque nouvelle page en position zéro après sa création.
+notion-move-pages est lent, et le tri manuel a dérivé. La cartographie du
+2026-06-16 a montré que sur les conteneurs anciens l'ordre n'était plus
+cohérent, la tête restait à peu près triée et la queue était mélangée.
+L'append est le comportement natif de la création de page, gratuit et
+déterministe.
+
+Le coût est que la page la plus récente n'est plus en haut à la lecture.
+C'est acceptable parce que l'état courant de la recherche se lit dans la
+section Situation de la page racine, qui pointe la dernière passation et le
+pipeline, et qu'une session qui reprend lit la dernière entrée, désormais
+en bas. Supersède la convention plus récente en premier, qui n'était écrite
+explicitement que sur la page conteneur Passations Recherche d'emploi.
+
+L'append est aussi le comportement le plus fiable côté outil. Le MCP Notion
+ne repositionne pas une page dans son parent en un seul appel, un
+déplacement vers le même parent est un no-op. Réordonner des pages enfants
+existantes reste possible en réécrivant le contenu, mais seulement par
+petits groupes où chaque entrée porte une description, les gros
+réordonnancements ou une entrée sans description orphelinant les
+descriptions. C'est lent et fragile. L'append en fin évite tout cela. La
+règle vaut pour les écritures à venir. Les conteneurs existants (passations
+et index des candidatures) ont été retriés une fois en ascendant le
+2026-06-16 pour partir d'une base cohérente.
+
+### D-39 : Fiche candidat chargée avant prospection, barrière de contraintes dures
+
+Choix retenu : implémenté. La phase 2 préparation charge le contenu de la
+fiche candidat à l'entrée, avant toute recherche d'offres, et une barrière de
+contraintes dures écarte d'office les offres hors critères avant l'analyse
+d'adéquation.
+
+Le dispatcher (règle 2) ne touchait la fiche que pour tester si elle est vide,
+son contenu n'était jamais porté dans la phase (D-24, une phase à la fois).
+L'analyse d'adéquation de la shortlist (§2.2) parlait d'adéquation avec le
+profil comme si le profil était connu, sans jamais le charger. Sur une session
+de prospection LinkedIn du 2026-06-16, l'agent a recommandé comme la plus
+alignée une offre en télétravail intégral que la fiche interdit explicitement,
+sur un profil deviné. Voir l'axe d'audit ci-dessous.
+
+La correction charge la fiche avec `notion-fetch` à l'entrée de phase, source
+qui fait autorité sur l'adéquation, et en extrait les contraintes dures, le
+présentiel, la zone géographique, le plancher salarial et les anti-patterns.
+La barrière confronte chaque offre à ces contraintes avant l'analyse à trois
+dimensions. Une offre qui viole une contrainte dure est écartée sans être
+proposée. Ce n'est pas l'agent qui décide à la place du candidat. Les
+contraintes dures sont des décisions déjà inscrites dans la fiche, par exemple
+ne jamais proposer de télétravail intégral. Les écarter d'office honore ces
+décisions. Les préférences molles passent par l'analyse où le candidat
+tranche.
+
+Écarté : filtre de contraintes codé dans le harnais LinkedIn, qui figerait des
+critères propres à un candidat dans un outil générique. Le harnais reste
+neutre, l'agent porte les contraintes.
+
+### D-40 : Écartement hors parcours et réconciliation Notion vers LinkedIn
+
+Choix retenu : implémenté. Le harnais LinkedIn expose une sous-commande
+`dismiss` qui écarte une carte par jobId hors d'un parcours, la page
+candidature porte le jobId de sa carte, et `lib/notion.mjs` expose
+`archivePage` pour l'écartement d'une offre.
+
+Le reject du driver ne valait que sur la carte au focus d'un parcours actif.
+Un candidat qui annule une shortlist plus tard n'avait aucune voie propre.
+Incident du 2026-06-16, l'agent a écrit un script Playwright ad hoc qui
+contournait les helpers du harnais et a timeouté sur une navigation nue, alors
+que `gotoStream` et `dismissCard` faisaient déjà le travail. Même racine que
+D-39, voir l'axe d'audit ci-dessous.
+
+La sous-commande `walk.mjs dismiss --jobId` réutilise `gotoStream`,
+`listCards`, `readFocusedCard` et `dismissCard`, sans état de run.
+`buildPagePayload` inscrit le jobId dans le méta de la page candidature, ce qui
+relie la page Notion à la carte. `archivePage` fait une suppression douce REST
+(`archived` à vrai), symétrique de `createShortlistPage`, par jeton
+d'intégration et non par le MCP, cohérent avec la couche d'écriture du harnais.
+À l'écartement d'une offre issue d'un parcours, archiver la page et dismisser
+la carte vont de pair, sans quoi l'offre annulée réapparaît au parcours
+suivant.
+
+Écarté : navigation ad hoc réécrite à chaque besoin, fragile et ignorant les
+helpers éprouvés. Couplage du dismiss à la machine à états du parcours, qui ne
+couvre pas l'annulation tardive.
+
+### Axe d'audit : agir sans charger la source qui fait autorité
+
+Deux incidents du 2026-06-16 partagent une racine unique. L'agent exécute une
+opération sans charger d'abord la source qui fait autorité sur cette
+opération, et agit donc sur une reconstruction devinée du réel.
+
+À la prospection LinkedIn, l'agent a évalué l'adéquation de trois offres sans
+jamais charger le contenu de la fiche candidat. Il a recommandé comme la plus
+alignée un poste full remote, que la fiche interdit explicitement. L'erreur
+n'a été rattrapée que par une question du candidat. La source qui fait
+autorité sur l'adéquation, ce sont les contraintes documentées de la fiche,
+pas le profil que l'agent infère du fil d'offres.
+
+Au dismiss d'une carte hors parcours, l'agent a réinventé une navigation
+Playwright ad hoc qui a planté en timeout, alors que lib/stream-page.mjs
+exposait déjà gotoStream pour la navigation robuste et dismissCard pour le
+clic, et que walk.mjs les importait. La source qui fait autorité sur la
+manière de dismisser une carte, c'est la lib du harnais, pas une nav
+improvisée.
+
+Ce fil sous-tend déjà plusieurs décisions. D-18 audite le texte réel du
+brouillon plutôt que les intentions de l'agent. D-27 force l'exploration d'un
+backend avant d'y écrire. D-13 et D-17 ancrent une porte `[outil]` qui force
+la consultation des sources avant navigation. Chacune est une réponse locale
+et ancrée au même risque.
+
+L'axe ne devient pas lui-même une instruction du skill. Un principe général
+posé dans le dispatcher, charger la source qui fait autorité avant d'agir,
+serait la porte prose-only que NFR-2 et D-13 identifient comme l'anti-pattern,
+lue puis sautée. L'agent connaissait déjà le principe dans l'abstrait et a
+quand même deviné. Sa valeur est diagnostique. C'est un angle d'audit à passer
+sur les sites d'action conséquents du skill, en demandant à chacun si l'agent
+charge la source qui fait autorité avant d'agir, ou s'il improvise sur une
+reconstruction. Les deux correctifs concrets nés de ces incidents sont D-39 et
+D-40, chacun une porte locale et ancrée, pas une instruction générale.
 
 ---
 

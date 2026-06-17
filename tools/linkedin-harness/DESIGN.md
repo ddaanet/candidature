@@ -97,6 +97,32 @@ claude.ai n'est pas garanti présent. Le jeton se lit dans NOTION_TOKEN ou dans
 retenue sous la racine, avec un paragraphe d'index daté ajouté au corps de la
 racine.
 
+### Écartement hors parcours et réconciliation Notion
+
+Choix retenu. Une sous-commande dismiss écarte une carte par son jobId, en
+dehors d'un parcours. Le candidat annule parfois une shortlist plus tard, et le
+reject du driver ne vaut que sur la carte au focus d'un parcours actif. La
+sous-commande réutilise gotoStream, listCards, readFocusedCard et dismissCard,
+sans état de run. Elle ne réécrit pas la navigation, l'incident fondateur étant
+un script ad hoc qui contournait ces helpers et timeoutait sur une nav nue.
+
+La page candidature créée par shortlist porte désormais le jobId de la carte,
+inscrit dans le méta par buildPagePayload. Ce lien permet de retrouver la carte
+à écarter à partir de la page Notion. lib/notion.mjs expose archivePage, une
+suppression douce REST (archived à vrai), symétrique de createShortlistPage. À
+l'écartement d'une offre, archiver la page et dismisser la carte gardent Notion
+et le flux LinkedIn cohérents, sans quoi une offre annulée réapparaît au
+parcours suivant.
+
+### Contraintes du candidat chargées par l'agent
+
+Choix retenu. Le harnais ne filtre pas les offres sur des contraintes dures. La
+décision shortlist ou reject reste au jugement de l'agent, qui charge les
+contraintes de la fiche candidat avant le parcours. Coder un filtre dans le
+harnais figerait des critères propres à un candidat dans un outil générique.
+Une offre hors contraintes, par exemple en télétravail intégral quand la fiche
+exige du présentiel, est un reject d'office côté agent. Le harnais reste neutre.
+
 ### playwright-core et chromium système
 
 Choix retenu. La dépendance est playwright-core, qui fournit l'API sans

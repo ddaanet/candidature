@@ -1,7 +1,7 @@
 # Phase 2, Soumission de la candidature
 
-Suite de la phase de préparation. Prend le relais quand les axes sont
-validés, le CV est prêt, et la recherche contextuelle est exploitable.
+Suite de la phase de préparation. Prend le relais quand le CV est prêt et
+la recherche contextuelle est exploitable.
 Le formulaire de candidature guide la génération : l'agent ne produit
 rien avant de connaître les champs du formulaire.
 
@@ -84,8 +84,13 @@ formulaire :
    propres termes" est un test d'authenticité. La réponse doit sonner
    comme le candidat, pas comme un modèle.
 
-2. Produire un brouillon adapté au champ. Une lettre de motivation complète
-   si le champ est prévu pour une lettre (voir
+2. Aligner les axes avec le candidat pour ce champ, à partir de l'analyse
+   d'adéquation stockée sur la page candidature : ce qui répond au poste
+   (P-J fit), pourquoi cette entreprise (P-O fit), et ce qui distingue le
+   candidat (voir `references/recruitment-science.md`, §2). Conversation
+   courte, 2-3 échanges. Le besoin d'axes est manifeste ici, pas avant.
+   Puis produire un brouillon adapté au champ. Une lettre de motivation
+   complète si le champ est prévu pour une lettre (voir
    `references/cover-letter.md`). Un message court si le champ attend
    quelques phrases. Une réponse ciblée si le champ pose une question
    spécifique. Le brouillon est créé en sous-page de la candidature dans

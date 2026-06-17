@@ -24,7 +24,7 @@ décide ce qu'il en fait.
 Adapter au type d'entretien (RH, technique, manager). Bases communes :
 
 - La présentation ("Parlez-moi de vous"). Préparer une version de 2
-  minutes alignée sur les axes identifiés en §2.4.
+  minutes alignée sur l'analyse d'adéquation de la candidature.
 - La motivation ("Pourquoi cette entreprise ?"). Reprendre les éléments
   de motivation pour l'entreprise retenus dans la candidature.
 - Les compétences : questions techniques liées au poste. Identifier les

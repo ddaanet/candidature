@@ -26,6 +26,18 @@ test('buildPagePayload rend trois sections d’analyse', () => {
   assert.ok(bodies.some((t) => t.includes('Ornikar') && t.includes(record.url)));
 });
 
+test('buildPagePayload inscrit le jobId dans le méta quand fourni', () => {
+  const p = buildPagePayload('root1', record, '4417156077');
+  const bodies = p.children.filter((b) => b.type === 'paragraph').map((b) => b.paragraph.rich_text[0].text.content);
+  assert.ok(bodies.some((t) => t.includes('jobId LinkedIn : 4417156077')));
+});
+
+test('buildPagePayload n’ajoute pas de jobId sans argument', () => {
+  const p = buildPagePayload('root1', record);
+  const bodies = p.children.filter((b) => b.type === 'paragraph').map((b) => b.paragraph.rich_text[0].text.content);
+  assert.ok(!bodies.some((t) => t.includes('jobId LinkedIn')));
+});
+
 test('buildIndexParagraph préfixe la date', () => {
   const b = buildIndexParagraph(record, '2026-06-09');
   assert.equal(b.type, 'paragraph');
@@ -53,7 +65,7 @@ test('loadToken sans source jette les instructions', () => {
   assert.throws(() => loadToken({ env: {}, file: '/non/existant' }), /Définir NOTION_TOKEN/);
 });
 
-import { createShortlistPage } from '../lib/notion.mjs';
+import { createShortlistPage, archivePage } from '../lib/notion.mjs';
 
 function stubFetch(responses) {
   const calls = [];
@@ -89,4 +101,30 @@ test('createShortlistPage jette sur réponse non ok', async () => {
     () => createShortlistPage(record, { rootId: 'root1', token: 'bad', dateStr: '2026-06-09', fetch }),
     /401/,
   );
+});
+
+test('createShortlistPage transmet le jobId au payload', async () => {
+  const { fetch, calls } = stubFetch([
+    { json: { id: 'page123', url: 'https://notion.so/page123' } },
+    { json: {} },
+  ]);
+  await createShortlistPage(record, { rootId: 'root1', token: 'ntn_x', dateStr: '2026-06-09', jobId: '4417156077', fetch });
+  const body = JSON.parse(calls[0].opts.body);
+  const bodies = body.children.filter((b) => b.type === 'paragraph').map((b) => b.paragraph.rich_text[0].text.content);
+  assert.ok(bodies.some((t) => t.includes('jobId LinkedIn : 4417156077')));
+});
+
+test('archivePage poste archived:true sur la page', async () => {
+  const { fetch, calls } = stubFetch([{ json: { id: 'page123', archived: true } }]);
+  await archivePage('page123', { token: 'ntn_x', fetch });
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /\/v1\/pages\/page123$/);
+  assert.equal(calls[0].opts.method, 'PATCH');
+  assert.equal(JSON.parse(calls[0].opts.body).archived, true);
+  assert.equal(calls[0].opts.headers.Authorization, 'Bearer ntn_x');
+});
+
+test('archivePage jette sur réponse non ok', async () => {
+  const { fetch } = stubFetch([{ ok: false, status: 404, json: { message: 'not found' } }]);
+  await assert.rejects(() => archivePage('missing', { token: 'bad', fetch }), /404/);
 });

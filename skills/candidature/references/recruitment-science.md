@@ -64,10 +64,11 @@ les candidats qui leur ressemblent culturellement). Le candidat doit
 montrer son adéquation avec les valeurs et la mission de l'organisation,
 pas sa ressemblance sociale avec le recruteur.
 
-Implication pour le skill : à l'étape des axes (§2.4), distinguer
-explicitement ce qui relève du P-J fit (compétences techniques,
-expérience) et du P-O fit (motivation, valeurs, projection dans
-l'équipe). S'assurer que la lettre adresse les deux dimensions.
+Implication pour le skill : quand on aligne les axes pour rédiger un texte
+libre de candidature, distinguer explicitement ce qui relève du P-J fit
+(compétences techniques, expérience) et du P-O fit (motivation, valeurs,
+projection dans l'équipe). S'assurer que le texte adresse les deux
+dimensions.
 
 ### Sources
 

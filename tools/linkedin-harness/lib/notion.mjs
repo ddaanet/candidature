@@ -25,8 +25,9 @@ function textBlock(type, content) {
   return { object: 'block', type, [type]: { rich_text: [{ type: 'text', text: { content } }] } };
 }
 
-export function buildPagePayload(rootId, record) {
-  const meta = `Entreprise : ${record.company}. Poste : ${record.role}. Lieu : ${record.location} (${record.workplace}). Offre : ${record.url}`;
+export function buildPagePayload(rootId, record, jobId = null) {
+  const base = `Entreprise : ${record.company}. Poste : ${record.role}. Lieu : ${record.location} (${record.workplace}). Offre : ${record.url}`;
+  const meta = jobId ? `${base}. jobId LinkedIn : ${jobId}` : base;
   const section = (heading, body) => [textBlock('heading_2', heading), textBlock('paragraph', body)];
   return {
     parent: { page_id: rootId },
@@ -61,8 +62,8 @@ async function notionFetch(path, { method = 'POST', body, token, fetch = globalT
   return json;
 }
 
-export async function createShortlistPage(record, { rootId, token, dateStr, fetch = globalThis.fetch }) {
-  const page = await notionFetch('/pages', { body: buildPagePayload(rootId, record), token, fetch });
+export async function createShortlistPage(record, { rootId, token, dateStr, jobId = null, fetch = globalThis.fetch }) {
+  const page = await notionFetch('/pages', { body: buildPagePayload(rootId, record, jobId), token, fetch });
   await notionFetch(`/blocks/${rootId}/children`, {
     method: 'PATCH',
     body: { children: [buildIndexParagraph(record, dateStr)] },
@@ -70,4 +71,10 @@ export async function createShortlistPage(record, { rootId, token, dateStr, fetc
     fetch,
   });
   return { pageId: page.id, url: page.url };
+}
+
+// Archive une page candidature (suppression douce Notion, archived:true). Sert à
+// écarter une offre. Symétrique de createShortlistPage, même convention REST.
+export async function archivePage(pageId, { token, fetch = globalThis.fetch }) {
+  return notionFetch(`/pages/${pageId}`, { method: 'PATCH', body: { archived: true }, token, fetch });
 }

@@ -50,6 +50,30 @@ node walk.mjs status relit l'état courant sans rien changer. Le parcours se
 termine de lui-même quand la cible de shortlists est atteinte ou quand le flux
 est épuisé, et rend alors un objet avec done à vrai et la raison.
 
+La page candidature créée par shortlist porte le jobId de la carte, ce qui
+relie la page Notion à la carte LinkedIn pour un écartement ultérieur.
+
+## Écarter une carte hors parcours
+
+Le candidat peut annuler une shortlist après le parcours. La sous-commande
+dismiss écarte une carte par son jobId, indépendamment d'un parcours. Elle
+réutilise la navigation robuste et le Dismiss du driver, sans toucher à
+tmp/run.json.
+
+    node walk.mjs dismiss --jobId 4417156077 --stream recommended
+
+Si la carte n'est plus dans le flux, la commande le signale par dismissed à
+faux et ne fait rien. Pour garder Notion et LinkedIn cohérents, archiver la
+page candidature (archivePage de lib/notion.mjs) et dismisser la carte vont de
+pair.
+
+## Contraintes du candidat avant un parcours
+
+Le harnais ne filtre pas les offres. La décision shortlist ou reject est
+laissée à l'agent. Avant un parcours, l'agent charge les contraintes dures de
+la fiche candidat. Une offre hors contraintes, par exemple en télétravail
+intégral quand la fiche exige du présentiel, est un reject d'office.
+
 Le dossier de décision lu par shortlist est un JSON. La forme attendue.
 
     {

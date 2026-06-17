@@ -14,6 +14,12 @@ L'algorithme de recommandation s'améliore quand on dismiss ("X") les
 offres non pertinentes. À faire systématiquement pendant les sessions de
 recherche.
 
+Avant un parcours d'offres, charger les contraintes dures de la fiche
+candidat (présentiel, zone géographique, plancher salarial, anti-patterns).
+Une offre qui les viole, par exemple en télétravail intégral quand la fiche
+exige du présentiel, est un reject d'office, pas une shortlist. Voir la
+barrière de contraintes dures de la préparation (§2.2).
+
 ## Navigation
 Les formulaires EasyApply sont généralement accessibles via DOM standard.
 Les popups de connexion et les banners cookies peuvent nécessiter une

@@ -1,5 +1,6 @@
-// CLI du parcours. Sous-commandes start, decide, status. L'agent appelle, lit
-// le JSON rendu, décide, rappelle. Le flux de contrôle vit ici, pas dans l'agent.
+// CLI du parcours. Sous-commandes start, decide, status, dismiss. L'agent
+// appelle, lit le JSON rendu, décide, rappelle. Le flux de contrôle vit ici,
+// pas dans l'agent. dismiss écarte une carte par jobId hors d'un parcours.
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { attach } from './attach.mjs';
@@ -8,7 +9,7 @@ import {
 } from './lib/state.mjs';
 import { loadRecord } from './lib/record.mjs';
 import { loadToken, createShortlistPage } from './lib/notion.mjs';
-import { gotoStream, readFocusedCard, dismissCard, advance } from './lib/stream-page.mjs';
+import { gotoStream, readFocusedCard, dismissCard, advance, listCards } from './lib/stream-page.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const STATE_PATH = join(HERE, 'tmp', 'run.json');
@@ -68,7 +69,7 @@ async function cmdDecide() {
     if (action === 'shortlist') {
       const record = loadRecord(flag('record'));
       const dateStr = new Date().toISOString().slice(0, 10);
-      const created = await createShortlistPage(record, { rootId: state.root, token: loadToken(), dateStr });
+      const created = await createShortlistPage(record, { rootId: state.root, token: loadToken(), dateStr, jobId: state.current?.jobId ?? null });
       let after = addShortlist(state, { jobId: state.current?.jobId ?? null, title: record.title, url: record.url, summary: record.summary, notionPageId: created.pageId });
       if (targetMet(after)) { saveState(STATE_PATH, after); out({ done: true, reason: 'target-met', created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
       const adv = await advance(page, state.stream, after.seen);
@@ -86,10 +87,38 @@ function cmdStatus() {
   out(loadState(STATE_PATH));
 }
 
+// Écarte une carte par jobId hors parcours. Réutilise les helpers du harnais,
+// nav robuste, résolution jobId vers carte, lecture du titre, clic Dismiss. Pas
+// de fichier d'état, l'opération est indépendante d'un parcours en cours.
+async function cmdDismiss() {
+  const jobId = flag('jobId');
+  const stream = flag('stream', 'recommended');
+  if (!jobId) throw new Error('Passer --jobId <id> de la carte à écarter.');
+  const { browser, page } = await attach();
+  try {
+    if (!(await gotoStream(page, stream))) {
+      out({ blocked: 'login', message: 'Session non connectée. Se connecter à la main, puis relancer.' });
+      return;
+    }
+    const card = (await listCards(page)).find((c) => c.jobId === String(jobId));
+    if (!card) {
+      out({ done: true, dismissed: false, reason: 'not-found', jobId: String(jobId), stream, message: `Carte ${jobId} absente du flux ${stream}. Déjà écartée ou hors flux.` });
+      return;
+    }
+    await card.link.click();
+    await page.waitForTimeout(900);
+    const focused = await readFocusedCard(page);
+    await dismissCard(page, focused.title);
+    out({ done: true, dismissed: true, jobId: String(jobId), title: focused.title, stream });
+  } finally {
+    await browser.close();
+  }
+}
+
 const cmd = process.argv[2];
-const run = { start: cmdStart, decide: cmdDecide, status: cmdStatus }[cmd];
+const run = { start: cmdStart, decide: cmdDecide, status: cmdStatus, dismiss: cmdDismiss }[cmd];
 if (!run) {
-  console.error('Usage : walk.mjs <start|decide|status> [options]');
+  console.error('Usage : walk.mjs <start|decide|status|dismiss> [options]');
   process.exit(1);
 }
 await run();

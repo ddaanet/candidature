@@ -11,6 +11,20 @@ l'envoi. Les axes de candidature ne sont pas un livrable de la préparation.
 Ils sont alignés avec le candidat quand un consommateur les requiert,
 l'adaptation du CV ou un champ de texte libre découvert à la soumission.
 
+## Fiche candidat (avant toute prospection)
+
+Au lancement de la phase, charger le contenu de la fiche candidat avec
+`notion-fetch` sur la sous-page Fiche candidat de la racine Notion. La fiche
+est la source qui fait autorité sur l'adéquation. Sans elle en contexte,
+l'analyse d'adéquation reconstruit un profil deviné au lieu d'appliquer les
+critères que le candidat a documentés.
+
+En extraire les contraintes dures et les garder en contexte pour toute la
+phase. Le présentiel ou le télétravail accepté, la zone géographique et le
+trajet maximum, le plancher salarial, et les anti-patterns explicites, c'est
+à dire les types de postes ou de conditions que le candidat a écartés
+d'avance. Ces contraintes gouvernent la barrière de la shortlist (§2.2).
+
 ## 2.1 Recherche d'offres
 
 Si le candidat n'a pas encore d'offre, rechercher des offres adaptées à
@@ -44,10 +58,27 @@ aucune sous-page n'existe dans Notion pour ce site, procéder avec le
 fichier de référence s'il existe, ou avec prudence si aucune source
 n'est disponible.
 
+### Barrière de contraintes dures
+
+Avant d'analyser l'adéquation d'une offre, la confronter aux contraintes dures
+de la fiche candidat chargées à l'entrée de phase. Une offre qui viole une
+contrainte dure est écartée d'office, sans passer par l'analyse à trois
+dimensions et sans être proposée au candidat. L'agent signale l'offre écartée
+et la contrainte violée.
+
+Ce n'est pas l'agent qui décide à la place du candidat. Les contraintes dures
+sont des décisions que le candidat a déjà prises et inscrites dans sa fiche,
+par exemple ne jamais proposer de poste en télétravail intégral, ou rester
+dans un rayon de trajet donné. Les écarter d'office honore ces décisions. Une
+offre en télétravail intégral quand la fiche exige du présentiel, ou hors de
+la zone géographique, ou sous le plancher salarial, ne franchit pas la
+barrière. Les préférences molles, elles, passent par l'analyse d'adéquation où
+le candidat tranche.
+
 ### Shortlist
 
-Pour chaque offre, analyser l'adéquation avec le profil du candidat sur
-trois dimensions :
+Pour chaque offre qui franchit la barrière, analyser l'adéquation avec le
+profil du candidat sur trois dimensions :
 
 1. Quelles compétences et expériences correspondent aux exigences du
    poste ? Quels écarts honnêtes ?
@@ -62,8 +93,11 @@ pour vérifier qu'une page pour cette offre n'existe pas déjà.
 
 Le candidat décide quoi en faire. S'il veut candidater, la page shortlist
 est enrichie en page candidature complète au lancement de la phase de
-soumission. S'il veut écarter l'offre, la page est supprimée. S'il veut
-différer, la page reste en l'état.
+soumission. S'il veut écarter l'offre, archiver sa page Notion. Si l'offre
+vient d'un parcours LinkedIn et que sa page porte un jobId, l'archiver seule
+la laisse dans le flux LinkedIn, qui la repropose au parcours suivant. Écarter
+aussi la carte correspondante pour garder les deux états cohérents, par la
+couche navigateur. S'il veut différer, la page reste en l'état.
 
 Avec 3+ offres en attente, l'agent peut proposer un tri comparatif :
 quelles offres sont les plus différenciantes pour ce profil. Le candidat

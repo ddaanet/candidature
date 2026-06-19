@@ -127,12 +127,25 @@ def main(argv):
     i = 1
     while i < len(argv):
         a = argv[i]
-        if a == "--today" and i + 1 < len(argv):
-            today = datetime.date.fromisoformat(argv[i + 1])
+        if a == "--today":
+            if i + 1 >= len(argv):
+                print("--today requiert une valeur AAAA-MM-JJ", file=sys.stderr)
+                return 2
+            valeur = argv[i + 1]
+            parsee = _parse_date(valeur)
+            if parsee is None:
+                print(
+                    f"--today invalide : {valeur!r}, attendu AAAA-MM-JJ",
+                    file=sys.stderr,
+                )
+                return 2
+            today = parsee
             i += 2
             continue
-        if not a.startswith("--"):
-            positionnels.append(a)
+        if a.startswith("--"):
+            print(f"option inconnue : {a}", file=sys.stderr)
+            return 2
+        positionnels.append(a)
         i += 1
     root = positionnels[0] if positionnels else "."
     rapport = scan(root, today)

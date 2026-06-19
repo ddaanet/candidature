@@ -1,4 +1,6 @@
+import contextlib
 import datetime
+import io
 import pathlib
 import sys
 import tempfile
@@ -138,6 +140,39 @@ class ScanTest(unittest.TestCase):
             result = validate.scan(base, self.TODAY)
             self.assertIn("2026-04-09-mirakl", result)
             self.assertTrue(any("frontmatter" in a for a in result["2026-04-09-mirakl"]))
+
+
+class MainCliTest(unittest.TestCase):
+    def _run(self, argv):
+        out = io.StringIO()
+        err = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = validate.main(argv)
+        return code, out.getvalue(), err.getvalue()
+
+    def test_today_malforme_ne_plante_pas(self):
+        with tempfile.TemporaryDirectory() as base:
+            code, _, err = self._run(["validate.py", base, "--today", "2026-13-99"])
+            self.assertEqual(code, 2)
+            self.assertIn("today", err)
+
+    def test_today_sans_valeur(self):
+        with tempfile.TemporaryDirectory() as base:
+            code, _, err = self._run(["validate.py", base, "--today"])
+            self.assertEqual(code, 2)
+            self.assertIn("today", err)
+
+    def test_option_inconnue_signalee(self):
+        with tempfile.TemporaryDirectory() as base:
+            code, _, err = self._run(["validate.py", base, "--inconnu"])
+            self.assertEqual(code, 2)
+            self.assertIn("--inconnu", err)
+
+    def test_today_valide_repo_vide(self):
+        with tempfile.TemporaryDirectory() as base:
+            code, out, _ = self._run(["validate.py", base, "--today", "2026-06-19"])
+            self.assertEqual(code, 0)
+            self.assertIn("conformes", out)
 
 
 if __name__ == "__main__":

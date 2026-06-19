@@ -63,6 +63,11 @@ class ValidateCandidatureTest(unittest.TestCase):
         anomalies = validate.validate_candidature("2026-06-19-x", fm, self.TODAY)
         self.assertEqual(anomalies, [])
 
+    def test_statut_shortlist_sans_canal_ni_date_conforme(self):
+        fm = {"entreprise": "X", "poste": "Y", "statut": "shortlist"}
+        anomalies = validate.validate_candidature("2026-06-19-x", fm, self.TODAY)
+        self.assertEqual(anomalies, [])
+
     def test_date_non_parsable(self):
         fm = self.valid_fm()
         fm["date_soumission"] = "09/04/2026"

@@ -19,7 +19,18 @@ class InitRepoTest(unittest.TestCase):
             self.assertTrue((root / "tendances.md").is_file())
             self.assertTrue((root / "candidatures" / "_a-trier.md").is_file())
             self.assertTrue((root / ".candidature").is_file())
-            self.assertIn(".candidature", created)
+            self.assertEqual(
+                set(created),
+                {
+                    "candidatures",
+                    "sites",
+                    "recherches",
+                    "fiche-candidat.md",
+                    "tendances.md",
+                    "candidatures/_a-trier.md",
+                    ".candidature",
+                },
+            )
 
     def test_sentinelle_porte_la_version(self):
         with tempfile.TemporaryDirectory() as d:

@@ -22,20 +22,31 @@
 
 ---
 
-### Task 1: Scaffold de l'outil et client Notion en lecture
+### Task 1: Lecteur Notion vers markdown (client, rich_text, blocs)
+
+Trois modules forment la couche de lecture « page Notion vers markdown ». Ils s'empilent directement (markdown consomme client et richtext) et se vérifient ensemble. Une seule barrière de revue, en fin de tâche, sur la suite complète. Le code et les tests sont prescrits verbatim : l'exécution est de la transcription, pas de la conception. Le seul point délicat est la normalisation des sauts de ligne dans la conversion des blocs (partie C), où l'ajustement reste borné par des assertions exactes.
+
+Cette tâche n'a aucune dépendance sur la Task 2 (classification). Les deux peuvent être menées en parallèle.
 
 **Files:**
 - Create: `tools/notion-export/package.json`
 - Create: `tools/notion-export/.gitignore`
 - Create: `tools/notion-export/lib/client.mjs`
+- Create: `tools/notion-export/lib/richtext.mjs`
+- Create: `tools/notion-export/lib/markdown.mjs`
 - Test: `tools/notion-export/test/client.test.mjs`
+- Test: `tools/notion-export/test/richtext.test.mjs`
+- Test: `tools/notion-export/test/markdown.test.mjs`
 
 **Interfaces:**
 - Consumes: `loadToken` importé de `../../linkedin-harness/lib/notion.mjs`.
 - Produces:
   - `notionGet(path, { token, fetch }) -> Promise<object>` : GET REST, jette sur réponse non ok.
-  - `listChildren(blockId, { token, fetch }) -> Promise<Block[]>` : agrège toutes les pages de `/blocks/{blockId}/children` en suivant `next_cursor`.
-  - Un `Block` est l'objet brut Notion : `{ id, type, has_children, [type]: {...} }`.
+  - `listChildren(blockId, { token, fetch }) -> Promise<Block[]>` : agrège toutes les pages de `/blocks/{blockId}/children` en suivant `next_cursor`. Un `Block` est l'objet brut Notion : `{ id, type, has_children, [type]: {...} }`.
+  - `richTextToMarkdown(richText) -> string` : tableau `rich_text` Notion vers markdown inline. Couvre `bold`, `italic`, `code`, liens. Mentions et équations via `plain_text`.
+  - `blocksToMarkdown(blocks, { token, fetch, depth = 0 }) -> Promise<{ markdown, childPages }>` : rend chaque type de bloc connu. Les `child_page` sont collectés dans `childPages` (pas rendus en ligne). Les conteneurs avec enfants (listes, tables) sont lus via `listChildren`. Type inconnu rendu en commentaire `<!-- bloc non géré: TYPE -->`.
+
+#### Partie A : scaffold et client Notion en lecture
 
 - [ ] **Step 1: Créer le `package.json`**
 
@@ -157,16 +168,7 @@ git add tools/notion-export/package.json tools/notion-export/.gitignore tools/no
 git commit -m "✨ client Notion lecture seule pour l'export"
 ```
 
----
-
-### Task 2: Conversion du rich_text en markdown
-
-**Files:**
-- Create: `tools/notion-export/lib/richtext.mjs`
-- Test: `tools/notion-export/test/richtext.test.mjs`
-
-**Interfaces:**
-- Produces: `richTextToMarkdown(richText) -> string`. `richText` est le tableau Notion `rich_text` (chaque item a `plain_text`, `annotations`, et pour les liens `text.link.url` ou `href`). Couvre `bold`, `italic`, `code`, liens. Les mentions et équations passent par `plain_text` (pas de balisage spécial).
+#### Partie B : conversion du rich_text
 
 - [ ] **Step 1: Écrire le test (échec attendu)**
 
@@ -251,21 +253,9 @@ git add tools/notion-export/lib/richtext.mjs tools/notion-export/test/richtext.t
 git commit -m "✨ conversion rich_text Notion vers markdown inline"
 ```
 
----
+#### Partie C : conversion des blocs
 
-### Task 3: Conversion des blocs en markdown
-
-**Files:**
-- Create: `tools/notion-export/lib/markdown.mjs`
-- Test: `tools/notion-export/test/markdown.test.mjs`
-
-**Interfaces:**
-- Consumes: `richTextToMarkdown` de `./richtext.mjs`, `listChildren` de `./client.mjs`.
-- Produces: `blocksToMarkdown(blocks, { token, fetch, depth = 0 }) -> Promise<{ markdown: string, childPages: Array<{ id, title }> }>`.
-  - Rend chaque type de bloc connu en markdown. Les `child_page` ne sont pas rendus en ligne : ils sont collectés dans `childPages` pour que l'orchestrateur les traite (fichier séparé ou récursion).
-  - Pour les listes et `to_do` avec `has_children`, indente les enfants de deux espaces par niveau.
-  - Pour `table`, lit ses `table_row` enfants et rend un tableau markdown.
-  - Type inconnu : rend un commentaire `<!-- bloc non géré: TYPE -->` (filet de sécurité, ne doit pas se déclencher sur l'arbre réel d'après le recensement).
+Comportement de `blocksToMarkdown`, calé sur le recensement de l'arbre réel : les `child_page` ne sont pas rendus en ligne, ils sont collectés dans `childPages` pour que l'orchestrateur les traite. Les listes et `to_do` avec `has_children` indentent leurs enfants de deux espaces par niveau. Une `table` lit ses `table_row` enfants et rend un tableau markdown. Un type inconnu rend un commentaire `<!-- bloc non géré: TYPE -->`, filet de sécurité qui ne doit pas se déclencher sur l'arbre réel.
 
 - [ ] **Step 1: Écrire le test (échec attendu)**
 
@@ -434,7 +424,9 @@ git commit -m "✨ conversion des blocs Notion vers markdown"
 
 ---
 
-### Task 4: Classification des pages et parsing du statut
+### Task 2: Classification des pages et parsing du statut
+
+Module de fonctions pures, sans dépendance sur la Task 1. Parallélisable avec elle. Verbatim pour l'essentiel, mais les regexes de `parseStatusLine` sont calées sur le format réel des paragraphes-index et l'étape d'ajustement attend une vraie itération : c'est ici, et non dans la transcription du Lecteur, que la revue indépendante porte.
 
 **Files:**
 - Create: `tools/notion-export/lib/classify.mjs`
@@ -615,7 +607,9 @@ git commit -m "✨ classification des pages et parsing du statut candidature"
 
 ---
 
-### Task 5: Orchestrateur d'export vers l'arborescence locale
+### Task 3: Orchestrateur d'export vers l'arborescence locale
+
+Keystone : intègre le Lecteur (Task 1) et la Classification (Task 2). Le helper `frontmatter.mjs` (trivial, deux tests) est bundlé ici parce que seul l'orchestrateur le consomme. La revue de fin de tâche est la première qui voit les modules s'assembler, et l'ordre de flush dans la boucle est le point à vérifier.
 
 **Files:**
 - Create: `tools/notion-export/lib/frontmatter.mjs`
@@ -888,7 +882,7 @@ Expected: PASS (2 tests). Si le routage d'un fichier échoue, vérifier l'ordre 
 - [ ] **Step 7: Lancer toute la suite**
 
 Run: `node --test test/*.test.mjs`
-Expected: PASS (toutes les tâches 1 à 5).
+Expected: PASS (toutes les tâches 1 à 3).
 
 - [ ] **Step 8: Commit**
 
@@ -899,7 +893,9 @@ git commit -m "✨ orchestrateur d'export de l'arbre Notion vers fichiers locaux
 
 ---
 
-### Task 6: Point d'entrée CLI, run réel et vérification scriptée
+### Task 4: Point d'entrée CLI, run réel et vérification scriptée
+
+Seule tâche à effets de bord : appel réseau réel à `api.notion.com` (hors sandbox) et écriture dans le repo privé `Emploi`. Le Step 6 est un spot-check humain. À traiter comme un checkpoint manuel à part entière, pas comme une transcription : c'est le moment où David valide la cohérence des statuts avant que les données soient committées.
 
 **Files:**
 - Create: `tools/notion-export/run.mjs`
@@ -1033,7 +1029,7 @@ Run (hors sandbox réseau) :
 ```bash
 node verify.mjs /Users/david/code/Emploi
 ```
-Expected : `VÉRIFICATION OK`. Si écarts, examiner les `_a-trier.md` et les candidatures sans statut, corriger le parsing (Task 4) ou trier à la main, puis relancer `run.mjs` et `verify.mjs`.
+Expected : `VÉRIFICATION OK`. Si écarts, examiner les `_a-trier.md` et les candidatures sans statut, corriger le parsing (Task 2) ou trier à la main, puis relancer `run.mjs` et `verify.mjs`.
 
 - [ ] **Step 6: Spot-check manuel léger**
 
@@ -1061,7 +1057,9 @@ git -C /Users/david/code/Emploi commit -m "Migration des données Notion vers l'
 
 ---
 
-### Task 7: Correctifs Notion → backlog `candidature/TODO.md`
+### Task 5: Correctifs Notion → backlog `candidature/TODO.md`
+
+À exécuter inline dans la session principale, pas via un sous-agent de code. La tâche demande un id à David (Step 1), lit un brouillon, et exerce du jugement sur ce qui est déjà implémenté. C'est de la curation interactive, dispatcher un sous-agent de code serait un contresens.
 
 **Files:**
 - Modify: `/Users/david/code/candidature/TODO.md`
@@ -1102,18 +1100,18 @@ git commit -m "📝 correctifs Notion triés vers le backlog local"
 ## Self-Review
 
 **Couverture du spec :**
-- Migration de l'arbre vers `Emploi/` : Tasks 5-6 (orchestrateur + run réel).
+- Migration de l'arbre vers `Emploi/` : Tasks 3-4 (orchestrateur + run réel).
 - Config locale (`Emploi/CLAUDE.md`) : hors Phase 1. Le spec la liste dans le périmètre global, mais c'est de la rédaction de config, pas de la migration de données scriptée. À traiter en fin de Phase 1 ou début de Phase 2 (note ci-dessous).
-- Correctifs → `candidature/` : Task 7.
-- Nommage `AAAA-MM-JJ-slug` : `flushCandidate` (Task 5), date = soumission ou shortlist.
-- Frontmatter candidature : `toFrontmatter` + `parseStatusLine` (Tasks 4-5). Les champs `lieu`, `remote`, `source`, `poste` ne sont pas tous parsables de façon fiable depuis la ligne d'index ; `entreprise`, `poste`, `statut`, dates et `canal` le sont. Les champs non parsés sont simplement absents du frontmatter, le corps garde le texte source. C'est conforme à « choisir une source de vérité et signaler les écarts » : `ecarts` collecte les statuts non parsés.
-- Vérification scriptée (compte, frontmatter, spot-check) : Task 6.
-- Variante de repli (export natif Notion) : non implémentée, car le recensement montre un jeu de types de blocs borné et géré intégralement par Task 3. Le filet `<!-- bloc non géré -->` signalerait tout type imprévu.
-- Passations migrées en `Archive/passations/` figées : Task 5 (branche `passations`).
+- Correctifs → `candidature/` : Task 5.
+- Nommage `AAAA-MM-JJ-slug` : `flushCandidate` (Task 3), date = soumission ou shortlist.
+- Frontmatter candidature : `toFrontmatter` + `parseStatusLine` (Tasks 2-3). Les champs `lieu`, `remote`, `source`, `poste` ne sont pas tous parsables de façon fiable depuis la ligne d'index ; `entreprise`, `poste`, `statut`, dates et `canal` le sont. Les champs non parsés sont simplement absents du frontmatter, le corps garde le texte source. C'est conforme à « choisir une source de vérité et signaler les écarts » : `ecarts` collecte les statuts non parsés.
+- Vérification scriptée (compte, frontmatter, spot-check) : Task 4.
+- Variante de repli (export natif Notion) : non implémentée, car le recensement montre un jeu de types de blocs borné et géré intégralement par la Task 1 (partie C). Le filet `<!-- bloc non géré -->` signalerait tout type imprévu.
+- Passations migrées en `Archive/passations/` figées : Task 3 (branche `passations`).
 - Mention ajoutée : le spec liste `Emploi/CLAUDE.md` et la mise à jour de `Emploi/CLAUDE.local.md` dans le périmètre. Ce sont des fichiers de config rédigés à la main (conventions locales, pointeurs), pas un produit de l'export. Recommandation : les rédiger comme dernière étape manuelle après vérification, ou les rattacher au plan de Phase 2 (bascule du skill), qui définit comment le skill lit ces fichiers. À confirmer avec David avant exécution.
 
 **Scan placeholder :** aucun TBD/TODO dans le code des tâches. Le `<!-- bloc non géré -->` est un comportement défensif explicite, pas un placeholder. La regex de canal et la jointure markdown ont des steps d'ajustement bornés contre des assertions exactes.
 
-**Cohérence des types :** `exportTree({ rootId, outDir, token, fetch, write, dateStr })` cohérent entre Task 5 (définition), Task 5 tests, et Task 6 (`run.mjs`). `blocksToMarkdown(blocks, ctx) -> { markdown, childPages }` cohérent entre Tasks 3 et 5. `parseStatusLine -> { statut, date_soumission, date_shortlist, date_reponse, canal, note }` cohérent entre Tasks 4 et 5. `listChildren`/`notionGet` signature `(id, { token, fetch })` cohérente partout. `loadToken` ré-exporté par `client.mjs` et importé par `run.mjs`/`verify.mjs`.
+**Cohérence des types :** `exportTree({ rootId, outDir, token, fetch, write, dateStr })` cohérent entre Task 3 (définition), Task 3 tests, et Task 4 (`run.mjs`). `blocksToMarkdown(blocks, ctx) -> { markdown, childPages }` cohérent entre Task 1 (partie C) et Task 3. `parseStatusLine -> { statut, date_soumission, date_shortlist, date_reponse, canal, note }` cohérent entre Task 2 et Task 3. `listChildren`/`notionGet` signature `(id, { token, fetch })` cohérente partout. `loadToken` ré-exporté par `client.mjs` et importé par `run.mjs`/`verify.mjs`.
 
 **Lacune connue, hors périmètre Phase 1 :** la rédaction d'`Emploi/CLAUDE.md` et la bascule du skill sont la Phase 2, qui aura son propre plan (le spec le dit explicitement).

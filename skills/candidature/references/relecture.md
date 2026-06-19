@@ -61,10 +61,10 @@ Il parle normalement.
 
 Quand tous les points sont passés :
 
-Si des modifications ont été enregistrées : les appliquer au texte dans
-Notion (`update_content` sur la sous-page de l'artefact). Vérifier la
-cohérence d'ensemble (transitions, longueur, ton) et signaler tout
-problème introduit par les modifications. Présenter le texte final.
+Si des modifications ont été enregistrées : les appliquer au brouillon dans
+`candidatures/<slug>/`, par une modification ciblée du bloc concerné.
+Vérifier la cohérence d'ensemble (transitions, longueur, ton) et signaler
+tout problème introduit par les modifications. Présenter le texte final.
 
 Si aucune modification : confirmer que le texte est prêt.
 
@@ -119,8 +119,7 @@ proposer de l'ajouter aux exemples de style :
 > "Le ton de ce texte vous plaît ? Je le garde comme référence pour les
 > prochains ?"
 
-L'utilisateur décide. Si oui, récupérer le texte validé depuis la
-sous-page Notion de l'artefact (`notion-fetch`) et le stocker comme
-sous-page de style dans la fiche candidat Notion (`notion-create-pages`).
-Voir `references/backend-write.md` pour le contrôle d'écriture. Le corpus
-s'enrichit, les textes suivants s'améliorent.
+L'utilisateur décide. Si oui, relire le texte validé dans le brouillon de
+`candidatures/<slug>/` et l'ajouter comme entrée dans la section Sources de
+style de `fiche-candidat.md`. Voir `references/backend-write.md` pour le
+contrôle d'écriture. Le corpus s'enrichit, les textes suivants s'améliorent.

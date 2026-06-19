@@ -1,8 +1,8 @@
 ## Current task
 
-Plan B (réécriture du skill candidature vers le stockage fichiers) est écrit, relu, simplifié à huit tâches par simplify-plan et committé sur dev (311fb1c) ; il reste à décider de l'exécuter ou d'écrire Plan C d'abord.
+Les findings Minor reportés de la revue de branche sont traités et livrés sur `dev` (commit 35b3e9c, check.sh vert) ; reste à décider du push et à attaquer Plan C.
 
 ## Open decisions
 
-- Exécuter Plan B maintenant, ou écrire Plan C (harnais LinkedIn JavaScript, bascule des écritures Notion vers fichiers) avant de toucher au code, pour avoir les deux plans Phase 2 avant exécution.
-- Si exécution de Plan B : mode subagent-driven (un sous-agent Opus frais par tâche, revue entre chaque) ou inline. Contrainte : l'exécution touche SKILL.md, DESIGN.md et references/*.md, donc Opus obligatoire, sous-agents compris.
+- Pousser `main` et `dev` vers origin. Rien n'est poussé, origin est en retard sur les deux branches, plus le commit Minor (35b3e9c) sur dev seul.
+- Plan C (D-40) : bascule du harnais navigateur LinkedIn de Notion vers les fichiers, hors périmètre Phase 2. Les noms d'outils navigateur (open_url, form_input) dans site-ouverture.md ont été laissés exprès en attendant cette livraison.

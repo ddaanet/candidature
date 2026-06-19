@@ -99,13 +99,13 @@ formulaire :
    le contrôle d'écriture. Le README porte les métadonnées, chaque artefact
    texte vit dans son propre fichier.
 
-3. Charger le protocole d'étayage (`view references/etayage.md`) et
+3. Charger le protocole d'étayage (`references/etayage.md`) et
    auditer le brouillon. L'agent découvre le protocole après avoir généré
    le brouillon. Cette séparation est intentionnelle (voir DESIGN.md
    D-22). Corriger le brouillon selon les résultats de l'audit.
 
 4. Charger le protocole de relecture
-   (`view references/relecture.md`) et passer le brouillon en
+   (`references/relecture.md`) et passer le brouillon en
    revue point par point avec le candidat. La relecture est une boucle
    interne à la soumission, pas une phase séquentielle. Chaque champ
    texte libre passe par la relecture avant d'être rempli.

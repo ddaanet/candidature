@@ -29,8 +29,7 @@ Le harnais ouvre le navigateur (`./launch.sh`), liste les flux
 (`npm run streams`) et pilote le parcours de cartes (`npm run walk`).
 Une décision parmi trois, shortlist crée un dossier candidature
 `candidatures/<slug>/` avec `statut: shortlist`, reject écarte la carte,
-stop arrête le parcours. La création du dossier est l'affaire du harnais,
-voir son README pour le détail.
+stop arrête le parcours. La création du dossier est l'affaire du harnais.
 
 Avant de lancer un parcours, charger les contraintes dures de la fiche
 candidat (`references/preparation.md`). Le harnais laisse la décision

@@ -30,7 +30,7 @@ candidatures. Ne rien créer sans accord. Proposer l'initialisation :
 > Ce dossier n'est pas encore un repo de candidatures. Je peux créer la structure de départ (dossiers candidatures, sites, recherches, et une fiche candidat vide). On y va ?
 
 Si le candidat accepte, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"`
-dans `bash_tool` puis continuer. Sinon, s'arrêter.
+puis continuer. Sinon, s'arrêter.
 
 Première ligne avec un numéro de format supérieur à 1 : le format sur
 disque est plus récent que ce que ce skill connaît. Dire de mettre à
@@ -53,7 +53,7 @@ besoin de la situation d'ensemble (présenter l'avancement, router sur
 l'état), lire ces frontmatter et construire le tableau à la demande.
 
 À la lecture de l'index, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/validate.py" .`
-dans `bash_tool` sur la racine du repo de données. Le script signale les
+sur la racine du repo de données. Le script signale les
 anomalies de métadonnées sans corriger. Le code de sortie 1 signale au
 moins une anomalie, 0 leur absence, 2 une erreur d'usage. Présenter les
 anomalies au candidat sans interrompre le travail. Une anomalie est un
@@ -70,24 +70,24 @@ appliquée.
 1. Si le candidat signale un retour (refus, réponse, entretien à
    débriefer) ou utilise un déclencheur de suivi ("refus", "rejeté",
    "debrief", "compte rendu entretien"), charger
-   `view references/suivi.md`.
+   `references/suivi.md`.
 
 2. Si `fiche-candidat.md` à la racine manque ou porte sur sa première
    ligne le marqueur `<!-- candidature:gabarit -->`, charger
-   `view references/profil.md`.
+   `references/profil.md`.
 
 3. Si le candidat fournit une offre d'emploi ou demande à préparer une
    candidature ("postuler", "adapter mon CV", ou une URL/texte d'offre),
-   charger `view references/preparation.md`.
+   charger `references/preparation.md`.
 
 4. Si un dossier sous `candidatures/` correspond à l'offre en cours, que
    la recherche contextuelle pour ce type de poste existe sous
    `recherches/`, et que le candidat passe à la soumission (ouvrir le
-   formulaire, remplir, envoyer), charger `view references/soumission.md`.
+   formulaire, remplir, envoyer), charger `references/soumission.md`.
 
 5. Si aucune des règles précédentes ne s'applique et que la fiche
    candidat existe (sans marqueur gabarit), charger
-   `view references/preparation.md`.
+   `references/preparation.md`.
 
 Émettre une ligne de statut indiquant la phase chargée, par exemple :
 `Phase 2, préparation.`

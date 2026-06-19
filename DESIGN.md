@@ -45,14 +45,15 @@ corpus (boucle d'apprentissage).
 Avant de demander des documents au candidat, le skill recherche ce qui est
 attendu pour ce type de poste (documents, ton, conventions sectorielles).
 
-L'agent vérifie en mémoire projet si une recherche précédente couvre ce type
-de poste, puis lance `web_search` si rien ne correspond. Les résultats sont
-stockés en mémoire projet pour réutilisation (une entrée mémoire par type
-de poste).
+L'agent consulte d'abord les pages Recherches dans Notion pour voir si une
+recherche précédente couvre ce type de poste, puis lance `web_search` si rien
+ne correspond. Les résultats sont stockés en page enfant sous Recherches pour
+réutilisation, une page par type de poste (D-25).
 
-Le critère de réutilisation est un match exact sur type de poste + secteur +
-taille d'entreprise + pays. Un match approximatif est signalé au candidat
-qui décide. Jamais de réutilisation silencieuse.
+Le critère de réutilisation porte sur les métadonnées de la page, type de
+poste, secteur, taille d'entreprise et pays, et sur son ancienneté. Un match
+approximatif est signalé au candidat qui décide. Jamais de réutilisation
+silencieuse.
 
 ### FR-3 : Génération de candidature
 
@@ -104,17 +105,17 @@ paragraphes. On y va ?" Voir D-11.
 Enregistrement des retours, comptes rendus d'entretien, analyse de
 patterns.
 
-Chaque candidature est enregistrée comme une entrée de mémoire projet
-(`memory_user_edits`) contenant : date, entreprise, poste, canal, axes,
-statut. Le statut est mis à jour in-place (`replace`) quand le candidat
-signale un retour.
+Chaque candidature est une page Notion sous la racine du candidat, ses champs
+factuels en propriétés et son analyse en prose (D-30). Le statut est mis à jour
+dans la page (`notion-update-page`) quand le candidat signale un retour.
 
 Les comptes rendus d'entretien sont conversationnels. 3 niveaux (informel,
 guidé, structuré) choisis au premier CR via widget. Ajustement dynamique
 selon le comportement du candidat. Les apprentissages sont extraits et
-stockés en mémoire projet.
+stockés dans Notion, le compte rendu en sous-page de la candidature, les
+patterns dans la page Tendances.
 
-L'analyse de patterns se fait en lisant les mémoires existantes, pas en
+L'analyse de patterns se fait en lisant les pages Notion existantes, pas en
 parsant des fichiers. Proposée après 5+ candidatures, jamais automatique.
 
 L'ensemble repose sur l'orientation apprentissage plutôt que performance
@@ -124,7 +125,7 @@ apprentissages transférables, pas des statistiques.
 ### FR-7 : Enrichissement continu
 
 Le corpus de style, l'archive de recherche et les patterns de candidature
-s'enrichissent au fil des candidatures. Tout est stocké en mémoire projet.
+s'enrichissent au fil des candidatures. Tout est stocké dans Notion (D-25).
 
 ---
 
@@ -189,17 +190,19 @@ filesystem (`view /mnt/project/`). Voir D-19.
 Sur les autres plateformes : coller une URL dans un chat. Pas de terminal,
 pas de build, pas de config.
 
-### NFR-7 : Stockage en mémoire projet
+### NFR-7 : Stockage persistant sans manipulation de fichiers
 
 Le public cible ne sait pas manipuler des fichiers dans un projet IA.
 Toutes les données persistantes (suivi des candidatures, préférences,
-archive de recherche, patterns) sont stockées via la mémoire du projet
-(`memory_user_edits`), pas dans des fichiers markdown.
+archive de recherche, patterns) sont stockées dans des pages Notion
+imbriquées sous une racine configurée une fois, pas dans des fichiers
+markdown que le candidat doit gérer.
 
-Cette approche est accessible dans toutes les conversations du projet sans
-manipulation. Pas de fichiers à gérer. La mémoire a un budget limité. Les
-comptes rendus d'entretien détaillés sont stockés sous forme de synthèse,
-pas de verbatim. Voir D-6 pour les détails.
+Cette approche est accessible dans toutes les conversations sans
+manipulation. La première version reposait sur la mémoire projet, dont les
+limites de budget ont conduit à Notion. Les comptes rendus d'entretien
+détaillés sont stockés sous forme de synthèse, pas de verbatim. Voir D-25
+pour la décision et D-6 pour la solution écartée.
 
 ### NFR-8 : Étayage réflexif
 
@@ -581,8 +584,8 @@ d'attention sans bénéfice pour la phase en cours. L'agent qui voyait les
 instructions d'étayage pendant la génération anticipait l'audit au lieu de
 se faire auditer (voir D-22).
 
-Les fichiers de phase sont : phase-1-profil.md, phase-2-preparation.md,
-phase-2-soumission.md, phase-3-relecture.md, phase-4-suivi.md.
+Les fichiers de phase sont profil.md, preparation.md, soumission.md,
+relecture.md et suivi.md.
 
 Écarté : garder SKILL.md avec des directives de chargement partiel (le
 modèle ne respecte pas de manière fiable les instructions de ne pas lire
@@ -1039,52 +1042,70 @@ mémoire par candidature suffit.
 candidature/
   README.md
   DESIGN.md
-  VERSION
   TODO.md
-  scripts/
-    version_check.py
-  references/
-    phase-1-profil.md
-    phase-2-preparation.md
-    phase-2-soumission.md
-    phase-3-relecture.md
-    phase-4-suivi.md
-    recruitment-science.md
-    cover-letter.md
-    adaptation-cv.md
-    review-items.md
-    suivi-retours.md
-    preparation-entretien.md
-    etayage.md
-    backend-write.md
-    site-ouverture.md
-    site-cloture.md
-    consolidation.md
-    notion-setup.md
-    modele-notion.md
-    sites/
-      smartrecruiters.md
-      teamtailor.md
-      wttj.md
-      linkedin.md
+  VERSION
+  src/
+    SKILL.md
+    plugin.json.tmpl
+    scripts/
+      version_check.py
+    references/
+      profil.md
+      preparation.md
+      soumission.md
+      relecture.md
+      suivi.md
+      recruitment-science.md
+      cover-letter.md
+      adaptation-cv.md
+      decoupage-relecture.md
+      preparation-entretien.md
+      etayage.md
+      backend-write.md
+      site-ouverture.md
+      site-ouverture-playwright.md
+      site-cloture.md
+      consolidation.md
+      notion-setup.md
+      modele-notion.md
+      sites/
+        smartrecruiters.md
+        teamtailor.md
+        wttj.md
+        linkedin.md
+  skills/candidature/
+    SKILL.md
+    references/
+  .claude-plugin/
+    plugin.json
   build/
     build.sh
-    build.sh
     dev-stub.md
+    preprocess.awk
+  dist/
+  tools/
 ```
 
-Les fichiers de phase dans references/ remplacent le workflow monolithique
-SKILL.md (D-24). Le dispatcher charge une phase à la fois. Le stockage
-persistant est dans Notion (D-25), pas en mémoire projet.
+`src/` est la source unique. Le préprocesseur et `build.sh` en dérivent les
+deux artefacts, le `.skill` Claude.ai dans `dist/` et le plugin Claude Code
+versionné sous `skills/candidature/` avec son `.claude-plugin/plugin.json`
+(D-33, D-34). Les fichiers de phase dans `references/` remplacent le workflow
+monolithique SKILL.md (D-24). Le dispatcher charge une phase à la fois. Le
+stockage persistant est dans Notion (D-25), pas en mémoire projet.
 
 ---
 
-## Portes du workflow, état actuel
+## Portes du workflow, résolution historique
 
-Toutes les portes ont été résolues dans la version courante des fichiers
-de phase. Conservé comme référence historique.
+Le workflow v1 monolithique portait des portes prose-only, des points de
+décision sans ancrage que l'agent sautait. Chacune a reçu un ancrage par appel
+d'outil. La table trace cette première résolution, telle qu'écrite avant la
+migration Notion. Les résolutions en mémoire projet montrées ici ont depuis été
+supersédées par le stockage Notion (D-25, D-30), les sections numérotées ne
+correspondent plus au découpage actuel des fichiers de phase. Conservé comme
+référence historique.
 
-| Section | Porte initiale | Résolution |
+| Section | Porte initiale | Résolution (avant Notion) |
 |---------|---------------|------------|
 | §2.2 | `view index` fichier | Consultation mémoire projet (`recherche:`) |
 | §2.2 | `create_file` recherche | `memory_user_edits` |
@@ -1127,7 +1148,7 @@ concernés.
 | 7 | Recherche d'emploi = processus d'autorégulation | recruitment-science.md §5 | Kanfer et al. 2001 | Étayé |
 | 8 | JSQS : 4 dimensions de qualité de recherche | recruitment-science.md §5 | Van Hooft & Van Hoye 2022 | Étayé |
 | 9 | Orientation apprentissage > performance | recruitment-science.md §5 | Kanfer 2001, Van Hooft 2021 | Étayé |
-| 10 | Inspection Fagan : détection par item | phase-3-relecture.md | Fagan 1976 | Étayé |
+| 10 | Inspection Fagan : détection par item | relecture.md | Fagan 1976 | Étayé |
 | 11 | ~4 items en mémoire de travail | proof/SKILL.md (source) | Cowan 2001 | Étayé |
 
 ### Affirmations dérivées (inférences)
@@ -1137,7 +1158,7 @@ concernés.
 | 12 | La lettre adresse naturellement le P-O fit | recruitment-science.md §2, cover-letter.md | Inférence : CV vers P-J, lettre vers P-O | Faiblement étayé | Qualifié avec note |
 | 13 | L'accroche est le point le plus critique | recruitment-science.md §4 | Extrapolation biais d'ancrage | Faiblement étayé | Qualifié avec note |
 | 14 | Les adjectifs auto-attribués sont des signaux gratuits | recruitment-science.md §1, cover-letter.md | Application de Spence | Faiblement étayé | Qualifié avec note |
-| 15 | ~7 secondes pour une lettre | phase-3-relecture.md (v1) | Extension non justifiée de Ladders | Non étayé | Corrigé, retiré |
+| 15 | ~7 secondes pour une lettre | relecture.md (v1) | Extension non justifiée de Ladders | Non étayé | Corrigé, retiré |
 
 ### Affirmations factuelles (plateformes)
 

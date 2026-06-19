@@ -93,24 +93,35 @@ Un commit unique peut aller directement sur `main`.
 
 ## Messages de commit
 
-Préfixe gitmoji. Messages courts et denses, centrés sur le « pourquoi » et
-non le « quoi ». Chaque commit est une unité thématique cohérente, pas un
-découpage par fichier. Un commit peut toucher plusieurs fichiers s'ils
-participent au même changement logique.
+Notation conventional commits. Le préfixe s'écrit `type: description` ou
+`type(portée): description`. Un hook commit-msg le réécrit en gitmoji à la
+volée, donc on tape `feat: ...` et l'historique porte `✨ ...`. Un message
+déjà préfixé d'un gitmoji connu passe inchangé.
 
-| Emoji | Quand |
-|-------|-------|
-| 🎉 | Commit initial |
-| ✨ | Nouvelle fonctionnalité ou section de contenu |
-| 📝 | Modifications de documentation |
-| ♻️ | Restructuration sans changement de sens |
-| 🔥 | Suppression de contenu ou de fichiers |
-| 🐛 | Correction d'une erreur (factuelle, structurelle, de référence) |
-| 💡 | Amélioration de la clarté ou de la formulation |
-| 🔍 | Ajout ou mise à jour de sources |
-| 🌐 | Localisation ou traduction |
-| 🚚 | Déplacement ou renommage de fichiers |
-| 🔀 | Merge de branches |
+Messages courts et denses, centrés sur le « pourquoi » et non le « quoi ».
+Chaque commit est une unité thématique cohérente, pas un découpage par
+fichier. Un commit peut toucher plusieurs fichiers s'ils participent au même
+changement logique.
+
+| Type | Gitmoji | Quand |
+|------|---------|-------|
+| feat | ✨ | Nouvelle fonctionnalité ou section de contenu |
+| fix | 🐛 | Correction d'une erreur (factuelle, structurelle, de référence) |
+| docs | 📝 | Modifications de documentation |
+| refactor | ♻️ | Restructuration sans changement de sens |
+| style | 🎨 | Forme ou structure du contenu sans changement de sens |
+| perf | ⚡️ | Amélioration de performance |
+| test | ✅ | Ajout ou mise à jour de tests |
+| build | 📦️ | Fichiers ou paquets compilés |
+| ci | 👷 | Système d'intégration continue |
+| chore | 🔧 | Fichiers de configuration |
+| revert | ⏪️ | Annulation d'un changement |
+| hotfix | 🚑️ | Correctif critique |
+| release | 🔖 | Tag de version |
+
+Le hook ne connaît pas de type merge. Un merge `--no-ff` prend un préfixe
+conventional qui nomme le livrable, par exemple `feat: ...`. La nature de merge
+tient au commit à deux parents, pas au préfixe.
 
 ## Règles de contenu
 

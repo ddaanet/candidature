@@ -1,7 +1,7 @@
 ## Current task
 
-Plan C (bascule du harnais LinkedIn de Notion vers les fichiers) est spécifié et planifié en 3 tâches TDD sur dev, prêt à exécuter via le plan `docs/superpowers/plans/2026-06-19-plan-c-harnais-fichiers.md`.
+Plan C, le harnais LinkedIn qui écrit le dossier candidature en fichiers, est livré, mergé sur main et poussé. Rien n'est en cours.
 
 ## Open decisions
 
-- Mode d'exécution : en ligne dans la session (recommandé, plan petit et séquentiel, contexte déjà chargé) ou piloté par sous-agents. La Task 3 édite DESIGN.md et exige un agent Opus.
+- La mémoire workflow.md décrit encore l'ancien build à deux cibles claude.ai plus claude-code et `build.sh --bump`, ce qui contredit CLAUDE.md qui acte un build mono-cible plugin Claude Code et une release via `just release`. La corriger ou la laisser.

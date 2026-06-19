@@ -21,7 +21,7 @@ const write = async (rel, content) => {
 };
 // dateStr : passé en argument d'environnement pour rester déterministe et testable.
 const dateStr = process.env.MIGRATION_DATE || new Date().toISOString().slice(0, 10);
-const report = await exportTree({ rootId, outDir, token, fetch: globalThis.fetch, write, dateStr });
+const report = await exportTree({ rootId, token, fetch: globalThis.fetch, write, dateStr });
 console.log('Compteurs :', JSON.stringify(report.counts));
 console.log('À trier (prospects orphelins) :', report.aTrier.length);
 console.log('Écarts (statut non parsé) :', report.ecarts.length);

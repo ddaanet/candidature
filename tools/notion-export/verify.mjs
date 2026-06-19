@@ -10,7 +10,7 @@ const rootId = outArg ? rootArg : DEFAULT_ROOT;
 const outDir = outArg || rootArg;
 const token = loadToken();
 
-async function countFiles(dir, pred = () => true) {
+async function countFiles(dir, pred = (e) => e.isFile()) {
   try {
     const entries = await readdir(dir, { withFileTypes: true });
     let n = 0;
@@ -40,9 +40,11 @@ notion.recherches = await sub('recherches');
 const candDir = join(outDir, 'candidatures');
 const candDirs = (await readdir(candDir, { withFileTypes: true })).filter((e) => e.isDirectory());
 let sansStatut = [];
+let aTrier = [];
 for (const d of candDirs) {
   const readme = await readFile(join(candDir, d.name, 'README.md'), 'utf8').catch(() => '');
   if (!/^statut:\s*\S/m.test(readme)) sansStatut.push(d.name);
+  else if (/^statut:\s*à trier\s*$/m.test(readme)) aTrier.push(d.name);
 }
 
 console.log('Notion (racine) :', JSON.stringify(notion));
@@ -51,6 +53,7 @@ console.log('Fichiers : candidatures =', candDirs.length,
   '| sites =', await countFiles(join(outDir, 'sites')),
   '| recherches =', await countFiles(join(outDir, 'recherches')));
 console.log('Candidatures sans frontmatter statut :', sansStatut.length, sansStatut);
+console.log('Candidatures à trier (statut non parsé, à corriger ou trier à la main) :', aTrier.length, aTrier);
 const ok = sansStatut.length === 0
   && candDirs.length === notion.candidature
   && (await countFiles(join(outDir, 'Archive/passations'))) === notion.passations

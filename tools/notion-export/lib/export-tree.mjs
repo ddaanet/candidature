@@ -75,7 +75,7 @@ export async function exportTree({ rootId, token, fetch, write, dateStr }) {
       canal: st.canal,
     });
     const body = await pageMarkdown(page.id, ctx);
-    await write(`${dir}/README.md`, `${fm}\n${indexText ? indexText + '\n\n' : ''}${body.markdown}`);
+    await write(uniquePath(usedPaths, `${dir}/README.md`), `${fm}\n${indexText ? indexText + '\n\n' : ''}${body.markdown}`);
     // Sous-pages de la candidature (Lettre de motivation, Questions formulaire).
     for (const cp of body.childPages) {
       const sub = await pageMarkdown(cp.id, ctx);

@@ -11,14 +11,15 @@ candidat :
 
 > "Des difficultés avec le site ?"
 
-Créer ou mettre à jour une sous-page sous Sites/ dans Notion pour cette
-plateforme. Voir `references/backend-write.md` pour le contrôle
-d'écriture. L'écriture est obligatoire, même si le candidat répond "non"
-ou "RAS". Chaque observation est datée et associée à la version du skill.
+Lire ou écrire le fichier du site, `sites/<site>.md` sous le répertoire
+racine, pour cette plateforme. Voir `references/backend-write.md` pour le
+contrôle d'écriture. L'écriture est obligatoire, même si le candidat répond
+"non" ou "RAS". Chaque observation est datée et associée à la version du
+skill.
 
-Si aucune sous-page n'existe pour ce site, la créer avec le nom de la
-plateforme, la date de découverte et l'entreprise associée. Si une
-sous-page existe déjà, la compléter avec les nouvelles observations.
+Si aucun fichier n'existe pour ce site, le créer avec le nom de la
+plateforme, la date de découverte et l'entreprise associée. Si le fichier
+existe déjà, le compléter avec les nouvelles observations.
 
 Chaque observation porte sa source. Le retour du candidat est ce que
 l'utilisateur signale après l'interaction. L'observation autonome est ce
@@ -33,6 +34,6 @@ solution adoptée et le résultat.
 
 ## Consolidation
 
-La consolidation périodique des observations Notion vers les fichiers de
-référence du skill (`references/sites/*.md`) est décrite dans
-`references/consolidation.md`.
+La consolidation périodique des observations du stockage (`sites/<site>.md`)
+vers les fichiers de référence du skill (`references/sites/*.md`) est décrite
+dans `references/consolidation.md`.

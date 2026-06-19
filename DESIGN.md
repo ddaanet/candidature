@@ -1110,6 +1110,15 @@ initialisé, proposer le script d'init sans rien créer sans accord. Version
 supérieure à celle que le skill connaît, demander de mettre à jour le skill et
 s'arrêter.
 
+Sentinelle absente, deux cas selon le contenu du répertoire. Pas de dossier
+candidatures/, le répertoire est vierge, proposer l'initialisation. Un dossier
+candidatures/ existe déjà sans sentinelle, c'est un repo existant à adopter, par
+exemple issu d'une migration. L'idempotence d'init_repo.py rend l'adoption sûre,
+le script ajoute la sentinelle et les fichiers de structure manquants sans
+toucher aux données présentes. Le dispatcher distingue les deux pour ne pas
+présenter une adoption comme une création de structure de départ, formulation
+qui alarmerait sur un repo déjà rempli.
+
 scripts/init_repo.py scaffolde un repo vide, crée candidatures/, sites/,
 recherches/, un fiche-candidat.md gabarit, tendances.md, candidatures/_a-trier.md,
 et écrit .candidature. Le script est idempotent, il ne touche pas un fichier déjà

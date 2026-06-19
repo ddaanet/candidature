@@ -10,7 +10,7 @@ description: >-
 
 # Candidature, dispatcher
 
-Version: 0.5.1
+Version: 0.6.0
 
 Point d'entrée. Vérifie le repo de données, détecte les capacités,
 charge la phase appropriée.
@@ -24,13 +24,25 @@ fichier à la racine du répertoire courant. Trois cas.
 Première ligne `format: 1` : le repo est initialisé au format que ce
 skill connaît. Continuer.
 
-Fichier absent : le répertoire courant n'est pas encore un repo de
-candidatures. Ne rien créer sans accord. Proposer l'initialisation :
+Fichier absent : la sentinelle manque. Ne rien créer sans accord. Le
+répertoire détermine la proposition.
+
+Pas de dossier `candidatures/` : le répertoire est vierge. Proposer
+l'initialisation :
 
 > Ce dossier n'est pas encore un repo de candidatures. Je peux créer la structure de départ (dossiers candidatures, sites, recherches, et une fiche candidat vide). On y va ?
 
-Si le candidat accepte, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"`
-puis continuer. Sinon, s'arrêter.
+Un dossier `candidatures/` existe déjà mais sans sentinelle : c'est un
+repo existant à adopter, par exemple issu d'une migration. Le script
+d'init est idempotent, il ajoute seulement la sentinelle et les fichiers
+de structure manquants, et ne touche à aucune donnée déjà présente.
+Proposer l'adoption :
+
+> Ce dossier contient déjà des candidatures mais pas la marque de format que le skill attend. Je peux l'enregistrer en ajoutant cette marque, sans toucher à tes données. On y va ?
+
+Dans les deux cas, si le candidat accepte, lancer
+`python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"` puis continuer.
+Sinon, s'arrêter.
 
 Première ligne avec un numéro de format supérieur à 1 : le format sur
 disque est plus récent que ce que ce skill connaît. Dire de mettre à

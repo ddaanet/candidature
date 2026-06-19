@@ -10,11 +10,8 @@ locaux au lieu de l'API Notion, reste à planifier et aura son propre plan.
 
 ### Correctifs migrés depuis Notion
 
-Après l'envoi d'une candidature, le workflow devrait déclencher une passation.
-Cela vide le contexte, enregistre le travail en attente, et suggère d'ouvrir
-une nouvelle conversation. La revue critique entre sessions en dépend. Ce
-déclencheur appartient au workflow candidature, pas à la mécanique de la
-passation elle-même.
+Déclencher un handoff après envoi de candidature, c'est le meilleur point de
+reset. Le contexte est plein et le travail bascule en attente de réponse.
 
 ### Médium de remontée utilisateurs externes (D-17)
 

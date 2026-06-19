@@ -63,8 +63,9 @@ marquants, présentations, rapports, études de cas, candidatures
 précédentes approuvées.
 
 Si le candidat fournit des sources, les lire (appel d'outil) et les
-enregistrer dans la fiche candidat sur Notion. Ces sources sont chargées
-avant toute rédaction (phases 2 et 3) pour capter le ton du candidat.
+écrire dans la section Sources de style de `fiche-candidat.md`. Ces sources
+sont chargées avant toute rédaction (phases 2 et 3) pour capter le ton du
+candidat.
 
 Si le candidat n'a aucun exemple écrit : pas de problème. Le skill capte
 le ton naturel dans les échanges conversationnels et l'enrichit au fil
@@ -73,14 +74,17 @@ candidat de conserver le ton comme référence pour les prochaines.
 
 ## 1.4 Enregistrement du profil
 
-Enregistrer le profil dans la fiche candidat sur Notion. Les informations
-collectées (parcours, contraintes, fourchette salariale, métriques,
-sources de style) sont écrites dans la page fiche candidat. Voir
+Écrire le profil dans `fiche-candidat.md`. Les informations collectées se
+rangent dans les sections du fichier : Parcours, Contraintes, Métriques,
+Sources de style, Notes. La fourchette salariale va dans Contraintes. Voir
 `references/backend-write.md` pour le contrôle d'écriture.
+
+Au premier remplissage, retirer la ligne marqueur `<!-- candidature:gabarit -->`
+en tête du fichier. Ce marqueur signale au dispatcher que la fiche est encore
+un gabarit vide. Le retirer fait basculer le routage hors de la phase profil,
+si bien que les lancements suivants entrent directement dans la préparation.
 
 ## Artefacts texte
 
-Tout artefact texte généré (résumé du CV, synthèse du profil) est
-enregistré dans Notion. Donner le lien au candidat. Les itérations se
-font directement sur la page Notion pour que le candidat puisse suivre
-en temps réel.
+Tout artefact texte généré (résumé du CV, synthèse du profil) est écrit dans
+`fiche-candidat.md`. Les itérations se font sur ce fichier.

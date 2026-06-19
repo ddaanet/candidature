@@ -4,7 +4,7 @@
 
 **Goal:** Fournir les deux scripts Python que le skill candidature appellera pour initialiser un repo de données et valider les métadonnées de candidature.
 
-**Architecture:** Deux scripts stdlib autonomes sous src/scripts/. init_repo.py scaffolde la structure du repo de données et écrit la sentinelle .candidature versionnée. validate.py lit les frontmatter des README de candidature, signale les anomalies, sort en code non nul si une anomalie est trouvée. Aucune dépendance externe : parsing frontmatter maison, tests en unittest stdlib.
+**Architecture:** Deux scripts stdlib autonomes sous src/scripts/. init_repo.py scaffolde la structure du repo de données et écrit la sentinelle .candidature versionnée. validate.py lit les frontmatter des README de candidature, signale les anomalies, sort en code non nul si une anomalie est trouvée. Aucune dépendance externe : parsing frontmatter maison, tests en unittest stdlib. Les deux scripts sont indépendants l'un de l'autre et peuvent se construire en parallèle.
 
 **Tech Stack:** Python 3 stdlib uniquement. Tests via unittest. Pas de pyyaml, pas de pytest.
 
@@ -23,11 +23,13 @@
 ## File Structure
 
 - `src/scripts/init_repo.py` — scaffolding du repo de données, écriture de la sentinelle. Responsabilité unique : créer une structure vide idempotente.
-- `src/scripts/validate.py` — validation des frontmatter de candidature. Trois unités internes : parser de frontmatter, logique de validation pure sur dict, CLI de parcours de répertoire.
+- `src/scripts/validate.py` — validation des frontmatter de candidature. Trois unités internes construites dans une seule tâche : parser de frontmatter, logique de validation pure sur dict, CLI de parcours de répertoire.
 - `tests/test_init_repo.py` — tests de init_repo.py.
 - `tests/test_validate.py` — tests de validate.py.
 
 Les tests vivent sous tests/ hors de src/, pour ne pas finir copiés dans l'artefact par le build du Plan B.
+
+Deux tâches, une par fichier livrable. init_repo.py et validate.py sont indépendants : un relecteur peut rejeter l'un en approuvant l'autre, et ils n'ont aucune dépendance de code entre eux.
 
 ---
 
@@ -79,6 +81,20 @@ class InitRepoTest(unittest.TestCase):
             text = (pathlib.Path(d) / "fiche-candidat.md").read_text(encoding="utf-8")
             self.assertIn(init_repo.GABARIT_MARKER, text)
 
+    def test_idempotent_ne_recree_rien(self):
+        with tempfile.TemporaryDirectory() as d:
+            init_repo.init_repo(d)
+            second = init_repo.init_repo(d)
+            self.assertEqual(second, [])
+
+    def test_idempotent_ne_modifie_pas_le_contenu(self):
+        with tempfile.TemporaryDirectory() as d:
+            init_repo.init_repo(d)
+            fiche = pathlib.Path(d) / "fiche-candidat.md"
+            fiche.write_text("profil rempli", encoding="utf-8")
+            init_repo.init_repo(d)
+            self.assertEqual(fiche.read_text(encoding="utf-8"), "profil rempli")
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -89,7 +105,7 @@ if __name__ == "__main__":
 Run: `python3 -m unittest tests.test_init_repo -v`
 Expected: FAIL avec `ModuleNotFoundError: No module named 'init_repo'`.
 
-- [ ] **Step 3: Écrire init_repo.py minimal**
+- [ ] **Step 3: Écrire init_repo.py**
 
 ```python
 # src/scripts/init_repo.py
@@ -165,35 +181,12 @@ if __name__ == "__main__":
     sys.exit(main(sys.argv))
 ```
 
-- [ ] **Step 4: Lancer le test, vérifier qu'il passe**
+- [ ] **Step 4: Lancer les tests, vérifier qu'ils passent**
 
 Run: `python3 -m unittest tests.test_init_repo -v`
-Expected: PASS pour les trois tests.
+Expected: PASS pour les cinq tests. Note : les deux tests d'idempotence sont des tests de caractérisation, l'implémentation les satisfait d'emblée par le garde `if not target.exists()`.
 
-- [ ] **Step 5: Écrire le test d'idempotence**
-
-```python
-    def test_idempotent_ne_recree_rien(self):
-        with tempfile.TemporaryDirectory() as d:
-            init_repo.init_repo(d)
-            second = init_repo.init_repo(d)
-            self.assertEqual(second, [])
-
-    def test_idempotent_ne_modifie_pas_le_contenu(self):
-        with tempfile.TemporaryDirectory() as d:
-            init_repo.init_repo(d)
-            fiche = pathlib.Path(d) / "fiche-candidat.md"
-            fiche.write_text("profil rempli", encoding="utf-8")
-            init_repo.init_repo(d)
-            self.assertEqual(fiche.read_text(encoding="utf-8"), "profil rempli")
-```
-
-- [ ] **Step 6: Lancer les tests d'idempotence, vérifier qu'ils passent**
-
-Run: `python3 -m unittest tests.test_init_repo -v`
-Expected: PASS. L'implémentation gère déjà l'idempotence par le garde `if not target.exists()`.
-
-- [ ] **Step 7: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add src/scripts/init_repo.py tests/test_init_repo.py
@@ -202,19 +195,24 @@ git commit -m "✨ script d'init du repo de données et sentinelle de format"
 
 ---
 
-## Task 2: Parser de frontmatter (validate.py, première unité)
+## Task 2: Validateur de candidatures (validate.py)
+
+Un seul fichier, un seul sous-agent, une seule porte de revue. Le fichier se construit en trois unités internes (parser, logique de validation, CLI), chacune en cycle TDD rouge-vert, avec un commit par unité pour des commits fréquents. La revue se fait à la fin de la tâche.
 
 **Files:**
 - Create: `src/scripts/validate.py`
 - Test: `tests/test_validate.py`
 
 **Interfaces:**
-- Produces: fonction `parse_frontmatter(text: str) -> dict | None`. Retourne un dict des paires clé/valeur du bloc frontmatter délimité par des lignes `---`, ou None si le texte n'a pas de bloc frontmatter en tête. Les valeurs sont des chaînes brutes sans guillemets superflus. Consommée par les tâches 3 et 4.
+- Produces (contrat consommé par le dispatcher du Plan B) : la CLI `python3 scripts/validate.py [chemin] [--today AAAA-MM-JJ]`. Sans chemin, opère sur le répertoire courant. Imprime un rapport lisible. Sort en code 1 si au moins une anomalie est trouvée, 0 sinon. Constante `STATUTS` (ensemble fermé des statuts valides).
+
+### Unité 1 : parser de frontmatter
 
 - [ ] **Step 1: Écrire les tests du parser**
 
 ```python
 # tests/test_validate.py
+import datetime
 import pathlib
 import sys
 import tempfile
@@ -313,23 +311,13 @@ git add src/scripts/validate.py tests/test_validate.py
 git commit -m "✨ parser de frontmatter pour le validateur de candidatures"
 ```
 
----
+### Unité 2 : logique de validation
 
-## Task 3: Logique de validation (validate.py, deuxième unité)
-
-**Files:**
-- Modify: `src/scripts/validate.py`
-- Test: `tests/test_validate.py`
-
-**Interfaces:**
-- Consumes: `parse_frontmatter`, `STATUTS`, `STATUTS_SOUMIS` de la tâche 2.
-- Produces: fonction `validate_candidature(folder_name: str, fm: dict, today: datetime.date) -> list[str]`. Retourne la liste des messages d'anomalie pour une candidature, vide si conforme. folder_name est le nom du dossier (pour vérifier la cohérence de date). fm est le dict de frontmatter. today est la date de référence injectée. Consommée par la tâche 4.
-
-- [ ] **Step 1: Écrire les tests de validation des clés et du statut**
+- [ ] **Step 6: Écrire les tests de validation des clés et du statut**
 
 ```python
 class ValidateCandidatureTest(unittest.TestCase):
-    TODAY = __import__("datetime").date(2026, 6, 19)
+    TODAY = datetime.date(2026, 6, 19)
 
     def valid_fm(self):
         return {
@@ -363,12 +351,12 @@ class ValidateCandidatureTest(unittest.TestCase):
         self.assertEqual(anomalies, [])
 ```
 
-- [ ] **Step 2: Lancer les tests, vérifier qu'ils échouent**
+- [ ] **Step 7: Lancer les tests, vérifier qu'ils échouent**
 
 Run: `python3 -m unittest tests.test_validate.ValidateCandidatureTest -v`
 Expected: FAIL avec `AttributeError: module 'validate' has no attribute 'validate_candidature'`.
 
-- [ ] **Step 3: Ajouter validate_candidature à validate.py (clés, statut, présence conditionnelle)**
+- [ ] **Step 8: Ajouter validate_candidature à validate.py (clés, statut, présence conditionnelle)**
 
 ```python
 REQUIS = ("entreprise", "poste", "statut")
@@ -403,12 +391,12 @@ def validate_candidature(folder_name, fm, today):
     return anomalies
 ```
 
-- [ ] **Step 4: Lancer les tests, vérifier qu'ils passent**
+- [ ] **Step 9: Lancer les tests, vérifier qu'ils passent**
 
 Run: `python3 -m unittest tests.test_validate.ValidateCandidatureTest -v`
 Expected: PASS pour les quatre tests.
 
-- [ ] **Step 5: Écrire les tests de plausibilité des dates**
+- [ ] **Step 10: Écrire les tests de plausibilité des dates**
 
 ```python
     def test_date_non_parsable(self):
@@ -442,12 +430,12 @@ Expected: PASS pour les quatre tests.
         self.assertTrue(any("date_shortlist" in a for a in anomalies))
 ```
 
-- [ ] **Step 6: Lancer les tests, vérifier qu'ils échouent**
+- [ ] **Step 11: Lancer les tests, vérifier qu'ils échouent**
 
 Run: `python3 -m unittest tests.test_validate.ValidateCandidatureTest -v`
 Expected: FAIL sur les cinq nouveaux tests (les contrôles de date n'existent pas encore).
 
-- [ ] **Step 7: Ajouter les contrôles de date à validate_candidature**
+- [ ] **Step 12: Ajouter les contrôles de date à validate_candidature**
 
 Insérer ce bloc dans `validate_candidature`, juste avant `return anomalies` :
 
@@ -483,35 +471,25 @@ Insérer ce bloc dans `validate_candidature`, juste avant `return anomalies` :
         anomalies.append("date_shortlist postérieure à date_soumission")
 ```
 
-- [ ] **Step 8: Lancer tous les tests de validation, vérifier qu'ils passent**
+- [ ] **Step 13: Lancer tous les tests de validation, vérifier qu'ils passent**
 
 Run: `python3 -m unittest tests.test_validate -v`
 Expected: PASS pour les tests du parser et tous les tests de validate_candidature.
 
-- [ ] **Step 9: Commit**
+- [ ] **Step 14: Commit**
 
 ```bash
 git add src/scripts/validate.py tests/test_validate.py
 git commit -m "✨ logique de validation des métadonnées de candidature"
 ```
 
----
+### Unité 3 : CLI de parcours
 
-## Task 4: CLI de parcours (validate.py, troisième unité)
-
-**Files:**
-- Modify: `src/scripts/validate.py`
-- Test: `tests/test_validate.py`
-
-**Interfaces:**
-- Consumes: `parse_frontmatter`, `validate_candidature` des tâches 2 et 3.
-- Produces: fonction `scan(root: str, today: datetime.date) -> dict` qui mappe nom de dossier vers liste d'anomalies, pour les dossiers ayant une anomalie. Fonction `main(argv: list[str]) -> int` qui imprime le rapport et retourne 1 si anomalies, 0 sinon. Le dispatcher du Plan B lance `python3 scripts/validate.py` et lit le code de sortie et la sortie texte.
-
-- [ ] **Step 1: Écrire les tests du scan sur répertoire temporaire**
+- [ ] **Step 15: Écrire les tests du scan sur répertoire temporaire**
 
 ```python
 class ScanTest(unittest.TestCase):
-    TODAY = __import__("datetime").date(2026, 6, 19)
+    TODAY = datetime.date(2026, 6, 19)
 
     def _ecrire(self, base, dossier, frontmatter):
         d = pathlib.Path(base) / "candidatures" / dossier
@@ -551,12 +529,12 @@ class ScanTest(unittest.TestCase):
             self.assertTrue(any("frontmatter" in a for a in result["2026-04-09-mirakl"]))
 ```
 
-- [ ] **Step 2: Lancer les tests, vérifier qu'ils échouent**
+- [ ] **Step 16: Lancer les tests, vérifier qu'ils échouent**
 
 Run: `python3 -m unittest tests.test_validate.ScanTest -v`
 Expected: FAIL avec `AttributeError: module 'validate' has no attribute 'scan'`.
 
-- [ ] **Step 3: Ajouter scan et main à validate.py**
+- [ ] **Step 17: Ajouter scan et main à validate.py**
 
 ```python
 def scan(root, today):
@@ -608,22 +586,22 @@ if __name__ == "__main__":
     sys.exit(main(sys.argv))
 ```
 
-- [ ] **Step 4: Lancer les tests, vérifier qu'ils passent**
+- [ ] **Step 18: Lancer les tests, vérifier qu'ils passent**
 
 Run: `python3 -m unittest tests.test_validate.ScanTest -v`
 Expected: PASS pour les quatre tests de scan.
 
-- [ ] **Step 5: Vérifier le validateur sur les données réelles du repo Emploi**
+- [ ] **Step 19: Vérifier le validateur sur les données réelles du repo Emploi**
 
 Run: `python3 src/scripts/validate.py /Users/david/code/Emploi --today 2026-06-19; echo "code de sortie : $?"`
-Expected: un rapport lisible. Les anomalies éventuelles sur les données migrées sont attendues (statuts hérités, dates manquantes). Noter le code de sortie. Cette étape vérifie le comportement réel, elle ne modifie pas les données. Si le rapport révèle un faux positif systématique (une règle trop stricte contre les données réelles), corriger la règle dans validate_candidature et relancer les tests de la tâche 3 avant de continuer.
+Expected: un rapport lisible. Les anomalies éventuelles sur les données migrées sont attendues (statuts hérités, dates manquantes). Noter le code de sortie. Cette étape vérifie le comportement réel, elle ne modifie pas les données. Si le rapport révèle un faux positif systématique (une règle trop stricte contre les données réelles), corriger la règle dans validate_candidature et relancer les tests de l'unité 2 avant de continuer.
 
-- [ ] **Step 6: Lancer toute la suite de tests**
+- [ ] **Step 20: Lancer toute la suite de tests**
 
 Run: `python3 -m unittest discover -s tests -v`
 Expected: PASS pour tous les tests de init_repo et validate.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 21: Commit**
 
 ```bash
 git add src/scripts/validate.py tests/test_validate.py
@@ -639,15 +617,17 @@ Couverture de la spec, section par section :
 - Sentinelle .candidature versionnée : tâche 1, FORMAT_VERSION et écriture testées.
 - Script d'init idempotent qui scaffolde la structure : tâche 1, tests de création et d'idempotence.
 - Marqueur de gabarit non rempli de fiche-candidat.md : tâche 1, GABARIT_MARKER écrit et testé. Le dispatcher du Plan B le consomme.
-- Validateur des clés requises : tâche 3.
-- Validateur du statut dans l'ensemble fermé : tâche 3, enum STATUTS.
-- Validateur des dates parsables et plausibles : tâche 3, format, futur, cohérence dossier, ordre des dates.
-- Présence conditionnelle canal/date selon statut : tâche 3.
-- Rapport et code de sortie non nul, utilisable seul : tâche 4, main et scan.
-- Lancé par le dispatcher à la lecture de l'index : interface main exposée, le câblage dispatcher est du Plan B.
+- Validateur des clés requises : tâche 2, unité 2.
+- Validateur du statut dans l'ensemble fermé : tâche 2, enum STATUTS.
+- Validateur des dates parsables et plausibles : tâche 2, unité 2, format, futur, cohérence dossier, ordre des dates.
+- Présence conditionnelle canal/date selon statut : tâche 2, unité 2.
+- Rapport et code de sortie non nul, utilisable seul : tâche 2, unité 3, main et scan.
+- Lancé par le dispatcher à la lecture de l'index : contrat CLI exposé, le câblage dispatcher est du Plan B.
 
 Hors de ce plan, conformément au découpage : dispatcher SKILL.md, réécriture des fichiers de phase, effondrement du build, DESIGN.md, harnais LinkedIn.
 
-Cohérence des types : `init_repo(root) -> list[str]`, `parse_frontmatter(text) -> dict | None`, `validate_candidature(folder_name, fm, today) -> list[str]`, `scan(root, today) -> dict`, `main(argv) -> int`. Les noms et signatures sont stables entre tâches. STATUTS, STATUTS_SOUMIS, REQUIS, FORMAT_VERSION, GABARIT_MARKER définis une fois et référencés tels quels.
+Cohérence des types : `init_repo(root) -> list[str]`, `parse_frontmatter(text) -> dict | None`, `validate_candidature(folder_name, fm, today) -> list[str]`, `scan(root, today) -> dict`, `main(argv) -> int`. Les noms et signatures sont stables. STATUTS, STATUTS_SOUMIS, REQUIS, FORMAT_VERSION, GABARIT_MARKER définis une fois et référencés tels quels.
+
+Granularité : deux tâches, une par fichier livrable, chacune rejetable indépendamment. validate.py reste une seule tâche malgré ses trois unités internes, parce qu'un relecteur ne rejette pas le parser indépendamment du validateur qu'il alimente. Les unités gardent leur cycle TDD et un commit chacune, la porte de revue est en fin de tâche.
 
 Pas de placeholder : chaque étape de code porte le code réel, chaque étape de test porte la commande exacte et le résultat attendu.

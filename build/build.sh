@@ -92,6 +92,9 @@ process_skill_tree claude-ai "$CAND_DIR"
 mkdir -p "$CAND_DIR/scripts"
 cp "$SRC_DIR/scripts/version_check.py" "$CAND_DIR/scripts/"
 
+# zip ajoute aux archives existantes, il faut donc partir d'un fichier
+# absent pour ne pas conserver les entrées d'un build précédent.
+rm -f "$CAND_OUTPUT"
 (cd "$BUILD_DIR" && zip -rq "$CAND_OUTPUT" candidature/ -x '*.DS_Store')
 echo "$CAND_OUTPUT ($VERSION)"
 
@@ -101,6 +104,7 @@ DEV_DIR="$BUILD_DIR/candidature-dev"
 DEV_OUTPUT="$DIST_DIR/candidature-dev.skill"
 mkdir -p "$DEV_DIR"
 cp "$SCRIPT_DIR/dev-stub.md" "$DEV_DIR/SKILL.md"
+rm -f "$DEV_OUTPUT"
 (cd "$BUILD_DIR" && zip -rq "$DEV_OUTPUT" candidature-dev/ -x '*.DS_Store')
 echo "$DEV_OUTPUT (dev stub)"
 

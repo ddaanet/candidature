@@ -24,7 +24,6 @@ content_files=(
   src/references/relecture.md
   src/references/suivi.md
   src/references/backend-write.md
-  src/references/notion-setup.md
   src/references/modele-fichiers.md
   src/references/cover-letter.md
   src/references/adaptation-cv.md

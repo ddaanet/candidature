@@ -1,8 +1,7 @@
 ## Current task
 
-Les findings Minor reportés de la revue de branche sont traités et livrés sur `dev` (commit 35b3e9c, check.sh vert) ; reste à décider du push et à attaquer Plan C.
+Phase 2 et les findings Minor sont poussés sur origin (main f0ba7b9, dev c904a01) ; le prochain chantier est Plan C / D-40, la bascule du harnais navigateur LinkedIn de Notion vers les fichiers.
 
 ## Open decisions
 
-- Pousser `main` et `dev` vers origin. Rien n'est poussé, origin est en retard sur les deux branches, plus le commit Minor (35b3e9c) sur dev seul.
-- Plan C (D-40) : bascule du harnais navigateur LinkedIn de Notion vers les fichiers, hors périmètre Phase 2. Les noms d'outils navigateur (open_url, form_input) dans site-ouverture.md ont été laissés exprès en attendant cette livraison.
+- Plan C / D-40 : quand attaquer la bascule du harnais navigateur. Les noms d'outils navigateur (open_url, form_input) dans site-ouverture restent en place exprès en attendant cette livraison hors périmètre Phase 2.

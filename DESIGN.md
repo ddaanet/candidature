@@ -485,6 +485,11 @@ passe d'étayage). Pas de règle rigide.
 
 ### D-19 : Instruction projet, nommer l'outil explicitement
 
+Caduque depuis le pivot du 2026-06-19. La cible claude.ai est abandonnée
+(D-41). `project_knowledge_search` et le project knowledge n'existent pas dans
+un plugin Claude Code, où le skill est chargé par le système de plugins.
+L'historique ci-dessous décrit l'état antérieur au pivot.
+
 Choix retenu : l'instruction projet dit "utiliser
 `project_knowledge_search` pour chercher SKILL.md".
 
@@ -546,6 +551,11 @@ succès, 3-5x moins cher que ReAct. VOXAM (2026-03), les transitions
 d'état doivent être du code déterministe, pas une décision LLM.
 
 ### D-23 : Liens directs vers le .skill, pas vers la page de release
+
+Caduque depuis le pivot du 2026-06-19. La distribution par fichier `.skill` et
+release GitHub appartenait à la cible claude.ai (D-41), abandonnée.
+L'installation passe désormais par la marketplace de plugins Claude Code (D-45).
+L'historique ci-dessous décrit l'état antérieur au pivot.
 
 Choix retenu : tous les liens pointent vers le fichier `.skill`, pas vers
 la page de release GitHub.
@@ -784,6 +794,11 @@ compris les fichiers techniques et le dispatcher.
 
 ### D-33 : Double cible, sources canoniques et préprocesseur
 
+Caduque depuis le pivot du 2026-06-19. Supersédée par D-41 et D-45, le dépôt ne
+produit plus qu'un seul artefact, `skills/candidature/`, pour la cible Claude
+Code. Les blocs `target:` ont disparu et le préprocesseur ne substitue plus que
+`{{VERSION}}`. L'historique ci-dessous décrit l'état antérieur au pivot.
+
 Choix retenu : le dépôt produit deux artefacts depuis une source unique
 `src/`. Les blocs `<!-- target: claude-ai|claude-code -->` isolent le
 contenu propre à chaque cible. Un préprocesseur awk portable
@@ -792,6 +807,12 @@ contenu propre à chaque cible. Un préprocesseur awk portable
 main. Spec 2026-04-24, sections 1, 3, 4.
 
 ### D-34 : Artefacts Claude Code versionnés, garde-fou de dérive
+
+Partiellement caduque depuis le pivot du 2026-06-19. Le manifeste
+`.claude-plugin/plugin.json` n'est plus généré, c'est une source éditée à la
+main et la source de vérité de la version (D-45). Seul `skills/candidature/`
+reste un artefact buildé sous garde de dérive. L'historique ci-dessous décrit
+l'état antérieur au pivot.
 
 Choix retenu : `skills/candidature/` et `.claude-plugin/plugin.json`
 sont générés puis versionnés. Un plugin Claude Code n'a pas de lifecycle
@@ -815,6 +836,12 @@ reste hors du contenu skill, il vit dans une copie locale du dépôt, pas
 dans le cache plugin. Spec 2026-04-24, section 5, réconciliée.
 
 ### D-36 : Suppression de la vérification de version sur Claude Code
+
+Caduque depuis le pivot du 2026-06-19. Le bloc `claude-ai` a disparu avec la
+cible claude.ai (D-41) et `scripts/version_check.py` a été supprimé du dépôt,
+code mort depuis le retrait du version-check. Les mises à jour passent par la
+marketplace Claude Code. L'historique ci-dessous décrit l'état antérieur au
+pivot.
 
 Choix retenu : le build Claude Code supprime la section 1 de SKILL.md et
 `scripts/version_check.py`. Les mises à jour sont gérées par la
@@ -987,8 +1014,8 @@ manière de dismisser une carte, c'est la lib du harnais, pas une nav
 improvisée.
 
 Ce fil sous-tend déjà plusieurs décisions. D-18 audite le texte réel du
-brouillon plutôt que les intentions de l'agent. D-27 force l'exploration d'un
-backend avant d'y écrire. D-13 et D-17 ancrent une porte `[outil]` qui force
+brouillon plutôt que les intentions de l'agent. D-27 imposait l'exploration
+d'un backend avant d'y écrire, étape disparue avec le pivot vers les fichiers. D-13 et D-17 ancrent une porte `[outil]` qui force
 la consultation des sources avant navigation. Chacune est une réponse locale
 et ancrée au même risque.
 

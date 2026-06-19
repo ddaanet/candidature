@@ -14,8 +14,8 @@ main, donc aucune insertion à coordonner.
 
 Le répertoire racine est le hub de la recherche d'emploi. À sa création,
 `scripts/init_repo.py` y écrit la sentinelle `.candidature`, la fiche
-candidat, le fichier des tendances, et les sous-répertoires `candidatures/`,
-`sites/`, `recherches/`. La fiche candidat porte le profil. Le répertoire
+candidat, le fichier des tendances, le pense-bête `candidatures/_a-trier.md`,
+et les sous-répertoires `candidatures/`, `sites/`, `recherches/`. La fiche candidat porte le profil. Le répertoire
 `sites/` rassemble un fichier par plateforme ATS. Le répertoire
 `recherches/` archive les recherches contextuelles, un fichier chacune. Le
 fichier `tendances.md` regroupe les observations transversales.
@@ -62,7 +62,9 @@ entreprise, poste, statut. Le statut prend une valeur de l'ensemble fermé
 défini plus bas. D'autres clés apparaissent selon l'avancement : canal,
 date_soumission, date_reponse, date_shortlist. Une candidature soumise porte
 canal et date_soumission. Un refus porte date_reponse. Une mise en shortlist
-porte date_shortlist.
+porte date_shortlist. Un dossier issu d'un parcours LinkedIn porte aussi une
+clé jobId, inscrite par le harnais, qui relie le dossier à sa carte pour
+l'écartement.
 
 Le corps du README est structuré en sections. Offre reprend l'intitulé, le
 lieu, le contrat et les exigences clés. Adéquation et écarts confronte le

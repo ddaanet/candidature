@@ -18,23 +18,15 @@ check() {
 }
 
 cat > "$TMP/in.md" <<'EOF'
-commun avant
-<!-- target: claude-ai -->
-bloc claude-ai
-<!-- /target -->
-<!-- target: claude-code -->
-bloc claude-code
-<!-- /target -->
+ligne commune
 version {{VERSION}}
+deux fois {{VERSION}} et {{VERSION}}
 EOF
 
-ai="$(awk -v target=claude-ai -v version=1.2.3 -f "$AWK" "$TMP/in.md")"
-check "claude-ai garde son bloc"      $'commun avant\nbloc claude-ai\nversion 1.2.3' "$ai"
+out="$(awk -v version=1.2.3 -f "$AWK" "$TMP/in.md")"
+check "substitution simple de version" $'ligne commune\nversion 1.2.3\ndeux fois 1.2.3 et 1.2.3' "$out"
 
-cc="$(awk -v target=claude-code -v version=1.2.3 -f "$AWK" "$TMP/in.md")"
-check "claude-code garde son bloc"    $'commun avant\nbloc claude-code\nversion 1.2.3' "$cc"
-
-nb="$(printf '%s\n' "$ai" | grep -c 'bloc claude-code' || true)"
-check "aucun bloc claude-code dans la sortie claude-ai" "0" "$nb"
+nb="$(printf '%s\n' "$out" | grep -c '{{VERSION}}' || true)"
+check "aucun marqueur {{VERSION}} résiduel" "0" "$nb"
 
 exit "$fail"

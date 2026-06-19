@@ -29,8 +29,8 @@ candidatures. Ne rien créer sans accord. Proposer l'initialisation :
 
 > Ce dossier n'est pas encore un repo de candidatures. Je peux créer la structure de départ (dossiers candidatures, sites, recherches, et une fiche candidat vide). On y va ?
 
-Si le candidat accepte, lancer `python3 scripts/init_repo.py` dans
-`bash_tool` puis continuer. Sinon, s'arrêter.
+Si le candidat accepte, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"`
+dans `bash_tool` puis continuer. Sinon, s'arrêter.
 
 Première ligne avec un numéro de format supérieur à 1 : le format sur
 disque est plus récent que ce que ce skill connaît. Dire de mettre à
@@ -52,8 +52,8 @@ des frontmatter des README sous `candidatures/`. Quand le dispatcher a
 besoin de la situation d'ensemble (présenter l'avancement, router sur
 l'état), lire ces frontmatter et construire le tableau à la demande.
 
-À la lecture de l'index, lancer `python3 scripts/validate.py .` dans
-`bash_tool` sur la racine du repo de données. Le script signale les
+À la lecture de l'index, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/validate.py" .`
+dans `bash_tool` sur la racine du repo de données. Le script signale les
 anomalies de métadonnées sans corriger. Le code de sortie 1 signale au
 moins une anomalie, 0 leur absence, 2 une erreur d'usage. Présenter les
 anomalies au candidat sans interrompre le travail. Une anomalie est un

@@ -1,15 +1,27 @@
 # À faire
 
-### Migration BDD Notion vers pages imbriquées
+### Migration Notion vers fichiers locaux
 
-Le stockage Notion est implémenté (D-25). Les candidatures existantes dans
-la base de données Notion doivent être migrées vers des pages imbriquées
-sous la page racine.
+La Phase 1 est livrée. L'arbre Notion Recherche d'emploi est exporté vers le
+repo local Emploi par l'outil tools/notion-export, soit 29 candidatures avec
+leur frontmatter de statut, 38 passations figées, 15 fiches Sites et 6 notes
+de recherche. La Phase 2, qui fait lire au skill candidature les fichiers
+locaux au lieu de l'API Notion, reste à planifier et aura son propre plan.
 
-- [ ] Lire les entrées existantes dans la BDD Notion
-- [ ] Créer les pages imbriquées correspondantes
-- [ ] Valider la migration avec l'utilisateur
-- [ ] Supprimer les entrées BDD une fois migrées
+### Correctifs migrés depuis Notion
+
+DESIGN.md garde des incohérences de la migration Notion v0.4. Les noms de
+fichiers de phase ne correspondent plus à l'arborescence actuelle, les
+références memory_user_edits dans FR-2, FR-6, FR-7 et NFR-7 pointent vers un
+mécanisme retiré, la table Portes du workflow est périmée, et suivi-retours.md
+décrit encore l'ancien modèle. Reprendre DESIGN.md pour le réaligner sur l'état
+réel du skill.
+
+Après l'envoi d'une candidature, le workflow devrait déclencher une passation.
+Cela vide le contexte, enregistre le travail en attente, et suggère d'ouvrir
+une nouvelle conversation. La revue critique entre sessions en dépend. Ce
+déclencheur appartient au workflow candidature, pas à la mécanique de la
+passation elle-même.
 
 ### Médium de remontée utilisateurs externes (D-17)
 

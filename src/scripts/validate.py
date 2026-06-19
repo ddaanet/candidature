@@ -22,8 +22,25 @@ STATUTS_SOUMIS = {"en attente", "refus", "classée sans suite"}
 
 _FOLDER_DATE = re.compile(r"^(\d{4}-\d{2}-\d{2})-")
 
-
 REQUIS = ("entreprise", "poste", "statut")
+
+
+def parse_frontmatter(text):
+    """Retourne le dict du bloc frontmatter, ou None s'il n'y en a pas."""
+    if not text.startswith("---"):
+        return None
+    lines = text.splitlines()
+    if lines[0].strip() != "---":
+        return None
+    fm = {}
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return fm
+        if ":" not in line:
+            continue
+        key, _, value = line.partition(":")
+        fm[key.strip()] = value.strip()
+    return None
 
 
 def _parse_date(value):
@@ -85,19 +102,50 @@ def validate_candidature(folder_name, fm, today):
     return anomalies
 
 
-def parse_frontmatter(text):
-    """Retourne le dict du bloc frontmatter, ou None s'il n'y en a pas."""
-    if not text.startswith("---"):
-        return None
-    lines = text.splitlines()
-    if lines[0].strip() != "---":
-        return None
-    fm = {}
-    for line in lines[1:]:
-        if line.strip() == "---":
-            return fm
-        if ":" not in line:
+def scan(root, today):
+    """Parcourt candidatures/*/README.md. Retourne les dossiers fautifs."""
+    base = pathlib.Path(root)
+    rapport = {}
+    candidatures = base / "candidatures"
+    if not candidatures.is_dir():
+        return rapport
+    for readme in sorted(candidatures.glob("*/README.md")):
+        dossier = readme.parent.name
+        fm = parse_frontmatter(readme.read_text(encoding="utf-8"))
+        if fm is None:
+            rapport[dossier] = ["frontmatter absent ou mal formé"]
             continue
-        key, _, value = line.partition(":")
-        fm[key.strip()] = value.strip()
-    return None
+        anomalies = validate_candidature(dossier, fm, today)
+        if anomalies:
+            rapport[dossier] = anomalies
+    return rapport
+
+
+def main(argv):
+    today = datetime.date.today()
+    positionnels = []
+    i = 1
+    while i < len(argv):
+        a = argv[i]
+        if a == "--today" and i + 1 < len(argv):
+            today = datetime.date.fromisoformat(argv[i + 1])
+            i += 2
+            continue
+        if not a.startswith("--"):
+            positionnels.append(a)
+        i += 1
+    root = positionnels[0] if positionnels else "."
+    rapport = scan(root, today)
+    if not rapport:
+        print("Métadonnées de candidature conformes.")
+        return 0
+    print("Anomalies de métadonnées :")
+    for dossier in sorted(rapport):
+        print(f"  {dossier}")
+        for a in rapport[dossier]:
+            print(f"    - {a}")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

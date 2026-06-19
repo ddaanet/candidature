@@ -94,5 +94,46 @@ class ValidateCandidatureTest(unittest.TestCase):
         self.assertTrue(any("date_shortlist" in a for a in anomalies))
 
 
+class ScanTest(unittest.TestCase):
+    TODAY = datetime.date(2026, 6, 19)
+
+    def _ecrire(self, base, dossier, frontmatter):
+        d = pathlib.Path(base) / "candidatures" / dossier
+        d.mkdir(parents=True)
+        (d / "README.md").write_text(f"---\n{frontmatter}---\n\nCorps.\n", encoding="utf-8")
+
+    def test_scan_repere_anomalie(self):
+        with tempfile.TemporaryDirectory() as base:
+            self._ecrire(base, "2026-04-09-mirakl", "entreprise: Mirakl\nposte: X\nstatut: rejeté\n")
+            result = validate.scan(base, self.TODAY)
+            self.assertIn("2026-04-09-mirakl", result)
+
+    def test_scan_silencieux_si_conforme(self):
+        with tempfile.TemporaryDirectory() as base:
+            self._ecrire(
+                base,
+                "2026-06-19-x",
+                "entreprise: X\nposte: Y\nstatut: à trier\n",
+            )
+            result = validate.scan(base, self.TODAY)
+            self.assertEqual(result, {})
+
+    def test_scan_ignore_a_trier_fichier(self):
+        with tempfile.TemporaryDirectory() as base:
+            (pathlib.Path(base) / "candidatures").mkdir(parents=True)
+            (pathlib.Path(base) / "candidatures" / "_a-trier.md").write_text("# À trier\n", encoding="utf-8")
+            result = validate.scan(base, self.TODAY)
+            self.assertEqual(result, {})
+
+    def test_readme_sans_frontmatter_signale(self):
+        with tempfile.TemporaryDirectory() as base:
+            d = pathlib.Path(base) / "candidatures" / "2026-04-09-mirakl"
+            d.mkdir(parents=True)
+            (d / "README.md").write_text("# Pas de frontmatter\n", encoding="utf-8")
+            result = validate.scan(base, self.TODAY)
+            self.assertIn("2026-04-09-mirakl", result)
+            self.assertTrue(any("frontmatter" in a for a in result["2026-04-09-mirakl"]))
+
+
 if __name__ == "__main__":
     unittest.main()

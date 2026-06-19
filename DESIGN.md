@@ -45,12 +45,12 @@ corpus (boucle d'apprentissage).
 Avant de demander des documents au candidat, le skill recherche ce qui est
 attendu pour ce type de poste (documents, ton, conventions sectorielles).
 
-L'agent consulte d'abord les pages Recherches dans Notion pour voir si une
+L'agent consulte d'abord les fichiers sous recherches/ pour voir si une
 recherche précédente couvre ce type de poste, puis lance `web_search` si rien
-ne correspond. Les résultats sont stockés en page enfant sous Recherches pour
-réutilisation, une page par type de poste (D-25).
+ne correspond. Les résultats sont stockés dans un fichier sous recherches/ pour
+réutilisation, un fichier par recherche (D-42).
 
-Le critère de réutilisation porte sur les métadonnées de la page, type de
+Le critère de réutilisation porte sur les métadonnées du fichier, type de
 poste, secteur, taille d'entreprise et pays, et sur son ancienneté. Un match
 approximatif est signalé au candidat qui décide. Jamais de réutilisation
 silencieuse.
@@ -105,18 +105,19 @@ paragraphes. On y va ?" Voir D-11.
 Enregistrement des retours, comptes rendus d'entretien, analyse de
 patterns.
 
-Chaque candidature est une page Notion sous la racine du candidat, ses champs
-factuels en propriétés et son analyse en prose (D-30). Le statut est mis à jour
-dans la page (`notion-update-page`) quand le candidat signale un retour.
+Chaque candidature est un dossier sous candidatures/, son README.md porte
+l'offre et un frontmatter de champs factuels, et son analyse en prose dans le
+corps (D-30, D-42). Le statut est mis à jour dans le frontmatter du README.md
+quand le candidat signale un retour.
 
 Les comptes rendus d'entretien sont conversationnels. 3 niveaux (informel,
 guidé, structuré) choisis au premier CR via widget. Ajustement dynamique
 selon le comportement du candidat. Les apprentissages sont extraits et
-stockés dans Notion, le compte rendu en sous-page de la candidature, les
-patterns dans la page Tendances.
+stockés en fichiers, le compte rendu dans un entretien-N.md du dossier de
+candidature, les patterns dans tendances.md.
 
-L'analyse de patterns se fait en lisant les pages Notion existantes, pas en
-parsant des fichiers. Proposée après 5+ candidatures, jamais automatique.
+L'analyse de patterns se fait en lisant les fichiers de candidature existants.
+Proposée après 5+ candidatures, jamais automatique.
 
 L'ensemble repose sur l'orientation apprentissage plutôt que performance
 (Kanfer et al., 2001, Van Hooft & Van Hoye, 2022). Le suivi extrait des
@@ -125,7 +126,8 @@ apprentissages transférables, pas des statistiques.
 ### FR-7 : Enrichissement continu
 
 Le corpus de style, l'archive de recherche et les patterns de candidature
-s'enrichissent au fil des candidatures. Tout est stocké dans Notion (D-25).
+s'enrichissent au fil des candidatures. Tout est stocké en fichiers dans le
+repo de données (D-42).
 
 ---
 
@@ -170,39 +172,39 @@ comme "commit", "widget").
 
 ### NFR-5 : Portabilité multi-plateforme
 
-Le skill est un dossier de fichiers markdown. Aucune dépendance à une
-plateforme. Fonctionne sur Claude.ai (projet), ChatGPT (GPT), Gemini
-(Gem), Mistral (Agent), ou toute IA capable de lire du markdown.
+Caduc depuis le pivot du 2026-06-19 (D-41). Le skill ciblait à l'origine toute
+IA capable de lire du markdown, Claude.ai, ChatGPT, Gemini, Mistral. La cible
+claude.ai et le plus petit dénominateur commun multi-plateforme sont abandonnés.
+Le skill est désormais un plugin Claude Code, qui suppose un système de fichiers
+local pour son stockage (D-42). Le contenu reste du markdown, mais le runtime
+n'est plus portable hors de Claude Code.
 
 ### NFR-6 : Installation minimale
 
-Sur Claude.ai : 4 étapes. Import GitHub (ou ZIP), upload du CV, et une
-instruction projet qui force le déclenchement sur `/candidature`.
-L'instruction est nécessaire parce que les fichiers importés depuis
-GitHub arrivent dans le project knowledge (documents de référence
-indexés), pas comme skills avec déclenchement automatique. Sans
-l'instruction, rien ne garantit que le modèle cherchera SKILL.md quand
-l'utilisateur tape la commande. L'instruction doit nommer l'outil
-`project_knowledge_search` explicitement. « Chercher dans les fichiers
-du projet » est ambigu et l'agent le confond avec une recherche
-filesystem (`view /mnt/project/`). Voir D-19.
+Caduc dans sa forme claude.ai depuis le pivot du 2026-06-19 (D-41). L'ancienne
+procédure, import GitHub, upload du CV et instruction projet nommant
+`project_knowledge_search` pour forcer le déclenchement (D-19), valait pour le
+project knowledge de Claude.ai et n'a plus cours.
 
-Sur les autres plateformes : coller une URL dans un chat. Pas de terminal,
-pas de build, pas de config.
+Le skill s'installe désormais comme un plugin Claude Code depuis la marketplace.
+Le déclenchement passe par le manifeste du plugin, sans instruction projet. Au
+premier lancement dans un repo de données non initialisé, le dispatcher propose
+le script d'init qui scaffolde la structure (D-43). Pas de build manuel, pas de
+config de chemin.
 
-### NFR-7 : Stockage persistant sans manipulation de fichiers
+### NFR-7 : Stockage persistant géré par le skill
 
-Le public cible ne sait pas manipuler des fichiers dans un projet IA.
-Toutes les données persistantes (suivi des candidatures, préférences,
-archive de recherche, patterns) sont stockées dans des pages Notion
-imbriquées sous une racine configurée une fois, pas dans des fichiers
-markdown que le candidat doit gérer.
+Renversé par le pivot du 2026-06-19 (D-42). Le besoin d'origine évitait à un
+public non technique de manipuler des fichiers dans un projet IA, ce qui avait
+conduit à Notion (D-25) puis, avant lui, à la mémoire projet (D-6). Le backend
+est désormais une arborescence de fichiers markdown dans le repo de données.
 
-Cette approche est accessible dans toutes les conversations sans
-manipulation. La première version reposait sur la mémoire projet, dont les
-limites de budget ont conduit à Notion. Les comptes rendus d'entretien
-détaillés sont stockés sous forme de synthèse, pas de verbatim. Voir D-25
-pour la décision et D-6 pour la solution écartée.
+La contrainte sous-jacente tient toujours, le candidat n'écrit pas les fichiers
+à la main. Le skill les crée et les met à jour, le candidat travaille en
+conversation. Ce qui change, c'est le backend, des fichiers locaux gérés par le
+skill au lieu de pages Notion. Le système de fichiers de Claude Code rend cette
+gestion directe (D-41). Les comptes rendus d'entretien détaillés sont stockés
+sous forme de synthèse, pas de verbatim.
 
 ### NFR-8 : Étayage réflexif
 
@@ -294,9 +296,10 @@ ni les mises en page très complexes. Le candidat qui a un CV avec un design
 
 ### D-6 : Données persistantes, mémoire projet vs fichiers
 
-Choix retenu : mémoire projet (`memory_user_edits`) pour toutes les données
-persistantes. Archive de recherche, suivi des candidatures, comptes rendus,
-patterns.
+Supersédé par D-25, puis renversé par D-42 qui revient au stockage fichiers,
+local et géré par le skill cette fois. Choix retenu à l'époque : mémoire projet
+(`memory_user_edits`) pour toutes les données persistantes. Archive de
+recherche, suivi des candidatures, comptes rendus, patterns.
 
 La v1 utilisait des fichiers markdown (archive dans `recherche/index.md` +
 fichiers par type de poste, suivi dans `candidatures/suivi.md`, CR dans
@@ -419,35 +422,38 @@ recherche.
 
 ### D-16 : Deux skills complémentaires
 
-Supersédé par D-20, puis D-25. Un seul skill avec détection de capacités.
-Le stockage persistant utilise Notion (D-25), pas la mémoire projet.
+Supersédé par D-20, puis D-25, depuis renversé par D-42. Un seul skill avec
+détection de capacités. Le stockage persistant utilise désormais des fichiers
+locaux (D-42), pas Notion ni la mémoire projet.
 
 ### D-17 : Cycle rappel, capture, consolidation pour les sites ATS
 
-Choix retenu : cycle en trois temps intégré dans le skill. Mis à jour en
-v0.4 pour Notion (D-25) et la hiérarchie des sources (D-28).
+Choix retenu : cycle en trois temps intégré dans le skill. La hiérarchie des
+sources (D-28) sépare les observations terrain des directives consolidées. Le
+backend est passé de Notion à des fichiers locaux au pivot du 2026-06-19 (D-42),
+les observations terrain vivent désormais dans le repo de données sous sites/.
 
-Le rappel (references/soumission.md, §2.6) consulte deux sources
-avant navigation. Notion est la source primaire (observations terrain
-datées et versionnées). Les fichiers `references/sites/*.md` du skill
-sont la source secondaire (directives consolidées). Porte `[outil]` :
-l'agent consulte les deux sources même s'il pense connaître le site.
+Le rappel (references/soumission.md) consulte deux sources avant navigation.
+Le fichier d'observations sous sites/ du repo de données est la source primaire
+(observations terrain datées et versionnées). Les fichiers
+`references/sites/*.md` du plugin sont la source secondaire (directives
+consolidées). Porte `[outil]` : l'agent consulte les deux sources même s'il
+pense connaître le site.
 
-La capture (references/soumission.md, §2.9) est une question
-systématique + écriture obligatoire (même "RAS"). Chaque observation
-est datée, associée à la version du skill, et porte sa source (feedback
-candidat ou observation autonome de l'agent). Quand l'agent adopte un
-contournement, il enregistre le problème, la solution et le résultat.
-Porte `[outil]` cohérente avec D-13.
+La capture (references/soumission.md) est une question systématique + écriture
+obligatoire (même "RAS"). Chaque observation est datée, associée à la version
+du skill, et porte sa source (feedback candidat ou observation autonome de
+l'agent). Quand l'agent adopte un contournement, il enregistre le problème, la
+solution et le résultat. Porte `[outil]` cohérente avec D-13.
 
-La consolidation (references/consolidation.md, différée) lit les
-sous-pages Sites/ dans Notion, les déduplique, et met à jour les
-fichiers `references/sites/*.md` du skill. Les observations consolidées
-restent dans Notion (source primaire).
+La consolidation (references/consolidation.md, différée) lit les observations
+terrain du repo de données, les déduplique, et met à jour les fichiers
+`references/sites/*.md` du plugin. Les observations consolidées restent dans le
+repo de données (source primaire).
 
 L'expérience d'intégration avec les ATS s'accumule naturellement au fil
 des candidatures. Sans structuration, elle reste éparpillée dans les
-conversations. La hiérarchie Notion/skill et le datage/versionnage
+conversations. La hiérarchie repo de données/plugin et le datage/versionnage
 permettent le rappel et la consolidation systématiques.
 
 Sources du cycle consolidation : AWS Well-Architected, Operational
@@ -567,7 +573,9 @@ l'agent télécharge via web_fetch" (le redirect est bloqué).
 
 ### D-21 : Archivage candidatures sur Filesystem (Desktop)
 
-Supersédé par D-25. Le stockage persistant utilise Notion, pas Filesystem.
+Supersédé par D-25, depuis renversé par D-42. Le stockage persistant est
+revenu aux fichiers locaux, ancrés sur le répertoire courant (D-42), ce que
+cette décision anticipait pour le Desktop avant la parenthèse Notion.
 
 ### D-24 : Suppression de SKILL.md, fichiers de phase comme source de vérité
 
@@ -592,6 +600,12 @@ modèle ne respecte pas de manière fiable les instructions de ne pas lire
 ce qui est déjà dans son contexte).
 
 ### D-25 : Notion requis, pages imbriquées comme stockage
+
+Caduque depuis le pivot du 2026-06-19. Supersédée par D-42, le stockage
+persistant est désormais une arborescence de fichiers ancrée sur le répertoire
+courant, pas Notion. L'historique ci-dessous décrit l'état antérieur au pivot et
+reste tel quel comme trace de la décision renversée. Tout ce qui suit dans cette
+décision décrit un backend abandonné.
 
 Choix retenu : implémenté (v0.4). Supersède D-6, D-21.
 
@@ -663,42 +677,45 @@ section, voir D-37.
 
 ### D-27 : Contrôle d'écriture backend (references/backend-write.md)
 
-Choix retenu : implémenté (v0.4).
+Choix retenu : implémenté (v0.4). L'étape d'exploration préalable décrite
+ci-dessous valait pour le backend Notion, dont la structure d'une page n'était
+pas connue à l'avance. Le pivot du 2026-06-19 (D-42) bascule sur des fichiers
+locaux au layout connu et documenté (D-43), l'étape d'exploration disparaît, et
+backend-write.md est réécrit en convention d'écriture directe, chemin calculé
+depuis la date et le slug, frontmatter au schéma, corps en sections nommées.
 
-Avant toute écriture vers un backend externe (Notion, Filesystem), l'agent
-explore la cible et génère une procédure d'écriture. La procédure n'existe
-pas avant l'exploration. Ce mécanisme empêche l'agent d'écrire vers un
-backend qu'il ne connaît pas, avec une structure qu'il invente.
+Avant toute écriture vers la page Notion cible, l'agent explorait la cible et
+générait une procédure d'écriture. La procédure n'existait pas avant
+l'exploration. Ce mécanisme empêchait l'agent d'écrire vers un backend qu'il ne
+connaissait pas, avec une structure qu'il invente.
 
-Le problème fondateur est le même que D-18 (étayage après le draft) :
+Le problème fondateur était le même que D-18 (étayage après le draft) :
 un agent qui planifie une écriture dans l'abstrait produit une structure
-plausible mais déconnectée de la réalité du backend. L'exploration force
-la découverte de la structure existante avant toute modification.
+plausible mais déconnectée de la réalité du backend. L'exploration forçait
+la découverte de la structure existante avant toute modification. Avec un
+layout fichiers fixe, cette découverte n'a plus lieu d'être.
 
-La procédure est un artifact conversationnel, pas un fichier persistant.
-Elle est générée, validée par l'utilisateur, exécutée, puis jetée. Le
-fichier backend-write.md contient les instructions pour générer la
-procédure, pas la procédure elle-même.
+Écarté à l'époque : écriture directe avec instructions codées en dur (fragile,
+ne s'adaptait pas aux structures Notion de chaque utilisateur). Procédure
+persistante (la structure Notion pouvait changer entre deux sessions).
 
-Écarté : écriture directe avec instructions codées en dur (fragile, ne
-s'adapte pas aux structures Notion de chaque utilisateur). Procédure
-persistante (la structure Notion peut changer entre deux sessions).
+### D-28 : Hiérarchie des sources sites (observations terrain primaires, skill secondaire)
 
-### D-28 : Hiérarchie des sources sites (Notion primaire, skill secondaire)
+Choix retenu : implémenté (v0.4). Les observations terrain vivaient dans Notion
+jusqu'au pivot du 2026-06-19 (D-42), désormais dans le repo de données sous
+sites/.
 
-Choix retenu : implémenté (v0.4).
-
-Notion contient les observations terrain, datées et associées à la
-version du skill utilisée. Les fichiers `references/sites/*.md` du skill
-contiennent les directives consolidées. Notion prévaut en cas de
-divergence. À la mise à jour du skill, les notes Notion sont comparées
-aux fichiers de référence (eux aussi datés et versionnés) pour détecter
-les divergences. Les directives du skill ne font pas double emploi avec
-les observations Notion.
+Les observations terrain, datées et associées à la version du skill utilisée,
+sont stockées dans le repo de données. Les fichiers `references/sites/*.md` du
+plugin contiennent les directives consolidées. Les observations terrain
+prévalent en cas de divergence. À la mise à jour du skill, elles sont comparées
+aux fichiers de référence (eux aussi datés et versionnés) pour détecter les
+divergences. Les directives du plugin ne font pas double emploi avec les
+observations terrain.
 
 Cette séparation résout le problème de la consolidation (D-17) : les
-observations terrain sont vivantes dans Notion, les directives du skill
-sont stables et versionnées. La mise à jour du skill est le moment de
+observations terrain sont vivantes dans le repo de données, les directives du
+plugin sont stables et versionnées. La mise à jour du skill est le moment de
 synchronisation.
 
 ### D-29 : Distinction feedback autonome agent vs feedback candidat
@@ -715,37 +732,40 @@ solution adoptée, et le résultat (succès ou échec). Cette traçabilité
 permet de pondérer la fiabilité des observations et de retrouver les
 contournements automatisés lors des candidatures suivantes.
 
-### D-30 : Archivage restructuré (propriétés + prose sur page candidature)
+### D-30 : Archivage restructuré (frontmatter + prose sur le README de candidature)
 
-Choix retenu : implémenté (v0.4). Supersède D-12.
+Choix retenu : implémenté (v0.4). Supersède D-12. La structure décrite ci-dessous
+en propriétés et page Notion s'est transposée au pivot du 2026-06-19 (D-42) en
+frontmatter et corps du README.md de candidature.
 
-La sous-page résumé est supprimée. Les champs factuels (date de
-soumission, canal, plateforme, prétentions salariales) sont des
-propriétés de la page candidature Notion. Les champs analytiques (axes
-retenus, accroche, ton) sont un court paragraphe de prose dans la page
-candidature. Les brouillons restent dans leurs sous-pages.
+Le résumé séparé est supprimé. Les champs factuels (date de soumission, canal,
+plateforme, prétentions salariales) sont le frontmatter du README.md de
+candidature. Les champs analytiques (axes retenus, accroche, ton) sont un court
+paragraphe de prose dans le corps du README.md. Les brouillons restent des
+fichiers à côté dans le dossier de candidature.
 
-La distinction est entre contenu (sous-pages de brouillon) et
-métadonnées (page candidature). Les champs factuels sont partagés entre
-tous les brouillons, les monter en propriétés évite l'arbitraire de les
-rattacher à un brouillon particulier.
+La distinction est entre contenu (fichiers de brouillon) et métadonnées
+(frontmatter du README). Les champs factuels sont partagés entre tous les
+brouillons, les monter en frontmatter évite l'arbitraire de les rattacher à un
+brouillon particulier.
 
-Écarté : sous-page résumé dédiée (D-12, trop de métadonnées pour
-justifier une sous-page). Résumé en tête du brouillon (arbitraire quand
-il y a plusieurs brouillons).
+Écarté : résumé dédié séparé (D-12, trop de métadonnées pour le justifier).
+Résumé en tête du brouillon (arbitraire quand il y a plusieurs brouillons).
 
 ### D-31 : Clôture comme checkpoint d'enregistrement
 
 Choix retenu : implémenté (v0.4).
 
 La clôture n'est pas un message de fin. C'est un checkpoint qui force
-l'agent à vérifier que tout est archivé dans Notion avant de proposer
-un nouveau chat. Si un élément manque, l'agent demande au candidat avant
-de créer la page.
+l'agent à vérifier que tout est enregistré dans les fichiers du repo de données
+avant de proposer un nouveau chat. Si un élément manque, l'agent demande au
+candidat avant d'écrire le fichier. Le backend est passé de Notion aux fichiers
+locaux au pivot du 2026-06-19 (D-42), le checkpoint vaut désormais sur les
+écritures fichiers.
 
 Le contexte conversationnel (échanges, corrections, décisions en temps
 réel) ne sera plus accessible dans un nouveau chat. Tout ce qui doit
-être retrouvé plus tard doit être dans Notion avant la clôture. Cette
+être retrouvé plus tard doit être écrit en fichiers avant la clôture. Cette
 contrainte évite la perte silencieuse d'artefacts non enregistrés.
 
 ### D-32 : Contamination de style dans le dispatcher
@@ -840,7 +860,14 @@ présence d'une sous-page d'axes. Supersède la correction notée sous D-26.
 
 ### D-38 : Ordre d'insertion des collections Notion, append en fin
 
-Choix retenu : dans toute collection de sous-pages Notion (candidatures,
+Caduque depuis le pivot du 2026-06-19 (D-42). La convention réglait l'ordre des
+sous-pages Notion, contrainte propre au MCP qui ne repositionne pas une page dans
+son parent. En stockage fichiers, l'ordre n'est plus une propriété du backend,
+chaque entrée est un fichier ou un dossier nommé, et l'index tabulaire se
+régénère à la demande par tri sur les frontmatter (D-42). L'historique ci-dessous
+décrit la contrainte Notion abandonnée.
+
+Choix retenu à l'époque : dans toute collection de sous-pages Notion (candidatures,
 recherches, sites, comptes rendus, passations), une nouvelle page s'ajoute
 à la fin, la plus récente en dernier. L'agent ne repositionne pas les pages
 existantes.
@@ -886,8 +913,8 @@ de prospection LinkedIn du 2026-06-16, l'agent a recommandé comme la plus
 alignée une offre en télétravail intégral que la fiche interdit explicitement,
 sur un profil deviné. Voir l'axe d'audit ci-dessous.
 
-La correction charge la fiche avec `notion-fetch` à l'entrée de phase, source
-qui fait autorité sur l'adéquation, et en extrait les contraintes dures, le
+La correction charge la fiche à l'entrée de phase, source qui fait autorité sur
+l'adéquation, et en extrait les contraintes dures, le
 présentiel, la zone géographique, le plancher salarial et les anti-patterns.
 La barrière confronte chaque offre à ces contraintes avant l'analyse à trois
 dimensions. Une offre qui viole une contrainte dure est écartée sans être
@@ -901,7 +928,17 @@ tranche.
 critères propres à un candidat dans un outil générique. Le harnais reste
 neutre, l'agent porte les contraintes.
 
+La fiche était à l'origine chargée depuis Notion. Le pivot du 2026-06-19 (D-42)
+en fait fiche-candidat.md à la racine du repo de données, lue à l'entrée de
+phase. La décision tient inchangée, seul le backend de la source change.
+
 ### D-40 : Écartement hors parcours et réconciliation Notion vers LinkedIn
+
+Cette décision porte sur le harnais LinkedIn, code JavaScript distinct du
+contenu du skill. Sa bascule de Notion vers les fichiers est un sous-plan dédié
+(Plan C), hors du pivot du 2026-06-19. Les mentions Notion ci-dessous décrivent
+l'état courant du harnais, pas le backend du skill, qui est désormais en fichiers
+(D-42). Elles seront révisées quand le sous-plan harnais sera livré.
 
 Choix retenu : implémenté. Le harnais LinkedIn expose une sous-commande
 `dismiss` qui écarte une carte par jobId hors d'un parcours, la page
@@ -964,6 +1001,145 @@ sur les sites d'action conséquents du skill, en demandant à chacun si l'agent
 charge la source qui fait autorité avant d'agir, ou s'il improvise sur une
 reconstruction. Les deux correctifs concrets nés de ces incidents sont D-39 et
 D-40, chacun une porte locale et ancrée, pas une instruction générale.
+
+### D-41 : Abandon de la cible claude.ai, plugin Claude Code pur
+
+Choix retenu : le skill devient un plugin Claude Code pur. La cible claude.ai
+est abandonnée.
+
+Le skill était distribué pour les deux cibles depuis une source unique, le
+préprocesseur isolant les blocs propres à claude.ai (D-33). Cette double cible
+contraignait chaque décision de stockage et de distribution au plus petit
+dénominateur commun, Notion comme backend faute de système de fichiers sur
+claude.ai (D-25), version-check par upload de fichier faute de marketplace
+(D-23), instruction projet pour forcer le déclenchement faute de manifeste de
+skill (D-19). La compatibilité claude.ai n'était pas un acquis à protéger mais
+une camisole qui dictait des choix dégradés. La note mémoire
+feedback_claude_ai_camisole acte ce renversement.
+
+Le plugin Claude Code dispose d'un système de fichiers, d'une marketplace pour
+les mises à jour, et d'un déclenchement par manifeste. Abandonner claude.ai
+libère le stockage fichiers (D-42), supprime le version-check résiduel (D-36
+l'avait déjà retiré côté Claude Code) et l'instruction projet, et effondre le
+build deux-cibles en assemblage plugin seul.
+
+Compromis accepté : les utilisateurs de claude.ai ne peuvent plus installer le
+skill. Le public visé migre vers Claude Code, dont le système de fichiers est
+la condition du nouveau modèle de stockage.
+
+### D-42 : Stockage fichiers ancré sur le répertoire courant
+
+Choix retenu : implémenté. Supersède D-25, D-6, D-21. Tout le stockage
+persistant est une arborescence de fichiers markdown dans le répertoire courant,
+qui est le repo de données. Pas de config de chemin.
+
+La Phase 1 a exporté l'arbre Notion vers un repo local de fichiers. Le pivot
+bascule le runtime du skill sur ce repo. Le layout est fiche-candidat.md pour le
+profil, tendances.md pour les tendances marché, candidatures/AAAA-MM-JJ-slug/
+par offre avec un README.md qui porte l'offre et son frontmatter et des
+brouillons à côté plus des entretien-N.md, candidatures/_a-trier.md pour les
+prospects orphelins, sites/ pour les fiches ATS consolidées, recherches/ pour
+les recherches contextuelles. L'index tabulaire du pipeline n'est pas stocké, il
+se régénère à la demande en lisant les frontmatter.
+
+Le répertoire courant comme ancre supprime toute manipulation de config. Le
+candidat lance le skill dans son repo de données, le skill opère là. Le système
+de fichiers de Claude Code rend chaque écriture directe, sans le détour MCP que
+Notion imposait (D-27, l'exploration préalable disparaît avec D-43 et la
+réécriture de backend-write.md).
+
+Le frontmatter de candidature porte entreprise, poste et statut en champs
+requis, plus des champs conditionnels selon l'avancement, canal, date_soumission,
+date_reponse, date_shortlist. Le statut prend une valeur d'un ensemble fermé, à
+trier, shortlist, en attente, refus, classée sans suite, écartée. à trier
+désigne un prospect non qualifié, écartée une offre que le candidat retire,
+distincte de classée sans suite qui est une clôture côté recruteur.
+
+Écarté : Notion (D-25, dépendance MCP et backend dégradé hérité de claude.ai),
+config de chemin du repo (le répertoire courant suffit), base de données pour
+le pipeline (le frontmatter par fichier et la régénération à la demande
+suffisent).
+
+Compromis accepté : l'écartement d'une offre devient un changement de statut
+dans le frontmatter, statut: écartée, le fichier reste. La couche navigateur
+garde son volet, écarter une offre issue d'un parcours LinkedIn écarte aussi sa
+carte dans le flux, sinon le repo de fichiers et le flux LinkedIn divergent
+(D-40).
+
+### D-43 : Sentinelle .candidature de version de format
+
+Choix retenu : implémenté. Un fichier .candidature à la racine du repo de
+données marque un repo initialisé. Sa première ligne porte la version du format
+de stockage, format: 1.
+
+La version de format est distincte de la version du skill. Elle ne change que si
+le layout sur disque évolue de façon incompatible, et impose alors une migration.
+La version 1 fige le layout produit par l'export de la Phase 1. La constante
+FORMAT_VERSION = 1 vit dans scripts/init_repo.py et fait foi.
+
+Le dispatcher lit .candidature au démarrage. Sentinelle présente et version
+connue, le repo est prêt, continuer. Sentinelle absente, le repo n'est pas
+initialisé, proposer le script d'init sans rien créer sans accord. Version
+supérieure à celle que le skill connaît, demander de mettre à jour le skill et
+s'arrêter.
+
+scripts/init_repo.py scaffolde un repo vide, crée candidatures/, sites/,
+recherches/, un fiche-candidat.md gabarit, tendances.md, candidatures/_a-trier.md,
+et écrit .candidature. Le script est idempotent, il ne touche pas un fichier déjà
+présent. Le gabarit de la fiche candidat porte sur sa première ligne le marqueur
+`<!-- candidature:gabarit -->`, que le routage de phase teste pour distinguer un
+profil vide d'un profil rempli, et que la phase profil retire au premier
+remplissage. Le script est embarqué dans le plugin et invoqué via
+`${CLAUDE_SKILL_DIR}/scripts/init_repo.py`, la variable Claude Code qui résout le
+répertoire du skill au runtime, indépendamment du répertoire courant.
+
+### D-44 : Validateur de métadonnées validate.py, signalement sans correction
+
+Choix retenu : implémenté. scripts/validate.py lit les frontmatter des README.md
+de candidature, signale les anomalies, et ne corrige rien.
+
+Les contrôles portent sur la présence des clés requises, l'appartenance du statut
+à l'ensemble fermé, le format de date AAAA-MM-JJ, la plausibilité des dates, date
+de soumission pas dans le futur et cohérente avec la date du dossier, réponse
+postérieure à la soumission, shortlist antérieure à la soumission, et la
+cohérence statut/dates, canal et date de soumission présents quand le statut
+implique une soumission, date de réponse présente quand le statut est refus.
+
+Le dispatcher lance le validateur à la lecture de l'index et présente les
+anomalies au candidat sans bloquer le workflow. Le validateur signale, le
+candidat décide. Les codes de sortie servent l'usage en ligne de commande comme
+en vérification, code 1 si au moins une anomalie est trouvée, 0 si aucune, 2 sur
+erreur d'usage. Comme init_repo.py, il est embarqué dans le plugin et invoqué via
+`${CLAUDE_SKILL_DIR}/scripts/validate.py`.
+
+Écarté : correction automatique des métadonnées. Une correction silencieuse
+masquerait des incohérences que le candidat doit trancher, par exemple un statut
+refus sans date de réponse renvoie à une information manquante, pas à une valeur
+à inventer.
+
+### D-45 : Release par le toolkit plugin-dev, plugin.json source de vérité
+
+Choix retenu : implémenté. Le build et la release passent par le toolkit
+plugin-dev, vendu dans le repo par git subtree sous plugin-dev/ au tag v0.2.1.
+`.claude-plugin/plugin.json` devient la source de vérité de la version.
+
+Le build deux-cibles et son fichier VERSION dataient de la double distribution
+(D-33, D-34). L'abandon de claude.ai (D-41) effondre le build en assemblage
+plugin seul et rend caducs le target stripping, le stub dev et le template
+src/plugin.json.tmpl, tous supprimés. Un toolkit de release partagé entre plugins
+remplace la mécanique propre au repo. La version se bumpe par
+`just release {patch|minor|major}`, qui écrit le champ version de plugin.json
+puis répercute la valeur dans la marketplace claude-plugins. Le fichier VERSION
+disparaît.
+
+Un hook version-guard câblé dans .claude/settings.json intercepte les écritures
+sur plugin.json et refuse tout changement manuel du champ version. La recette de
+release possède le bump, une édition manuelle désynchroniserait le manifeste du
+dernier tag et ne se ferait attraper qu'à la release suivante.
+
+Compromis accepté : une dépendance vendue de plus dans le repo, contre une infra
+de release reproductible et partagée entre plugins, au lieu d'un build maison à
+maintenir seul.
 
 ---
 
@@ -1043,12 +1219,11 @@ candidature/
   README.md
   DESIGN.md
   TODO.md
-  VERSION
   src/
     SKILL.md
-    plugin.json.tmpl
     scripts/
-      version_check.py
+      init_repo.py
+      validate.py
     references/
       profil.md
       preparation.md
@@ -1066,8 +1241,7 @@ candidature/
       site-ouverture-playwright.md
       site-cloture.md
       consolidation.md
-      notion-setup.md
-      modele-notion.md
+      modele-fichiers.md
       sites/
         smartrecruiters.md
         teamtailor.md
@@ -1075,23 +1249,27 @@ candidature/
         linkedin.md
   skills/candidature/
     SKILL.md
+    scripts/
     references/
   .claude-plugin/
     plugin.json
   build/
     build.sh
-    dev-stub.md
     preprocess.awk
-  dist/
+  plugin-dev/
   tools/
 ```
 
-`src/` est la source unique. Le préprocesseur et `build.sh` en dérivent les
-deux artefacts, le `.skill` Claude.ai dans `dist/` et le plugin Claude Code
-versionné sous `skills/candidature/` avec son `.claude-plugin/plugin.json`
-(D-33, D-34). Les fichiers de phase dans `references/` remplacent le workflow
-monolithique SKILL.md (D-24). Le dispatcher charge une phase à la fois. Le
-stockage persistant est dans Notion (D-25), pas en mémoire projet.
+`src/` est la source unique. `build.sh` en dérive un seul artefact, le plugin
+Claude Code versionné sous `skills/candidature/` avec son
+`.claude-plugin/plugin.json` (D-34). La cible claude.ai et son `.skill` sont
+abandonnés (D-41), le build deux-cibles, le stub dev et le template
+`plugin.json.tmpl` ont disparu (D-45). `plugin-dev/` est le toolkit de release
+vendu par git subtree (D-45). Les scripts `init_repo.py` et `validate.py` sont
+embarqués dans le plugin (D-43, D-44). Les fichiers de phase dans `references/`
+remplacent le workflow monolithique SKILL.md (D-24). Le dispatcher charge une
+phase à la fois. Le stockage persistant est une arborescence de fichiers dans le
+repo de données (D-42), pas Notion.
 
 ---
 
@@ -1100,8 +1278,9 @@ stockage persistant est dans Notion (D-25), pas en mémoire projet.
 Le workflow v1 monolithique portait des portes prose-only, des points de
 décision sans ancrage que l'agent sautait. Chacune a reçu un ancrage par appel
 d'outil. La table trace cette première résolution, telle qu'écrite avant la
-migration Notion. Les résolutions en mémoire projet montrées ici ont depuis été
-supersédées par le stockage Notion (D-25, D-30), les sections numérotées ne
+migration Notion. Les résolutions en mémoire projet montrées ici ont été
+supersédées par le stockage Notion (D-25, D-30), lui-même renversé par le
+stockage fichiers du pivot du 2026-06-19 (D-42). Les sections numérotées ne
 correspondent plus au découpage actuel des fichiers de phase. Conservé comme
 référence historique.
 
@@ -1178,13 +1357,35 @@ concernés.
 | 22 | Couche navigateur via harnais Playwright local, hors sandbox, pas le MCP | DESIGN.md D-35 | spec 2026-04-24 §5, tools/linkedin-harness/README.md | Étayé |
 | 23 | Suppression de version_check sur Claude Code, mises à jour par la marketplace | DESIGN.md D-36 | spec 2026-04-24 §6 | Étayé |
 
+### Affirmations du pivot fichiers (décisions D-41 à D-45)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 24 | Abandon de claude.ai, plugin Claude Code pur, claude.ai comme camisole | DESIGN.md D-41 | spec 2026-06-19 §Contexte, §Portée, memory feedback_claude_ai_camisole | Étayé |
+| 25 | Stockage fichiers ancré sur le répertoire courant, sans config de chemin | DESIGN.md D-42 | spec 2026-06-19 §Architecture cible, §Modèle de stockage | Étayé |
+| 26 | Layout du repo, fiche-candidat.md, tendances.md, candidatures/AAAA-MM-JJ-slug/, _a-trier.md, sites/, recherches/ | DESIGN.md D-42 | spec 2026-06-19 §Modèle de stockage, export Phase 1 | Étayé |
+| 27 | Ensemble fermé des statuts de candidature | DESIGN.md D-42 | spec 2026-06-19 §Frontmatter de candidature, scripts/validate.py | Étayé |
+| 28 | Sentinelle .candidature, première ligne format: 1, FORMAT_VERSION = 1 | DESIGN.md D-43 | spec 2026-06-19 §Sentinelle, scripts/init_repo.py | Étayé |
+| 29 | Marqueur de gabarit `<!-- candidature:gabarit -->` testé au routage | DESIGN.md D-43 | scripts/init_repo.py, src/SKILL.md, src/references/profil.md | Étayé |
+| 30 | init_repo.py idempotent scaffolde la structure, embarqué via ${CLAUDE_SKILL_DIR} | DESIGN.md D-43 | spec 2026-06-19 §Script d'initialisation, scripts/init_repo.py, src/SKILL.md | Étayé |
+| 31 | validate.py signale sans corriger, non bloquant, codes 0/1/2 | DESIGN.md D-44 | spec 2026-06-19 §Validateur, scripts/validate.py, src/SKILL.md | Étayé |
+| 32 | Release par plugin-dev vendu en subtree v0.2.1, plugin.json source de vérité, just release | DESIGN.md D-45 | plugin-dev/ subtree (tag v0.2.1), .claude-plugin/plugin.json, plugin-dev/release.just | Étayé |
+| 33 | Hook version-guard interdit l'édition manuelle du champ version | DESIGN.md D-45 | .claude/settings.json, plugin-dev/version-guard.sh | Étayé |
+| 34 | Disparition de VERSION, plugin.json.tmpl, dev-stub.md, target stripping | DESIGN.md D-45 | spec 2026-06-19 §Build et check, arbre du repo | Étayé |
+
 ### Bilan
 
-15 affirmations étayées (dont 1 avec réserves méthodologiques). 3
-affirmations faiblement étayées, qualifiées avec notes, inférences
-raisonnables documentées comme telles. 1 affirmation non étayée, corrigée
-(retirée du workflow, v1). 0 affirmation non auditée.
+15 affirmations académiques et dérivées étayées (dont 1 avec réserves
+méthodologiques). 3 affirmations faiblement étayées, qualifiées avec notes,
+inférences raisonnables documentées comme telles. 1 affirmation non étayée,
+corrigée (retirée du workflow, v1). 0 affirmation non auditée.
 
 Les quatre décisions de migration plugin (D-33 à D-36) tracent vers la
 spec approuvée du 2026-04-24, D-35 aussi vers le README du harnais
 LinkedIn. Toutes étayées.
+
+Les cinq décisions du pivot fichiers (D-41 à D-45) tracent vers la spec
+approuvée du 2026-06-19, le code livré (scripts/init_repo.py,
+scripts/validate.py, .claude-plugin/plugin.json, plugin-dev/version-guard.sh),
+le subtree plugin-dev au tag v0.2.1, et la note mémoire
+feedback_claude_ai_camisole. Toutes étayées.

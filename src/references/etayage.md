@@ -21,7 +21,7 @@ L'affirmation est-elle factuelle et sourcée ?
 Les données personnelles comme le parcours et les compétences sont
 vérifiables contre le CV ou le profil du candidat. Les données
 publiques sur l'entreprise, sa stack ou sa culture sont vérifiables
-par `web_search` ou `web_fetch`. Les inférences comme la projection
+par une recherche web. Les inférences comme la projection
 dans l'équipe ou l'adéquation culturelle doivent être qualifiées
 comme telles et ne pas être présentées comme des faits.
 
@@ -73,7 +73,7 @@ Pour chaque affirmation marquée "à vérifier" ou "faux" :
 Les données personnelles sont demandées au candidat. L'agent bloque
 jusqu'à la réponse. Il ne devine pas.
 
-Les données publiques sont recherchées par `web_search` ou `web_fetch`.
+Les données publiques sont recherchées sur le web.
 L'agent cherche, il ne suppose pas.
 
 Après recherche, émettre un nouveau bloc avec les lignes modifiées.

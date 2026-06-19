@@ -32,7 +32,7 @@ sur les sites d'emploi remonte davantage de résultats qu'une recherche
 web simple, car elle accède au contenu des pages de résultats et aux
 filtres des plateformes.
 
-Si le navigateur n'est pas disponible, utiliser `web_search` et recommander au
+Si le navigateur n'est pas disponible, utiliser la recherche web et recommander au
 candidat des plateformes adaptées à son profil. Le candidat revient avec
 des URLs.
 

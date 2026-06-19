@@ -14,7 +14,7 @@ Canva, Google Docs, LaTeX...), lui demander d'exporter en DOCX. En dernier
 recours, un PDF suffit pour la lecture, mais les adaptations produiront un
 nouveau fichier plutôt qu'une modification de l'existant.
 
-Lire le CV (`view` ou lecture programmatique). Confirmer au candidat ce qu'on
+Lire le CV, par lecture directe ou programmatique. Confirmer au candidat ce qu'on
 a compris : parcours, compétences principales, expériences clés. Signaler
 toute ambiguïté.
 
@@ -37,7 +37,7 @@ pour la recherche et de référence pour le champ prétentions à la
 soumission. Le candidat peut aussi indiquer ce qu'il veut mettre en avant
 ou ne pas mentionner, et les secteurs ou entreprises visés.
 
-Après la conversation ouverte, lancer une recherche rapide (`web_search`)
+Après la conversation ouverte, lancer une recherche rapide sur le web
 sur les métriques valorisées pour le type de profil et le secteur du
 candidat. Utiliser les résultats pour poser des questions ciblées sur les
 éléments chiffrés de son parcours. Les recruteurs valorisent les résultats
@@ -47,7 +47,7 @@ Pas de liste de contrôle. Chaque candidat a un contexte différent. Un
 développeur senior a un GitHub, un chef de chantier n'en a pas, et c'est
 normal.
 
-Quand la conversation est suffisante, confirmer avec un widget :
+Quand la conversation est suffisante, confirmer en posant la question :
 
 > "J'ai une bonne image de votre profil. On passe aux exemples de style ou
 > on commence à candidater directement ?"

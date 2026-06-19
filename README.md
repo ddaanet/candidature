@@ -76,15 +76,7 @@ un hook l'interdit, seul `just release` le bumpe.
 src/                          — Source canonique du contenu
   SKILL.md                    — Point d'entrée (dispatcher)
   references/                 — Fichiers de phase et documents de support
-    recruitment-science.md    — Fondements scientifiques
-    modele-fichiers.md        — Modèle de stockage fichiers
-    backend-write.md          — Protocole d'écriture
-    cover-letter.md           — Principes de rédaction
-    adaptation-cv.md          — Modification de CV (DOCX)
-    decoupage-relecture.md    — Découpage pour la relecture
-    preparation-entretien.md  — Préparation d'entretien et négociation
-    etayage.md                — Protocole d'audit des affirmations
-    consolidation.md          — Consolidation des fiches de site au release
+    *.md                      — Phases du dispatcher et protocoles
     sites/*.md                — Contraintes par plateforme ATS
   scripts/                    — init_repo.py, validate.py
 build/build.sh                — Assemblage de skills/candidature/ depuis src/

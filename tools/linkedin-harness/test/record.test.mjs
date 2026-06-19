@@ -8,6 +8,7 @@ const valid = () => ({
   location: 'Paris', workplace: 'hybrid',
   url: 'https://www.linkedin.com/jobs/view/123',
   summary: 'Data Software Engineer, Python, Paris hybrid. Via LinkedIn.',
+  slug: 'ornikar-data-software-engineer',
   analysis: { fit: 'forte correspondance Python', company: 'mission édutech', differentiation: 'profil agentic' },
 });
 
@@ -19,6 +20,11 @@ test('un dossier complet passe et est rendu', () => {
 test('un champ chaîne manquant est listé', () => {
   const r = valid(); delete r.summary;
   assert.throws(() => validateRecord(r), /summary/);
+});
+
+test('le slug manquant est listé', () => {
+  const r = valid(); delete r.slug;
+  assert.throws(() => validateRecord(r), /slug/);
 });
 
 test('un champ chaîne vide est rejeté', () => {

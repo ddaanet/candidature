@@ -32,7 +32,7 @@
 - Version de format : constante `FORMAT_VERSION = 1` dans init_repo.py. Le dispatcher lit la première ligne de `.candidature` et la compare.
 - Le dispatcher appelle `validate.py <repo>` sans `--today`. validate.py lit `date.today()` par défaut. `--today` est une surcharge réservée aux tests. validate.py sort en code 1 si une anomalie est trouvée, 0 sinon, 2 sur erreur d'usage. Le dispatcher présente les anomalies sans bloquer.
 - Aucune opération Notion résiduelle dans le contenu réécrit. Le critère de fin d'une tâche de réécriture inclut : `grep -ri notion <fichier>` ne retourne aucune mention d'outil `notion-*`, de page Notion, de sous-page, de propriété Notion ni d'archivage de page. Les seules mentions tolérées sont historiques et explicitement marquées comme caduques (DESIGN.md uniquement).
-- Garde-fou de dérive : `src/` est la source canonique, `skills/candidature/` et `.claude-plugin/plugin.json` sont des artefacts buildés. Toute tâche qui modifie `src/` reconstruit (`./build/build.sh`) et committe les artefacts dans le même commit, sinon check.sh signale la dérive.
+- Garde-fou de dérive : `src/` est la source canonique, `skills/candidature/` et `.claude-plugin/plugin.json` sont des artefacts buildés. Toute tâche qui modifie `src/` reconstruit (`./build/build.sh`) et committe les artefacts dans le même commit, sinon check.sh signale la dérive. Task 7 fait de `.claude-plugin/plugin.json` une source de vérité éditée à la main, dont le champ version est bumpé par `just release`. À partir de Task 7, le garde-fou de dérive ne couvre plus que `skills/candidature/`, et le build ne régénère plus `plugin.json`.
 - Mise à jour de check.sh : quand une tâche crée, renomme ou supprime un fichier de `src/references/`, elle met à jour le tableau `content_files` de check.sh dans le même commit.
 - Fin de tâche : check.sh passe au vert (`./check.sh`), commit gitmoji avec message centré sur le pourquoi.
 
@@ -54,10 +54,11 @@ Fichiers de référence touchés, par responsabilité :
 - `src/references/relecture.md` — réécrit vers `fiche-candidat.md` (section exemples de style).
 - `src/references/consolidation.md` — réécrit vers consolidation de `sites/` du repo de données vers `src/references/sites/`.
 - `src/references/etayage.md` — inchangé. Aucune référence Notion (vérifié à l'inventaire). Le plan le laisse intact.
-- `build/build.sh`, `build/preprocess.awk`, `build/dev-stub.md` — effondrement deux-cibles vers plugin seul.
-- `check.sh` — retrait des assertions `.skill`, mise à jour de `content_files`.
-- `src/plugin.json.tmpl` — description sans mention Notion.
-- `README.md`, `CLAUDE.md` — retrait de la double distribution et des mentions `.skill` et claude.ai.
+- `build/build.sh`, `build/preprocess.awk`, `build/dev-stub.md` — effondrement deux-cibles vers plugin seul, et migration de la release vers le toolkit `plugin-dev`.
+- `check.sh` — retrait des assertions `.skill`, dérive réduite à `skills/`, version lue depuis `plugin.json`, mise à jour de `content_files`.
+- `.claude-plugin/plugin.json` — devient source de vérité, description sans mention Notion. `src/plugin.json.tmpl` et `VERSION` supprimés.
+- `plugin-dev/` (vendu par git subtree), `justfile` (recette `precommit` réelle, import de `release.just`), `.envrc` (`MARKETPLACE_DIR`), `.claude/settings.json` (hook version-guard) — adoption du toolkit de release.
+- `README.md`, `CLAUDE.md` — retrait de la double distribution et des mentions `.skill` et claude.ai, documentation du flux `just release`.
 - `DESIGN.md` — renversement de D-25, décisions du pivot, appendice d'étayage.
 
 Décomposition en huit tâches. Chaque tâche laisse `check.sh` au vert et porte un commit. L'ordre garde les références internes valides à chaque frontière : la couche de documentation du stockage (Task 1) précède les fichiers de phase qui la citent.
@@ -419,72 +420,112 @@ git commit -m "♻️ relecture et consolidation : sources de style et observati
 
 ---
 
-## Task 7: Effondrement du build vers le plugin seul
+## Task 7: Effondrement du build et migration de la release vers le toolkit plugin-dev
 
-Retire la génération `.skill`, le stub dev claude.ai, le target stripping. Simplifie le préprocesseur et check.sh. Cette tâche ne touche pas de fichier de contenu Opus, elle peut tourner sur tout modèle, mais reste dans la session Opus du plan.
+Retire la génération `.skill`, le stub dev claude.ai, le target stripping. Adopte le toolkit `plugin-dev` pour la release : `.claude-plugin/plugin.json` devient la source de vérité de la version, bumpée par `just release`, et le hook version-guard interdit les éditions manuelles du champ version. Le `VERSION` et `src/plugin.json.tmpl` disparaissent. Cette tâche ne touche pas de fichier de contenu de phase, mais elle modifie README.md et CLAUDE.md, donc elle reste dans la session Opus du plan.
 
 **Files:**
-- Modify: `build/build.sh`
-- Modify: `build/preprocess.awk`
-- Delete: `build/dev-stub.md`
+- Add: `plugin-dev/` (vendu par git subtree au tag `v0.2.1`)
+- Modify: `justfile` (import de `release.just`, recette `precommit` réelle), `.envrc` (`MARKETPLACE_DIR`), `.claude/settings.json` (hook version-guard)
+- Modify: `.claude-plugin/plugin.json` (devient source, description sans Notion)
+- Delete: `VERSION`, `src/plugin.json.tmpl`, `build/dev-stub.md`
+- Modify: `build/build.sh`, `build/preprocess.awk`, `build/preprocess.test.sh`
 - Modify: `check.sh`
-- Modify: `src/plugin.json.tmpl`
 - Modify: `README.md`, `CLAUDE.md`
 
 **Interfaces:**
-- Consumes : l'arbre `src/` réécrit (Tasks 1 à 6), sans marqueurs target.
-- Produces : un build qui n'assemble que `skills/candidature/` et `.claude-plugin/plugin.json`. Plus de `dist/*.skill`.
+- Consumes : l'arbre `src/` réécrit (Tasks 1 à 6), sans marqueurs target. Le toolkit local à `/Users/david/code/claude-plugin-dev` (tag `v0.2.1`). La marketplace à `/Users/david/code/claude-plugins`.
+- Produces : un build qui n'assemble que `skills/candidature/` à partir de `src/`, lit la version depuis `plugin.json`, et ne génère plus `plugin.json`. La release passe par `just release {patch|minor|major}`. Plus de `dist/*.skill`.
 
-- [ ] **Step 1: Retirer la génération .skill et le stub dev de build.sh**
+- [ ] **Step 1: Vendre le toolkit plugin-dev (hors ligne) et câbler le wiring**
+
+Le toolkit est versionné dans le repo par git subtree, donc les vieux tags et les clones frais reproduisent l'infra. L'`install.sh` du toolkit clone depuis GitHub, ce que le sandbox bloque. Vendre depuis le clone local à la place, puis lancer l'`install.sh` vendu pour le wiring local (justfile, settings).
+
+```bash
+git subtree add --prefix=plugin-dev /Users/david/code/claude-plugin-dev v0.2.1 --squash
+bash plugin-dev/install.sh
+```
+
+Le `subtree add` exige un arbre propre, donc cette étape vient en premier, juste après le commit de Task 6. Il crée son propre commit de squash. L'`install.sh` lancé sans ref voit `plugin-dev/` déjà présent, saute le subtree, et se borne à ajouter `import 'plugin-dev/release.just'` au justfile et le hook version-guard à `.claude/settings.json`. Ces deux modifications restent non committées, reprises au commit final de la tâche.
+
+- [ ] **Step 2: Faire de plugin.json la source, retirer VERSION et plugin.json.tmpl**
+
+`.claude-plugin/plugin.json` cesse d'être un artefact généré et devient la source de vérité éditée à la main. Le champ version reste `0.5.1`, identique au dernier tag `v0.5.1`, ne pas le toucher (le hook version-guard refuse de toute façon une édition du champ version). Modifier uniquement la description : remplacer « Stockage Notion. » par « Stockage en fichiers locaux. » dans la valeur de `description`. Conserver les autres champs.
+
+```bash
+git rm VERSION src/plugin.json.tmpl
+```
+
+- [ ] **Step 3: Réécrire build.sh sans génération de plugin.json ni release**
 
 Dans `build/build.sh` :
-- Retirer la section « Cible Claude.ai (.skill, non versionnée) » (création de `CAND_DIR`, copie de version_check.py, zip de `candidature.skill`).
-- Retirer la section « Stub dev Claude.ai » (création de `DEV_DIR`, copie de dev-stub.md, zip de `candidature-dev.skill`).
-- Dans la section release, retirer l'upload de `$CAND_OUTPUT` à `gh release create`. La release ne porte plus d'artefact `.skill`. Décider du contenu de la release : soit une release sans asset (tag et notes seulement), soit retrait de la création de release si la distribution passe entièrement par la marketplace de plugins. Conserver le tag et le commit de version.
-- Retirer les variables et l'en-tête de commentaire mentionnant les `.skill` et le stub dev.
-- Le préprocesseur n'a plus qu'une cible. Appeler `process_skill_tree` avec une seule cible (claude-code) ou retirer le paramètre target si le préprocesseur est simplifié au Step 2.
+- Lire la version depuis le manifeste au lieu du fichier `VERSION` : `VERSION="$(jq -r .version "$PLUGIN_JSON")"`. Retirer les fonctions `read_version` et `write_version` et le format `PACKAGE X.Y.Z`.
+- Retirer toute la résolution `--bump` et toute la section Release (commit, tag, push, `gh release create`). La release passe désormais par `just release`, le build ne tague plus.
+- Retirer la ligne qui génère `.claude-plugin/plugin.json` depuis `src/plugin.json.tmpl`. Le manifeste est une source, le build n'y touche plus.
+- Retirer la section « Cible Claude.ai (.skill, non versionnée) » (création de `CAND_DIR`, copie de version_check.py, zip de `candidature.skill`) et la section « Stub dev Claude.ai » (création de `DEV_DIR`, copie de dev-stub.md, zip de `candidature-dev.skill`).
+- Conserver l'assemblage de `skills/candidature/` depuis `src/`, avec la substitution de `{{VERSION}}` par la version lue.
+- Le préprocesseur n'a plus qu'une cible. Retirer le paramètre target des appels (voir Step 4).
+- Mettre à jour l'en-tête de commentaire d'usage : plus de `--bump`, plus de `.skill`, plus de stub dev.
 
-- [ ] **Step 2: Simplifier preprocess.awk**
+- [ ] **Step 4: Simplifier preprocess.awk**
 
 Le target stripping n'a plus d'objet, aucun marqueur target ne subsiste dans `src/`. Réduire `build/preprocess.awk` à la seule substitution de `{{VERSION}}`. Retirer les règles `/^<!-- target: ... -->$/` et la variable `target`. Mettre à jour l'en-tête d'usage. Adapter `build/preprocess.test.sh` en conséquence (retirer les cas de test target, garder la substitution de version).
 
-- [ ] **Step 3: Supprimer dev-stub.md**
+- [ ] **Step 5: Supprimer dev-stub.md**
 
 ```bash
 git rm build/dev-stub.md
 ```
 
-- [ ] **Step 4: Mettre à jour check.sh**
+- [ ] **Step 6: Recette precommit réelle et MARKETPLACE_DIR**
+
+Dans `justfile`, remplacer la recette `precommit` stub par une recette qui reconstruit puis vérifie, de sorte que gitlore et `just release` passent par la même porte :
+
+```just
+precommit:
+    ./build/build.sh
+    ./check.sh
+```
+
+Conserver la ligne `import 'plugin-dev/release.just'` ajoutée par l'install. Dans `.envrc`, ajouter `export MARKETPLACE_DIR=/Users/david/code/claude-plugins`, la racine du repo marketplace que `just release` bumpe.
+
+- [ ] **Step 7: Mettre à jour check.sh**
 
 Dans `check.sh` :
-- Retirer l'assertion `dist/candidature.skill genere` et `dist/candidature-dev.skill genere`.
-- Vérifier que le tableau content_files ne liste plus `notion-setup.md` (fait en Task 2) ni `modele-notion.md` (renommé en Task 1), et liste `modele-fichiers.md`.
-- Conserver la vérification de dérive sur `skills` et `plugin.json`, la vérification des références internes, la contamination de style.
+- Retirer les assertions `dist/candidature.skill genere` et `dist/candidature-dev.skill genere`.
+- Réduire la vérification de dérive à `skills` seul, retirer `.claude-plugin/plugin.json` de la comparaison `git diff` (le manifeste est désormais une source, pas un artefact).
+- Remplacer la section VERSION (qui lit le fichier `VERSION`) par une lecture de la version depuis le manifeste : `version=$(jq -r .version .claude-plugin/plugin.json)`, vérifier qu'elle est non vide et au format semver.
+- Vérifier que le tableau content_files liste `modele-fichiers.md` et ne liste plus `notion-setup.md` ni `modele-notion.md` (fait en Tasks 1 et 2).
+- Conserver la vérification des références internes et la contamination de style.
 
-- [ ] **Step 5: Mettre à jour plugin.json.tmpl**
+- [ ] **Step 8: Mettre à jour README.md et CLAUDE.md**
 
-Dans `src/plugin.json.tmpl`, remplacer « Stockage Notion » par une description du stockage fichiers local, par exemple « Stockage en fichiers locaux ». Contenu français.
+Retirer la double distribution, les mentions `.skill` et l'installation claude.ai. README.md décrit l'installation du plugin Claude Code par la marketplace et le flux de release `just release {patch|minor|major}`. CLAUDE.md (la section Build et la section « Deux skills d'utilisation ») décrit le build plugin seul, le manifeste `plugin.json` comme source de version, le toolkit `plugin-dev` vendu par subtree, et la release par `just release`. Retirer la mention du format du fichier `VERSION`. Retirer la mention `modele-notion.md` si présente, mentionner `modele-fichiers.md`. Mettre à jour la ligne `consolidation.md` de README.md si la responsabilité a changé.
 
-- [ ] **Step 6: Mettre à jour README.md et CLAUDE.md**
-
-Retirer la double distribution, les mentions `.skill` et l'installation claude.ai. README.md décrit l'installation du plugin Claude Code. CLAUDE.md (la section Build et la section « Deux skills d'utilisation ») décrit le build plugin seul. Retirer la mention `modele-notion.md` de README.md si présente, mentionner `modele-fichiers.md`. Mettre à jour la ligne `consolidation.md` de README.md si la responsabilité a changé.
-
-- [ ] **Step 7: Reconstruire et vérifier**
+- [ ] **Step 9: Reconstruire et vérifier**
 
 Run:
 ```bash
 ./build/build.sh
 ls dist/ 2>/dev/null; echo "dist code: $?"
+test ! -f VERSION && echo "VERSION retiré OK"
+test ! -f src/plugin.json.tmpl && echo "tmpl retiré OK"
+jq -e .version .claude-plugin/plugin.json
+grep -n 'target' build/preprocess.awk; echo "awk target code: $?"
+git --no-pager diff --quiet -- .claude-plugin/plugin.json && echo "plugin.json intact après build OK"
+jq -e '.hooks.PreToolUse[]?|select(.matcher|test("Write|Edit"))' .claude/settings.json >/dev/null && echo "version-guard câblé OK"
 ./check.sh
 ```
-Expected : le build produit `skills/candidature/` et `plugin.json`, aucun `dist/*.skill`. check.sh au vert sans les assertions `.skill`. Si `dist/` contient encore des `.skill` d'un build précédent, les supprimer (`rm -f dist/*.skill`).
+Expected : le build produit `skills/candidature/` et laisse `plugin.json` intact, aucun `dist/*.skill`, `VERSION` et `src/plugin.json.tmpl` absents, `plugin.json` valide, aucun marqueur target dans preprocess.awk (grep code 1), hook version-guard présent, check.sh au vert. Si `dist/` contient encore des `.skill` d'un build précédent, les supprimer (`rm -f dist/*.skill`).
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 10: Commit**
 
 ```bash
 git add -A
-git commit -m "🔥 effondrer le build vers le plugin Claude Code seul"
+git commit -m "🔥 migrer le build et la release vers le toolkit plugin-dev, plugin seul"
 ```
+
+Note : cette tâche produit deux commits, le squash du subtree (Step 1) puis le commit d'infra (Step 10). La revue couvre la plage BASE..HEAD complète.
 
 ---
 
@@ -508,6 +549,7 @@ Ajouter de nouvelles décisions numérotées à la suite des existantes (la dern
 - Stockage fichiers ancré sur le répertoire courant, qui est le repo de données. Plus de config de chemin.
 - Sentinelle `.candidature` de version de format, distincte de la VERSION du skill. La version 1 fige le layout de l'export Phase 1.
 - Validateur de métadonnées `validate.py`, signalement sans correction, lancé par le dispatcher à la lecture de l'index, non bloquant.
+- Release par le toolkit `plugin-dev` vendu par git subtree, et `.claude-plugin/plugin.json` comme source de vérité de la version, bumpée par `just release` puis répercutée dans la marketplace. Le fichier `VERSION` et le template `plugin.json.tmpl` disparaissent. Un hook version-guard interdit l'édition manuelle du champ version. Compromis : une dépendance vendue de plus, contre une infra de release reproductible et partagée entre plugins.
 
 Chaque décision suit le format des décisions existantes (contexte, choix retenu, compromis). Respecter les règles de prose.
 

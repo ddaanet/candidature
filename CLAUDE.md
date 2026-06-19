@@ -2,39 +2,51 @@
 
 ## Ce repo
 
-Un skill Claude.ai autonome (fichiers markdown) pour la candidature assistée.
+Un plugin Claude Code (fichiers markdown) pour la candidature assistée.
 Le public cible est non technique. Le contenu du skill est le produit.
 
-- `SKILL.md` est le point d'entrée (dispatcher, charge une phase à la fois).
-- `references/` contient les fichiers de phase et les documents de support.
-- `scripts/` contient les scripts Python exécutés par le skill au runtime.
-- `VERSION` contient la version courante au format `ddaanet/candidature X.Y.Z`.
-- `build/build.sh` assemble les `.skill` et crée les releases GitHub.
-- `build/dev-stub.md` est le stub dev, qui charge depuis le repo local.
+- `src/SKILL.md` est le point d'entrée (dispatcher, charge une phase à la fois).
+- `src/references/` contient les fichiers de phase et les documents de support.
+- `src/scripts/` contient les scripts Python exécutés par le skill au runtime.
+- `.claude-plugin/plugin.json` est le manifeste, source de vérité de la version.
+- `build/build.sh` assemble `skills/candidature/` depuis `src/`.
+- `plugin-dev/` est le toolkit de release vendu par git subtree.
 - `DESIGN.md` documente les décisions de conception et l'audit d'étayage.
 - `README.md` est le guide d'installation.
 
 ## Build
 
-`./build/build.sh` assemble deux `.skill` dans `dist/` :
+`./build/build.sh` assemble un seul artefact, `skills/candidature/`, depuis
+`src/` : SKILL.md, les références, et les scripts (`init_repo.py`,
+`validate.py`). La version est lue depuis `.claude-plugin/plugin.json`. Le
+build ne génère plus le manifeste et ne tague plus.
 
-- `candidature.skill` contient SKILL.md, les références et les scripts.
-  C'est le seul artefact releasé.
-- `candidature-dev.skill` contient le stub dev, qui charge depuis le repo
-  local via Filesystem. Non releasé.
+La source canonique est `src/`. L'artefact `skills/candidature/` est buildé.
+Toute modification de `src/` exige de reconstruire et de committer l'artefact
+dans le même commit, sinon `check.sh` signale la dérive. Le manifeste
+`plugin.json` est une source éditée à la main, pas un artefact, donc hors de
+la garde de dérive.
 
-`./build/build.sh --bump minor` incrémente VERSION, commite, tague, et crée
-une release GitHub avec `candidature.skill` uniquement.
+### Release
 
-### Deux skills d'utilisation
+La release passe par le toolkit `plugin-dev`, vendu sous `plugin-dev/` par git
+subtree et importé dans le `justfile` (`import 'plugin-dev/release.just'`) :
 
-Le skill public (`candidature.skill`) contient le workflow bundlé. Il détecte
-Chrome et charge la couche navigateur si disponible. Il vérifie les mises à
-jour au démarrage (une fois par jour).
+    just release patch    # ou minor, ou major
 
-Le skill dev (`candidature-dev.skill`) est un stub minimal qui charge le
-workflow depuis le repo local via Filesystem. Le chemin est configuré en
-mémoire projet (`candidature: dev <chemin>`).
+La recette reconstruit, vérifie via `just precommit`, bumpe le champ version de
+`plugin.json`, commite, tague, pousse, crée la release GitHub, puis répercute
+la version dans la marketplace `claude-plugins` (chemin dans `MARKETPLACE_DIR`,
+configuré en `.envrc`). Le champ version ne s'édite pas à la main : un hook
+version-guard câblé dans `.claude/settings.json` refuse toute édition manuelle,
+seul `just release` le bumpe.
+
+### Mode développement
+
+Pour itérer localement, reconstruire puis pointer Claude Code sur le dépôt :
+
+    ./build/build.sh
+    /plugin install /chemin/vers/candidature
 
 ## Qualité de la prose
 

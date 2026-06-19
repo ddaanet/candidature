@@ -24,20 +24,9 @@ psychologie du recrutement.
 5. **Suivi** — Retours, comptes rendus d'entretien, tendances sur
    plusieurs candidatures
 
-## Installation (Claude.ai)
+## Installation
 
-1. Télécharger [`candidature.skill`](https://github.com/ddaanet/candidature/releases/latest/download/candidature.skill)
-2. Dans Claude.ai, aller dans **Paramètres** → **Personnaliser** → **Skills**
-3. Uploader le fichier `.skill`
-4. Créer un **Projet**, y uploader votre CV (DOCX de préférence)
-5. Ouvrir un chat dans le projet et taper `/candidature`
-
-## Installation sur Claude Code
-
-Le skill est aussi disponible comme plugin Claude Code, pour un usage
-local sans la limite de tours de Claude.ai.
-
-Depuis la marketplace ddaanet :
+Le skill est un plugin Claude Code. Depuis la marketplace ddaanet :
 
     /plugin marketplace add ddaanet/claude-plugins
     /plugin install candidature@ddaanet
@@ -48,17 +37,17 @@ dépôt :
     ./build/build.sh
     /plugin install /chemin/vers/candidature
 
-La racine Notion des candidatures est stockée dans `CLAUDE.local.md`,
-écrite au premier lancement. La couche navigateur utilise le harnais
-Playwright local décrit dans `tools/linkedin-harness/` et exige un
-chromium système.
+## Stockage
 
+Le skill opère sur le répertoire courant, qui devient le repo de
+candidatures. Une sentinelle `.candidature` marque un repo initialisé.
+Tout est stocké en fichiers markdown locaux : la fiche candidat, un
+dossier par candidature, les recherches contextuelles, les fiches de
+site, les tendances. Au premier lancement dans un dossier vide,
+l'assistant propose de créer la structure de départ.
 
-## Mises à jour
-
-Le skill vérifie automatiquement si une version plus récente est
-disponible sur GitHub. Si c'est le cas, il vous le signale avec un lien
-vers le téléchargement. Télécharger le fichier et le réimporter dans le projet.
+La couche navigateur utilise le harnais Playwright local décrit dans
+`tools/linkedin-harness/` et exige un chromium système.
 
 ## Pour commencer
 
@@ -68,39 +57,39 @@ pour comprendre votre parcours, vos contraintes et vos objectifs.
 Ensuite, apportez une offre ou plusieurs — l'assistant analyse
 l'alignement avec votre profil et vous aide à prioriser.
 
-## Navigateur (Chrome)
+## Release
 
-Si Claude in Chrome est connecté, le skill détecte automatiquement la
-capacité et charge les instructions de navigation par site
-(SmartRecruiters, Teamtailor, WTTJ, LinkedIn...).
+La version vit dans `.claude-plugin/plugin.json`, la source de vérité.
+La release passe par le toolkit `plugin-dev` vendu sous `plugin-dev/` :
 
-## Mode développement
+    just release patch    # ou minor, ou major
 
-Pour les contributeurs qui modifient le skill activement. Nécessite le
-MCP Filesystem connecté au répertoire du repo.
-
-1. Installer `candidature-dev.skill` (dans `dist/`, non releasé)
-2. Ajouter en mémoire projet : `candidature: dev — <chemin du repo>`
-3. Le stub charge le workflow depuis le repo local
+La recette reconstruit, vérifie, bumpe `plugin.json`, commite, tague,
+pousse, crée la release GitHub, puis répercute la version dans la
+marketplace `claude-plugins`. Le champ version ne s'édite pas à la main :
+un hook l'interdit, seul `just release` le bumpe.
 
 ## Contenu
 
 ```
-SKILL.md                      — Point d'entrée (dispatcher)
-references/
-  recruitment-science.md      — Fondements scientifiques
-  cover-letter.md             — Principes de rédaction
-  adaptation-cv.md            — Modification de CV (DOCX)
-  review-items.md             — Découpage pour la relecture
-  suivi-retours.md            — Suivi et comptes rendus d'entretien
-  preparation-entretien.md    — Préparation d'entretien et négociation
-  etayage.md                  — Protocole d'audit des affirmations
-  browser-layer.md            — Couche navigateur (Chrome)
-  consolidation.md            — Processus de consolidation (groundé)
-  sites/*.md                  — Contraintes par plateforme ATS
-build/
-  build.sh                    — Assemblage des .skill + release
-  dev-stub.md                 — Stub de développement
+.claude-plugin/plugin.json    — Manifeste du plugin, source de version
+src/                          — Source canonique du contenu
+  SKILL.md                    — Point d'entrée (dispatcher)
+  references/                 — Fichiers de phase et documents de support
+    recruitment-science.md    — Fondements scientifiques
+    modele-fichiers.md        — Modèle de stockage fichiers
+    backend-write.md          — Protocole d'écriture
+    cover-letter.md           — Principes de rédaction
+    adaptation-cv.md          — Modification de CV (DOCX)
+    decoupage-relecture.md    — Découpage pour la relecture
+    preparation-entretien.md  — Préparation d'entretien et négociation
+    etayage.md                — Protocole d'audit des affirmations
+    consolidation.md          — Consolidation des fiches de site au release
+    sites/*.md                — Contraintes par plateforme ATS
+  scripts/                    — init_repo.py, validate.py
+build/build.sh                — Assemblage de skills/candidature/ depuis src/
+skills/candidature/           — Artefact buildé, lu par Claude Code
+plugin-dev/                   — Toolkit de release vendu (git subtree)
 ```
 
 ## Licence

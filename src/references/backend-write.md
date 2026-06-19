@@ -1,73 +1,62 @@
-# Contrôle d'écriture backend
+# Protocole d'écriture fichiers
 
-Protocole obligatoire avant toute écriture vers un backend (Notion ou
-autre). L'écriture ne peut pas se produire sans l'étape d'exploration,
-parce que la procédure d'écriture n'existe pas avant.
+Protocole d'écriture vers le stockage fichiers. Le layout est fixé par la
+version de format 1 et documenté dans `references/modele-fichiers.md`.
+L'agent connaît la cible à l'avance, donc il calcule le chemin de destination
+et écrit aux sections nommées sans étape d'exploration.
 
 ## Principe
 
-Chaque cible d'écriture a une structure propre : pages enfants, propriétés,
-conventions de nommage, contenu existant. Cette structure n'est pas connue
-à l'avance. L'agent doit la découvrir avant d'écrire, puis construire une
-procédure adaptée à ce qu'il a trouvé.
+Le stockage est un répertoire local de structure connue. Chaque type de
+document a son emplacement et ses sections, décrits dans
+`references/modele-fichiers.md`. L'agent ne découvre pas la structure, il
+l'applique.
 
 ## Protocole
 
-### 1. Explorer la cible
+### 1. Calculer le chemin de destination
 
-Avant d'écrire, appeler `notion-fetch` sur la page cible ou son parent.
-Lire la structure complète : pages enfants, propriétés, contenu.
+À partir du type de document, dériver le chemin. Une candidature va dans
+`candidatures/AAAA-MM-JJ-slug/README.md`, où la date est celle du repérage et
+le slug abrège l'entreprise et le poste. Un brouillon de lettre va dans un
+fichier `.md` frère du README, dans le même dossier. Un compte rendu
+d'entretien va dans `entretien-N.md` au même endroit. Une recherche va sous
+`recherches/`, un site sous `sites/`, les tendances dans `tendances.md` à la
+racine.
 
-Si la cible est une page enfant à créer, explorer le parent. Si la cible
-est une page existante à modifier, explorer la page elle-même.
+### 2. Écrire au schéma documenté
 
-Une seule exploration par session suffit pour une cible donnée. La
-procédure générée est réutilisable pour toutes les écritures vers la
-même cible dans la même session.
+Écrire le frontmatter YAML et les sections nommées que documente
+`references/modele-fichiers.md`. Pour un README de candidature, le frontmatter
+porte au moins entreprise, poste, statut, et les clés conditionnelles selon
+l'avancement. Le corps reprend les sections offre, adéquation et écarts,
+motivation, différenciation, soumission.
 
-### 2. Extraire les contraintes
+### 3. Modifier de façon ciblée
 
-À partir de l'exploration, identifier la convention de nommage des pages
-enfants existantes, les propriétés présentes et leur format (texte, date,
-relation, select), la structure du contenu (titres, sections, listes), et
-les pages enfants déjà présentes (pour éviter les doublons).
-
-### 3. Générer la procédure d'écriture
-
-Formuler la procédure spécifique à cette cible : quel outil appeler, avec
-quels paramètres, dans quel ordre. La procédure est un artefact de
-l'exploration, pas un modèle préétabli.
-
-Pour une création de page : titre conforme à la convention, propriétés
-conformes au schéma, contenu conforme à la structure observée.
-
-Pour une modification : identifier les blocs à modifier, utiliser la
-modification ciblée plutôt que le remplacement complet.
-
-### 4. Exécuter
-
-Exécuter la procédure générée. Vérifier le résultat (`notion-fetch` sur
-la page écrite).
+Pour une mise à jour, modifier le bloc concerné plutôt que réécrire le
+fichier entier. Changer une valeur de frontmatter touche la ligne de cette
+clé. Compléter une section touche cette section. Le reste du fichier reste
+inchangé, ce qui préserve l'historique git lisible et le travail en cours du
+candidat.
 
 ## Suppression et écartement
 
-Notion n'efface pas une page, il l'archive (suppression douce, `archived`
-à vrai). Pour écarter une offre, archiver sa page candidature plutôt que
-chercher une suppression définitive. L'archivage la retire de l'arborescence
-visible tout en gardant la trace récupérable.
+Écarter une offre ne supprime pas son fichier. Mettre `statut: écartée` dans
+le frontmatter du README. Le dossier et ses brouillons restent, la trace est
+conservée et l'index recalculé ignore les candidatures écartées.
 
-Avant d'archiver, vérifier qu'on cible la bonne page (`notion-fetch`).
-L'écartement d'une offre issue d'un parcours LinkedIn ne s'arrête pas à
-Notion. Sa page porte un jobId, et archiver la page seule laisse la carte
+L'écartement d'une offre issue d'un parcours LinkedIn ne s'arrête pas au
+fichier. Le README porte un jobId, et changer le statut seul laisse la carte
 dans le flux LinkedIn. Écarter aussi la carte par la couche navigateur, pour
-que Notion et le flux ne divergent pas.
+que le stockage fichiers et le flux ne divergent pas.
 
 ## Cas particuliers
 
-Si la cible est vide (pas de pages enfants, pas de contenu), utiliser le
-modèle de structure fourni dans `references/modele-notion.md`. Les
-écritures suivantes s'y conformeront.
+Pour un nouveau document, écrire directement à la structure documentée dans
+`references/modele-fichiers.md`. Pas de modèle vide à instancier, le format
+est la convention.
 
-Si l'exploration révèle une structure inattendue (propriétés inconnues,
-contenu dans un format non prévu), l'agent s'adapte à ce qu'il trouve.
-Ne pas forcer une structure différente de celle en place.
+Si un fichier existant présente une structure inattendue, sections absentes
+ou frontmatter incomplet, compléter ce qui manque sans écraser le contenu
+déjà présent.

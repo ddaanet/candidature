@@ -24,8 +24,7 @@ content_files=(
   src/references/relecture.md
   src/references/suivi.md
   src/references/backend-write.md
-  src/references/notion-setup.md
-  src/references/modele-notion.md
+  src/references/modele-fichiers.md
   src/references/cover-letter.md
   src/references/adaptation-cv.md
   src/references/etayage.md
@@ -111,37 +110,27 @@ else
   echo "$build_output"
 fi
 
-if [ -f dist/candidature.skill ]; then
-  pass "candidature.skill genere"
+# --- Derive de l'artefact versionne ---
+# plugin.json est desormais une source editee a la main, pas un artefact :
+# seul skills/ est regenere par le build, donc seul skills/ est compare.
+
+echo "Dérive de l'artefact versionné"
+if git diff --quiet -- skills; then
+  pass "skills/ à jour avec src/"
 else
-  fail "candidature.skill absent apres build"
+  fail "skills/ diverge de src/ (lancer ./build/build.sh et committer)"
+  git --no-pager diff --stat -- skills
 fi
 
-if [ -f dist/candidature-dev.skill ]; then
-  pass "candidature-dev.skill genere"
-else
-  fail "candidature-dev.skill absent apres build"
-fi
-
-# --- Derive des artefacts versionnes ---
-
-echo "Dérive des artefacts versionnés"
-if git diff --quiet -- skills .claude-plugin/plugin.json; then
-  pass "skills/ et plugin.json à jour avec src/"
-else
-  fail "skills/ ou plugin.json divergent de src/ (lancer ./build/build.sh et committer)"
-  git --no-pager diff --stat -- skills .claude-plugin/plugin.json
-fi
-
-# --- VERSION ---
+# --- Version ---
 
 echo "Version"
 
-version=$(cat VERSION | tr -d '[:space:]')
-if [ -z "$version" ]; then
-  fail "VERSION vide ou absent"
+version=$(jq -r .version .claude-plugin/plugin.json)
+if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  pass "plugin.json version = $version"
 else
-  pass "VERSION = $version"
+  fail "plugin.json version absente ou non semver : '$version'"
 fi
 
 # --- Resume ---

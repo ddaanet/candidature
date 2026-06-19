@@ -15,3 +15,6 @@ dist/
 # Brouillons et exports ponctuels. Le repo est public : aucun export Notion réel
 # ne doit y atterrir. Les scripts y déposent leurs sorties de travail.
 tmp/
+
+# Bytecode Python des scripts et des tests
+__pycache__/

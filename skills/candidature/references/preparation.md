@@ -13,11 +13,10 @@ l'adaptation du CV ou un champ de texte libre découvert à la soumission.
 
 ## Fiche candidat (avant toute prospection)
 
-Au lancement de la phase, charger le contenu de la fiche candidat avec
-`notion-fetch` sur la sous-page Fiche candidat de la racine Notion. La fiche
-est la source qui fait autorité sur l'adéquation. Sans elle en contexte,
-l'analyse d'adéquation reconstruit un profil deviné au lieu d'appliquer les
-critères que le candidat a documentés.
+Au lancement de la phase, charger le contenu de la fiche candidat en lisant
+`fiche-candidat.md` à la racine. La fiche est la source qui fait autorité sur
+l'adéquation. Sans elle en contexte, l'analyse d'adéquation reconstruit un
+profil deviné au lieu d'appliquer les critères que le candidat a documentés.
 
 En extraire les contraintes dures et les garder en contexte pour toute la
 phase. Le présentiel ou le télétravail accepté, la zone géographique et le
@@ -46,17 +45,16 @@ fiche de poste (appel d'outil). Si c'est une URL, aller la chercher.
 ### Rappel site (avant navigation)
 
 Avant de naviguer sur un site de candidature, charger les contraintes
-connues de la plateforme depuis deux sources. La source primaire est
-Notion : chercher une sous-page du site sous Sites/ dans Notion
-(`notion-fetch`). Cette sous-page contient les observations terrain,
-datées et associées à la version du skill utilisée. La source secondaire
-est le fichier de référence du skill (`references/sites/*.md`), qui
-contient les directives consolidées.
+connues de la plateforme depuis deux sources. La source primaire est le
+stockage local : lire le fichier du site sous `sites/`, nommé d'après le
+site. Ce fichier contient les observations terrain, datées et associées à la
+version du skill utilisée. La source secondaire est le fichier de référence
+du skill (`references/sites/*.md`), qui contient les directives consolidées.
 
-Si les deux sources existent, les observations Notion prévalent. Si
-aucune sous-page n'existe dans Notion pour ce site, procéder avec le
-fichier de référence s'il existe, ou avec prudence si aucune source
-n'est disponible.
+Si les deux sources existent, les observations sous `sites/` prévalent. Si
+aucun fichier de site n'existe pour cette plateforme, procéder avec le
+fichier de référence s'il existe, ou avec prudence si aucune source n'est
+disponible.
 
 ### Barrière de contraintes dures
 
@@ -86,18 +84,22 @@ profil du candidat sur trois dimensions :
    mission, le produit ou l'équipe, correspond au candidat ?
 3. Qu'est-ce qui distingue ce candidat des autres pour ce poste précis ?
 
-Chaque offre analysée est stockée immédiatement en page enfant sous la
-racine Notion du candidat. Voir `references/backend-write.md` pour le
-contrôle d'écriture. Avant de créer la page, explorer la racine Notion
-pour vérifier qu'une page pour cette offre n'existe pas déjà.
+Chaque offre analysée est stockée immédiatement dans un dossier
+`candidatures/AAAA-MM-JJ-slug/`, avec un `README.md` dont le frontmatter
+porte `statut: shortlist`, l'entreprise et le poste. Le slug se calcule depuis
+l'entreprise et le poste, la date est celle du jour. Voir
+`references/backend-write.md` pour le contrôle d'écriture. Avant de créer le
+dossier, parcourir `candidatures/` pour vérifier qu'un dossier pour cette
+offre n'existe pas déjà.
 
-Le candidat décide quoi en faire. S'il veut candidater, la page shortlist
-est enrichie en page candidature complète au lancement de la phase de
-soumission. S'il veut écarter l'offre, archiver sa page Notion. Si l'offre
-vient d'un parcours LinkedIn et que sa page porte un jobId, l'archiver seule
-la laisse dans le flux LinkedIn, qui la repropose au parcours suivant. Écarter
-aussi la carte correspondante pour garder les deux états cohérents, par la
-couche navigateur. S'il veut différer, la page reste en l'état.
+Le candidat décide quoi en faire. S'il veut candidater, le README de la
+shortlist est enrichi en dossier de candidature complet au lancement de la
+phase de soumission. S'il veut écarter l'offre, passer son frontmatter à
+`statut: écartée`, le dossier reste en place. Si l'offre vient d'un parcours
+LinkedIn et que son README porte un jobId, changer le statut seul la laisse
+dans le flux LinkedIn, qui la repropose au parcours suivant. Écarter aussi la
+carte correspondante pour garder les deux états cohérents, par la couche
+navigateur. S'il veut différer, le dossier reste en l'état.
 
 Avec 3+ offres en attente, l'agent peut proposer un tri comparatif :
 quelles offres sont les plus différenciantes pour ce profil. Le candidat
@@ -109,8 +111,9 @@ dans la foulée, ou accumuler et trier plus tard.
 ### Expiration des shortlists
 
 Une offre shortlistée il y a plus de 3 mois est probablement pourvue.
-Signaler au candidat les pages shortlist dont la date de création dépasse
-3 mois. Le candidat décide de conserver ou supprimer.
+Signaler au candidat les dossiers en `statut: shortlist` dont la date dépasse
+3 mois. La date se lit dans le nom du dossier. Le candidat décide de conserver
+ou d'écarter.
 
 ## 2.3 Canal de candidature
 
@@ -136,16 +139,15 @@ préparer, quel ton adopter, et quelles conventions respecter.
 
 ### Réutilisation des recherches existantes
 
-Consulter d'abord Notion. Lire les annotations de la page Recherches/
-(`notion-fetch`) et le contenu des pages les plus pertinentes. La
-sélection se fait par le jugement contextuel de l'agent (type de poste,
-secteur, taille d'entreprise, pays), pas par la recherche sémantique de
-Notion.
+Consulter d'abord le stockage local. Parcourir les fichiers sous
+`recherches/` et lire le contenu des plus pertinents. La sélection se fait par
+le jugement contextuel de l'agent (type de poste, secteur, taille
+d'entreprise, pays). Le nom du fichier porte le type de poste et la date, ce
+qui oriente le tri.
 
-L'ancienneté de la page compte. Moins de 3 mois : réutilisable telle
-quelle. Entre 3 et 6 mois : signaler au candidat et lui laisser décider
-(réutiliser, adapter, ou refaire). Plus de 6 mois : périmée, relancer la
-recherche.
+L'ancienneté du fichier compte. Moins de 3 mois : réutilisable tel quel.
+Entre 3 et 6 mois : signaler au candidat et lui laisser décider (réutiliser,
+adapter, ou refaire). Plus de 6 mois : périmé, relancer la recherche.
 
 Ne jamais réutiliser silencieusement une correspondance approximative ou
 une entrée de plus de 3 mois. Le candidat décide.
@@ -175,11 +177,11 @@ pour la préparation d'entretien (`references/preparation-entretien.md`).
 
 ### Stockage des résultats
 
-Les résultats sont stockés en page enfant sous Recherches/ dans Notion.
-Voir `references/backend-write.md` pour le contrôle d'écriture. La page
-contient le type de poste, le secteur, la taille, le pays, la date, les
-résultats structurés, et un champ "Pas applicable" pour le périmètre
-d'exclusion.
+Les résultats sont écrits dans un fichier `recherches/<type-poste>-AAAA-MM-JJ.md`.
+Voir `references/backend-write.md` pour le contrôle d'écriture et
+`references/modele-fichiers.md` pour les sections. Le fichier porte le cadrage
+(type de poste, secteur, taille, pays), les résultats structurés sur cinq
+dimensions, et une section « Pas applicable » pour le périmètre d'exclusion.
 
 ## 2.5 Documents et contexte candidat
 

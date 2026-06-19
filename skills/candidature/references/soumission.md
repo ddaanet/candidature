@@ -5,28 +5,28 @@ la recherche contextuelle est exploitable.
 Le formulaire de candidature guide la génération : l'agent ne produit
 rien avant de connaître les champs du formulaire.
 
-Le livrable de cette phase est une candidature soumise, archivée dans
-Notion, avec capture des observations sur le site.
+Le livrable de cette phase est une candidature soumise, archivée dans le
+dossier `candidatures/<slug>/`, avec capture des observations sur le site.
 
 ## 2.6 Ouverture du formulaire
 
 ### Rappel site (avant navigation)
 
 Avant de naviguer sur un site de candidature, charger les contraintes
-connues de la plateforme depuis deux sources. La source primaire est
-Notion : chercher une sous-page du site sous Sites/ dans Notion
-(`notion-fetch`). Cette sous-page contient les observations terrain,
-datées et associées à la version du skill utilisée. La source secondaire
-est le fichier de référence du skill (`references/sites/*.md`), qui
-contient les directives consolidées.
+connues de la plateforme depuis deux sources. La source primaire est le
+stockage local : lire le fichier du site sous `sites/`, nommé d'après le
+site. Ce fichier contient les observations terrain, datées et associées à
+la version du skill utilisée. La source secondaire est le fichier de
+référence du skill (`references/sites/*.md`), qui contient les directives
+consolidées.
 
-Si les deux sources existent, les observations Notion prévalent. Les
-directives du fichier de référence ne doivent pas faire double emploi
-avec les observations Notion. À la mise à jour du skill, comparer les
-notes Notion existantes avec les fichiers de référence (eux aussi datés
-et versionnés) pour détecter les divergences.
+Si les deux sources existent, les observations sous `sites/` prévalent.
+Les directives du fichier de référence ne doivent pas faire double emploi
+avec ces observations. À la mise à jour du skill, comparer les
+observations existantes sous `sites/` avec les fichiers de référence (eux
+aussi datés et versionnés) pour détecter les divergences.
 
-Si aucune sous-page n'existe dans Notion pour ce site, procéder avec le
+Si aucun fichier n'existe sous `sites/` pour ce site, procéder avec le
 fichier de référence s'il existe, ou avec prudence si aucune source
 n'est disponible. Noter le nom du site pour la capture après soumission.
 
@@ -85,18 +85,19 @@ formulaire :
    comme le candidat, pas comme un modèle.
 
 2. Aligner les axes avec le candidat pour ce champ, à partir de l'analyse
-   d'adéquation stockée sur la page candidature : ce qui répond au poste
-   (P-J fit), pourquoi cette entreprise (P-O fit), et ce qui distingue le
-   candidat (voir `references/recruitment-science.md`, §2). Conversation
-   courte, 2-3 échanges. Le besoin d'axes est manifeste ici, pas avant.
-   Puis produire un brouillon adapté au champ. Une lettre de motivation
-   complète si le champ est prévu pour une lettre (voir
+   d'adéquation consignée dans le README de la candidature : ce qui répond
+   au poste (P-J fit), pourquoi cette entreprise (P-O fit), et ce qui
+   distingue le candidat (voir `references/recruitment-science.md`, §2).
+   Conversation courte, 2-3 échanges. Le besoin d'axes est manifeste ici,
+   pas avant. Puis produire un brouillon adapté au champ. Une lettre de
+   motivation complète si le champ est prévu pour une lettre (voir
    `references/cover-letter.md`). Un message court si le champ attend
    quelques phrases. Une réponse ciblée si le champ pose une question
-   spécifique. Le brouillon est créé en sous-page de la candidature dans
-   Notion (`notion-create-pages`). Voir `references/backend-write.md`
-   pour le contrôle d'écriture. Ne jamais mettre le contenu directement
-   dans la page candidature : chaque artefact est une sous-page.
+   spécifique. Le brouillon est un fichier `.md` frère du README dans le
+   dossier `candidatures/<slug>/`, nommé d'après l'artefact (lettre,
+   message, reponse-formulaire). Voir `references/backend-write.md` pour
+   le contrôle d'écriture. Le README porte les métadonnées, chaque artefact
+   texte vit dans son propre fichier.
 
 3. Charger le protocole d'étayage (`view references/etayage.md`) et
    auditer le brouillon. L'agent découvre le protocole après avoir généré
@@ -114,10 +115,10 @@ formulaire :
    n'est pas disponible, présenter le texte final au candidat pour
    qu'il le copie.
 
-Quand la relecture d'un champ aboutit à des corrections, utiliser la
-modification ciblée Notion (`update_content`) sur la sous-page plutôt
-que de recréer la page. Ne jamais afficher le résultat de l'appel
-d'outil et le texte final dans la même réponse.
+Quand la relecture d'un champ aboutit à des corrections, éditer le fichier
+brouillon en place plutôt que de le recréer. Les itérations se font sur ce
+fichier. Ne pas montrer la sortie de l'écriture du fichier et le texte final
+dans la même réponse au candidat.
 
 ### Voix du candidat
 
@@ -157,15 +158,15 @@ Après soumission, demander au candidat :
 
 > "Des difficultés avec le site de candidature ?"
 
-Créer ou mettre à jour une sous-page sous Sites/ dans Notion pour
-cette plateforme. Voir `references/backend-write.md` pour le contrôle
+Lire ou créer le fichier du site sous `sites/`, nommé d'après cette
+plateforme. Voir `references/backend-write.md` pour le contrôle
 d'écriture. L'écriture est obligatoire, même si le candidat répond
 "non" ou "RAS". Chaque observation est datée et associée à la version
 du skill.
 
-Si aucune sous-page n'existe pour ce site, la créer avec le nom de
-la plateforme, la date de découverte et l'entreprise associée. Si une
-sous-page existe déjà, la compléter avec les nouvelles observations.
+Si aucun fichier n'existe pour ce site, le créer avec le nom de
+la plateforme, la date de découverte et l'entreprise associée. Si un
+fichier existe déjà, le compléter avec les nouvelles observations.
 
 Chaque observation porte sa source. Le retour du candidat est ce que
 l'utilisateur signale après soumission. L'observation autonome est ce
@@ -185,37 +186,41 @@ observations est décrite dans `references/consolidation.md`.
 
 ## 2.10 Archivage
 
-Après la soumission et la capture site, enrichir la page candidature
-dans Notion. Les champs factuels (date de soumission, canal utilisé,
-nom de la plateforme, prétentions salariales si communiquées) sont
-des propriétés de la page candidature.
+Après la soumission et la capture site, enrichir le README de la
+candidature. Les champs factuels vont dans le frontmatter YAML :
+`date_soumission`, `canal`, la plateforme, et les prétentions salariales
+si elles ont été communiquées. Le statut passe à `en attente` à la
+soumission. Voir `references/backend-write.md` pour le contrôle
+d'écriture et `references/modele-fichiers.md` pour les noms de champs.
 
-Les champs analytiques complètent la page candidature en prose courte :
-les axes retenus (adéquation au poste, motivation pour l'entreprise,
-différenciation), l'accroche utilisée
-(premiers mots ou résumé), et le registre de ton. Ce paragraphe permet
-de retrouver rapidement ce qui a été envoyé sans relire les brouillons.
+Les champs analytiques complètent le corps du README en sections.
+Adéquation et écarts confronte le profil aux exigences. Motivation porte
+les raisons de viser cette entreprise. Différenciation note l'accroche
+retenue et le registre de ton. Soumission consigne la plateforme, les
+prétentions si elles ont été communiquées, et la date. Ces sections
+permettent de retrouver rapidement ce qui a été envoyé sans relire les
+brouillons.
 
-Le texte complet reste dans les sous-pages de brouillon créées en 2.7.
-Les sous-pages contiennent le contenu, la page candidature contient les
-métadonnées.
+Le texte complet reste dans les fichiers brouillon créés en 2.7. Les
+fichiers brouillon contiennent le contenu, le README contient les
+métadonnées et l'analyse.
 
 ## 2.11 Clôture
 
-Avant de clore, vérifier que tous les artefacts sont enregistrés dans
-Notion : brouillons en sous-pages, métadonnées sur la page candidature,
-observations site capturées. Si un élément manque, demander au candidat
-avant de créer la page.
+Avant de clore, vérifier que tous les artefacts sont enregistrés dans le
+dossier de candidature : brouillons en fichiers frères, métadonnées et
+analyse dans le README, observations site capturées sous `sites/`. Si un
+élément manque, le compléter avant de clore.
 
 La conversation contient les échanges, les corrections et les décisions
 du candidat. Ces éléments ne seront plus accessibles dans un nouveau
-chat. Tout ce qui doit être retrouvé plus tard doit être dans Notion
-avant de clore.
+chat. Tout ce qui doit être retrouvé plus tard doit être dans les
+fichiers avant de clore.
 
 Proposer au candidat de démarrer un nouveau chat pour la prochaine
 action. La séparation en conversations distinctes évite l'accumulation
 de contexte et réduit le risque de contamination entre candidatures.
 
-> "La candidature est enregistrée. Tous les documents sont dans Notion.
-> Pour la suite (nouvelle candidature, suivi d'une réponse, autre
-> chose), je recommande de démarrer un nouveau chat."
+> "La candidature est enregistrée. Tous les documents sont dans le dossier
+> de candidature. Pour la suite (nouvelle candidature, suivi d'une réponse,
+> autre chose), je recommande de démarrer un nouveau chat."

@@ -9,18 +9,23 @@ Van Hooft & Van Hoye, 2022).
 ## 4.1 Enregistrement des retours
 
 Quand le candidat signale un retour (refus, entretien, offre), mettre à
-jour la page candidature correspondante dans Notion. Le statut est mis à
-jour dans le titre ou le contenu de la page (`notion-update-page`). Le
+jour le README de la candidature correspondante. Le champ `statut` du
+frontmatter prend une valeur de l'ensemble fermé. Un refus porte aussi
+`date_reponse`. Voir `references/backend-write.md` pour le contrôle
+d'écriture et `references/modele-fichiers.md` pour les noms de champs. Le
 candidat parle naturellement ("refus Wiremind", "entretien 1 chez
 Doctolib"). L'agent interprète et enregistre.
 
 Si le candidat fournit du contexte supplémentaire (retour du recruteur,
-hypothèse sur le refus, délai de réponse), l'ajouter au contenu de la
-page candidature. Rien n'est imposé, tout est capté s'il est offert.
+hypothèse sur le refus, délai de réponse), l'ajouter au corps du README.
+Rien n'est imposé, tout est capté s'il est offert.
 
-Les statuts possibles : en attente (envoyée, pas de réponse), refus (réponse
-négative, avec ou sans entretien), entretien N (convoqué ou passé au tour
-N), offre (offre reçue), accepté ou décliné (résolution finale).
+L'ensemble fermé des statuts, accents compris, est : à trier, shortlist,
+en attente, refus, classée sans suite, écartée. Le statut `en attente`
+couvre une candidature envoyée sans réponse. Un refus, avec ou sans
+entretien, passe à `refus`. Une candidature sans suite donnée passe à
+`classée sans suite`. Les entretiens et leur tour vivent dans les comptes
+rendus, pas dans le statut.
 
 ## 4.2 Entretiens
 
@@ -41,10 +46,12 @@ elle alimente l'analyse des tendances.
 
 ### Compte rendu
 
-Le compte rendu d'entretien est créé en sous-page de la candidature dans
-Notion (`notion-create-pages`). La sous-page contient la date, le tour
-(entretien 1, 2...), les interlocuteurs si connus, les points clés et les
-apprentissages transférables. Pas de verbatim, une synthèse compacte.
+Le compte rendu d'entretien est un fichier `candidatures/<slug>/entretien-N.md`,
+frère du README, N incrémenté à chaque tour. Voir
+`references/backend-write.md` pour le contrôle d'écriture. Le fichier
+contient la date, le tour (entretien 1, 2...), les interlocuteurs si
+connus, les points clés et les apprentissages transférables. Pas de
+verbatim, une synthèse compacte.
 
 L'objectif des deux moments (préparation et compte rendu) est l'extraction
 d'apprentissages transférables.
@@ -77,10 +84,12 @@ prochaines candidatures.
 
 ### Stockage des observations
 
-Les observations sont stockées dans la page Tendances sous la racine Notion
-du candidat (`notion-create-pages` pour la première analyse,
-`notion-update-page` pour les suivantes). Chaque analyse met à jour cette
-page avec les nouvelles observations et les ajustements décidés.
+Les observations sont stockées dans `tendances.md` à la racine du
+stockage. Le fichier est créé par `scripts/init_repo.py` au montage du
+répertoire. S'il n'existe pas, le créer. Voir
+`references/backend-write.md` pour le contrôle d'écriture. Chaque analyse
+ajoute ses observations datées et les ajustements décidés, sans écraser
+les précédentes.
 
-Cette page est consultée au lancement de la phase 2 (préparation) pour
+Ce fichier est consulté au lancement de la phase 2 (préparation) pour
 éclairer les choix des candidatures suivantes.

@@ -1,5 +1,8 @@
+import 'plugin-dev/release.just'
+
 # Recettes du repo candidature.
 
-# Vérifications avant commit. Stub : étendre au besoin.
+# Vérifications avant commit. gitlore et `just release` passent par cette porte.
 precommit:
-    @echo "precommit: stub, rien à vérifier pour l'instant"
+    ./build/build.sh
+    ./check.sh

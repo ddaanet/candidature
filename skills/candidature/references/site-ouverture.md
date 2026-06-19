@@ -9,17 +9,17 @@ Les phases chargent ce fichier avant toute navigation sur une plateforme.
 Avant de naviguer sur un site de candidature, charger les contraintes
 connues de la plateforme depuis deux sources.
 
-La source primaire est Notion : chercher une sous-page du site sous
-Sites/ dans Notion (`notion-fetch`). Cette sous-page contient les
-observations terrain, datées et associées à la version du skill utilisée.
+La source primaire est le stockage : lire le fichier du site, `sites/<site>.md`
+sous le répertoire racine. Ce fichier contient les observations terrain,
+datées et associées à la version du skill utilisée.
 
 La source secondaire est le fichier de référence du skill
 (`references/sites/*.md`), qui contient les directives consolidées.
 
-Si les deux sources existent, les observations Notion prévalent. Si
-aucune sous-page n'existe dans Notion pour ce site, procéder avec le
-fichier de référence s'il existe, ou avec prudence si aucune source
-n'est disponible. Noter le nom du site pour la capture après
+Si les deux sources existent, les observations du stockage prévalent. Si
+aucun fichier de site n'existe dans le stockage pour cette plateforme,
+procéder avec le fichier de référence s'il existe, ou avec prudence si
+aucune source n'est disponible. Noter le nom du site pour la capture après
 interaction.
 
 ## Cookies et consentement

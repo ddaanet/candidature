@@ -5,8 +5,8 @@ candidature. S'applique à tout texte produit par l'agent : lettre de
 motivation, réponse formulaire, message court, CV adapté.
 
 L'audit porte sur le texte réel, pas sur des intentions. L'artefact
-existe déjà, la page Notion a été créée. L'objectif est de vérifier
-ce que le texte dit effectivement.
+existe déjà, le brouillon a été écrit dans `candidatures/<slug>/`.
+L'objectif est de vérifier ce que le texte dit effectivement.
 
 ---
 
@@ -91,8 +91,8 @@ composé de signaux gratuits a un problème structurel.
 L'agent évalue la gravité et décide.
 
 Une correction factuelle isolée (un fait incorrect, une date, un nom
-d'outil) se traite par modification ciblée (`update_content`) sur la
-sous-page Notion du brouillon.
+d'outil) se traite par modification ciblée du bloc concerné dans le
+brouillon de `candidatures/<slug>/`.
 
 Un problème structurel (axe entier mal fondé, trop de signaux gratuits,
 ton incohérent après corrections multiples) nécessite une régénération

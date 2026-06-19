@@ -1,8 +1,8 @@
 ## Current task
 
-L'outillage Phase 2-A (init_repo.py, validate.py, tests) est implémenté, revu propre et committé sur dev ; la suite est d'écrire Plan B (réécriture du skill, Opus) et Plan C (harnais LinkedIn) avant de merger Phase 2 vers main.
+Plan B (réécriture du skill candidature vers le stockage fichiers) est écrit, relu, simplifié à huit tâches par simplify-plan et committé sur dev (311fb1c) ; il reste à décider de l'exécuter ou d'écrire Plan C d'abord.
 
 ## Open decisions
 
-- Écrire Plan B et Plan C avant toute exécution, ou alterner écriture et exécution. Et dans quel ordre traiter B et C.
-- Note pour Plan B : la CLI de validate.py avale silencieusement les --flag inconnus et --today malformé lève une ValueError non rattrapée. Le dispatcher devra passer un --today valide. Hors périmètre Plan 2-A.
+- Exécuter Plan B maintenant, ou écrire Plan C (harnais LinkedIn JavaScript, bascule des écritures Notion vers fichiers) avant de toucher au code, pour avoir les deux plans Phase 2 avant exécution.
+- Si exécution de Plan B : mode subagent-driven (un sous-agent Opus frais par tâche, revue entre chaque) ou inline. Contrainte : l'exécution touche SKILL.md, DESIGN.md et references/*.md, donc Opus obligatoire, sous-agents compris.

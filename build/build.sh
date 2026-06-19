@@ -35,8 +35,8 @@ process_skill_tree() {
 
 # --- Cible Claude Code (versionnée) ---
 # Le dispatcher invoque les scripts d'outillage par leur chemin sous ce
-# skill, ils sont donc embarqués dans skills/candidature/scripts/. Pas de
-# version_check.py : la vérification de version est gérée par la marketplace.
+# skill, ils sont donc embarqués dans skills/candidature/scripts/. Aucun
+# script de vérification de version, les mises à jour passent par la marketplace.
 
 rm -rf "$SKILLS_DIR"
 process_skill_tree "$SKILLS_DIR"

@@ -25,7 +25,7 @@ content_files=(
   src/references/suivi.md
   src/references/backend-write.md
   src/references/notion-setup.md
-  src/references/modele-notion.md
+  src/references/modele-fichiers.md
   src/references/cover-letter.md
   src/references/adaptation-cv.md
   src/references/etayage.md

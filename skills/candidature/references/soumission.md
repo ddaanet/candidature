@@ -117,7 +117,8 @@ formulaire :
 
 Quand la relecture d'un champ aboutit à des corrections, éditer le fichier
 brouillon en place plutôt que de le recréer. Les itérations se font sur ce
-fichier.
+fichier. Ne pas montrer la sortie de l'écriture du fichier et le texte final
+dans la même réponse au candidat.
 
 ### Voix du candidat
 

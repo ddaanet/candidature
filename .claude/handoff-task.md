@@ -1,8 +1,7 @@
 ## Current task
 
-Les findings Minor reportés de la revue de branche sont traités et livrés sur `dev` (commit 35b3e9c, check.sh vert) ; reste à décider du push et à attaquer Plan C.
+Plan C (bascule du harnais LinkedIn de Notion vers les fichiers) est spécifié et planifié en 3 tâches TDD sur dev, prêt à exécuter via le plan `docs/superpowers/plans/2026-06-19-plan-c-harnais-fichiers.md`.
 
 ## Open decisions
 
-- Pousser `main` et `dev` vers origin. Rien n'est poussé, origin est en retard sur les deux branches, plus le commit Minor (35b3e9c) sur dev seul.
-- Plan C (D-40) : bascule du harnais navigateur LinkedIn de Notion vers les fichiers, hors périmètre Phase 2. Les noms d'outils navigateur (open_url, form_input) dans site-ouverture.md ont été laissés exprès en attendant cette livraison.
+- Mode d'exécution : en ligne dans la session (recommandé, plan petit et séquentiel, contexte déjà chargé) ou piloté par sous-agents. La Task 3 édite DESIGN.md et exige un agent Opus.

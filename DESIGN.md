@@ -959,18 +959,18 @@ La fiche était à l'origine chargée depuis Notion. Le pivot du 2026-06-19 (D-4
 en fait fiche-candidat.md à la racine du repo de données, lue à l'entrée de
 phase. La décision tient inchangée, seul le backend de la source change.
 
-### D-40 : Écartement hors parcours et réconciliation Notion vers LinkedIn
+### D-40 : Écartement hors parcours et réconciliation du dossier vers LinkedIn
 
 Cette décision porte sur le harnais LinkedIn, code JavaScript distinct du
-contenu du skill. Sa bascule de Notion vers les fichiers est un sous-plan dédié
-(Plan C), hors du pivot du 2026-06-19. Les mentions Notion ci-dessous décrivent
-l'état courant du harnais, pas le backend du skill, qui est désormais en fichiers
-(D-42). Elles seront révisées quand le sous-plan harnais sera livré.
+contenu du skill. Le Plan C, livré le 2026-06-19, a basculé le harnais de Notion
+vers les fichiers. Le harnais écrit désormais le dossier candidature en fichiers,
+au même backend que le skill (D-42). Le sous-plan est clos, les mentions
+ci-dessous décrivent l'état fichiers.
 
 Choix retenu : implémenté. Le harnais LinkedIn expose une sous-commande
-`dismiss` qui écarte une carte par jobId hors d'un parcours, la page
-candidature porte le jobId de sa carte, et `lib/notion.mjs` expose
-`archivePage` pour l'écartement d'une offre.
+`dismiss` qui écarte une carte par jobId hors d'un parcours, le dossier
+candidature porte le jobId de sa carte dans son frontmatter, et l'écartement
+d'une offre se marque dans ce frontmatter.
 
 Le reject du driver ne valait que sur la carte au focus d'un parcours actif.
 Un candidat qui annule une shortlist plus tard n'avait aucune voie propre.
@@ -981,13 +981,13 @@ D-39, voir l'axe d'audit ci-dessous.
 
 La sous-commande `walk.mjs dismiss --jobId` réutilise `gotoStream`,
 `listCards`, `readFocusedCard` et `dismissCard`, sans état de run.
-`buildPagePayload` inscrit le jobId dans le méta de la page candidature, ce qui
-relie la page Notion à la carte. `archivePage` fait une suppression douce REST
-(`archived` à vrai), symétrique de `createShortlistPage`, par jeton
-d'intégration et non par le MCP, cohérent avec la couche d'écriture du harnais.
-À l'écartement d'une offre issue d'un parcours, archiver la page et dismisser
-la carte vont de pair, sans quoi l'offre annulée réapparaît au parcours
-suivant.
+`createShortlistDossier` inscrit le jobId dans le frontmatter du dossier
+candidature, ce qui relie le dossier fichier à la carte. L'écartement d'une
+offre passe par ce frontmatter, l'agent met `statut: écartée` dans le README,
+là où l'ancien backend Notion faisait une suppression douce REST. La création
+de dossier remplace `createShortlistPage`. À l'écartement d'une offre issue
+d'un parcours, mettre `statut: écartée` et dismisser la carte vont de pair,
+sans quoi l'offre annulée réapparaît au parcours suivant.
 
 Écarté : navigation ad hoc réécrite à chaque besoin, fragile et ignorant les
 helpers éprouvés. Couplage du dismiss à la machine à états du parcours, qui ne

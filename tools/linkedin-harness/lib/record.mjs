@@ -2,7 +2,7 @@
 // Validation stricte, les champs manquants sont listés ensemble.
 import { readFileSync } from 'node:fs';
 
-const REQUIRED_STRINGS = ['title', 'company', 'role', 'location', 'workplace', 'url', 'summary'];
+const REQUIRED_STRINGS = ['title', 'company', 'role', 'location', 'workplace', 'url', 'summary', 'slug'];
 const REQUIRED_ANALYSIS = ['fit', 'company', 'differentiation'];
 
 export function validateRecord(obj) {

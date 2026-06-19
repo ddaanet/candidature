@@ -1,0 +1,9 @@
+{
+  "name": "notion-export",
+  "private": true,
+  "type": "module",
+  "description": "Export ponctuel d'un arbre de pages Notion vers une arborescence de fichiers markdown locaux. Aucune dépendance, fetch natif.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

@@ -1,5 +1,5 @@
 // Vérification scriptée : recompte Notion vs fichiers, contrôle le frontmatter statut.
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { loadToken, listChildren } from './lib/client.mjs';
 import { classifyRootChild } from './lib/classify.mjs';
@@ -52,6 +52,7 @@ console.log('Fichiers : candidatures =', candDirs.length,
   '| recherches =', await countFiles(join(outDir, 'recherches')));
 console.log('Candidatures sans frontmatter statut :', sansStatut.length, sansStatut);
 const ok = sansStatut.length === 0
+  && candDirs.length === notion.candidature
   && (await countFiles(join(outDir, 'Archive/passations'))) === notion.passations
   && (await countFiles(join(outDir, 'sites'))) === notion.sites
   && (await countFiles(join(outDir, 'recherches'))) === notion.recherches;

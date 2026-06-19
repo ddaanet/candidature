@@ -79,3 +79,53 @@ test('exportTree range les paragraphes orphelins dans _a-trier', async () => {
   assert.ok(files.has('candidatures/_a-trier.md'));
   assert.match(files.get('candidatures/_a-trier.md'), /Prospect sans page/);
 });
+
+// Stub paramétré par un arbre local, pour isoler les cas de collision de slug.
+function stubWith(tree) {
+  const fetch = async (url) => {
+    const id = url.match(/\/blocks\/([^/]+)\/children/)[1];
+    return { ok: true, status: 200, json: async () => ({ results: tree[id] || [], has_more: false, next_cursor: null }) };
+  };
+  const files = new Map();
+  const write = async (rel, content) => { files.set(rel, content); };
+  return { fetch, write, files };
+}
+
+test('deux sites homonymes produisent deux fichiers distincts', async () => {
+  const tree = {
+    root: [page('si', 'Sites', true)],
+    si: [page('g1', 'Greenhouse', true), page('g2', 'Greenhouse', true)],
+    g1: [para('g1p', 'Fiche structure du formulaire.')],
+    g2: [para('g2p', 'Fiche stratégie de remplissage.')],
+  };
+  const { fetch, write, files } = stubWith(tree);
+  const report = await exportTree({ rootId: 'root', outDir: '', token: 't', fetch, write, dateStr: '2026-06-19' });
+
+  assert.ok(files.has('sites/greenhouse.md'), 'première fiche conservée');
+  assert.ok(files.has('sites/greenhouse-2.md'), 'seconde fiche non écrasée');
+  assert.match(files.get('sites/greenhouse.md'), /structure du formulaire/);
+  assert.match(files.get('sites/greenhouse-2.md'), /stratégie de remplissage/);
+  assert.equal(report.counts.sites, 2);
+});
+
+test('deux candidatures même employeur même date produisent deux dossiers distincts', async () => {
+  const tree = {
+    root: [
+      h1('hc', 'Candidatures'),
+      page('a1', 'Acme — Backend Engineer', true),
+      para('a1i', 'Soumise le 2026-04-09 via Lever. Statut : refus. Backend Engineer.'),
+      page('a2', 'Acme — Frontend Engineer', true),
+      para('a2i', 'Soumise le 2026-04-09 via Lever. Statut : refus. Frontend Engineer.'),
+    ],
+    a1: [para('a1p', 'Poste backend.')],
+    a2: [para('a2p', 'Poste frontend.')],
+  };
+  const { fetch, write, files } = stubWith(tree);
+  const report = await exportTree({ rootId: 'root', outDir: '', token: 't', fetch, write, dateStr: '2026-06-19' });
+
+  assert.ok(files.has('candidatures/2026-04-09-acme/README.md'), 'première candidature conservée');
+  assert.ok(files.has('candidatures/2026-04-09-acme-2/README.md'), 'seconde candidature non écrasée');
+  assert.match(files.get('candidatures/2026-04-09-acme/README.md'), /poste: Backend Engineer/);
+  assert.match(files.get('candidatures/2026-04-09-acme-2/README.md'), /poste: Frontend Engineer/);
+  assert.equal(report.counts.candidatures, 2);
+});

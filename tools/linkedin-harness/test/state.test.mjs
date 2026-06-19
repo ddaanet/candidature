@@ -36,10 +36,10 @@ test('setCurrent ne mute pas l’entrée', () => {
 
 test('addShortlist ajoute sans muter', () => {
   const s = base();
-  const s2 = addShortlist(s, { title: 'A', notionPageId: 'p1' });
+  const s2 = addShortlist(s, { title: 'A', dossierPath: 'candidatures/2026-06-09-a/README.md' });
   assert.equal(s.accepted.length, 0);
   assert.equal(s2.accepted.length, 1);
-  assert.equal(s2.accepted[0].notionPageId, 'p1');
+  assert.equal(s2.accepted[0].dossierPath, 'candidatures/2026-06-09-a/README.md');
 });
 
 test('addDismiss incrémente', () => {
@@ -56,7 +56,7 @@ test('targetMet vrai quand accepted atteint la cible', () => {
 test('saveState puis loadState rend le même état', () => {
   const dir = mkdtempSync(join(tmpdir(), 'walk-state-'));
   const path = join(dir, 'run.json');
-  const s = addShortlist(base(), { title: 'A', notionPageId: 'p1' });
+  const s = addShortlist(base(), { title: 'A', dossierPath: 'candidatures/2026-06-09-a/README.md' });
   saveState(path, s);
   assert.deepEqual(loadState(path), s);
   rmSync(dir, { recursive: true, force: true });

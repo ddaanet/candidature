@@ -8,7 +8,7 @@ import {
   initState, setCurrent, addShortlist, addDismiss, addSeen, targetMet, loadState, saveState,
 } from './lib/state.mjs';
 import { loadRecord } from './lib/record.mjs';
-import { loadToken, createShortlistPage } from './lib/notion.mjs';
+import { createShortlistDossier } from './lib/dossier.mjs';
 import { gotoStream, readFocusedCard, dismissCard, advance, listCards } from './lib/stream-page.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -34,7 +34,7 @@ async function cmdStart() {
   const stream = flag('stream', 'recommended');
   const target = Number(flag('target', '3'));
   const root = flag('root');
-  if (!root) throw new Error('Passer --root <pageId> de la racine Notion.');
+  if (!root) throw new Error('Passer --root <chemin> du dépôt de candidatures.');
   const { browser, page } = await attach();
   try {
     if (!(await gotoStream(page, stream))) {
@@ -69,8 +69,8 @@ async function cmdDecide() {
     if (action === 'shortlist') {
       const record = loadRecord(flag('record'));
       const dateStr = new Date().toISOString().slice(0, 10);
-      const created = await createShortlistPage(record, { rootId: state.root, token: loadToken(), dateStr, jobId: state.current?.jobId ?? null });
-      let after = addShortlist(state, { jobId: state.current?.jobId ?? null, title: record.title, url: record.url, summary: record.summary, notionPageId: created.pageId });
+      const created = createShortlistDossier(record, { root: state.root, dateStr, jobId: state.current?.jobId ?? null });
+      let after = addShortlist(state, { jobId: state.current?.jobId ?? null, title: record.title, url: record.url, summary: record.summary, dossierPath: created.path });
       if (targetMet(after)) { saveState(STATE_PATH, after); out({ done: true, reason: 'target-met', created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
       const adv = await advance(page, state.stream, after.seen);
       if (adv.done) { saveState(STATE_PATH, after); out({ done: true, reason: adv.reason, created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }

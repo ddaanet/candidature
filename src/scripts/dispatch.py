@@ -5,6 +5,8 @@ Le flux de contrôle vit ici, pas dans l'agent. Sous-commandes status, next,
 capture-form, transition. Chaque sous-commande imprime du markdown que l'agent
 lit et suit. Le JSON ne sert qu'en entrée complexe (capture-form --fields).
 """
+import json
+import pathlib
 import re
 
 import validate
@@ -59,3 +61,45 @@ def validate_transition(target, fm):
     if target == "refus" and not fm.get("date_reponse"):
         return (False, "date_reponse requise pour le statut 'refus'")
     return (True, None)
+
+
+GABARIT = "<!-- candidature:gabarit -->"
+
+
+def read_fiche_status(root):
+    fiche = pathlib.Path(root) / "fiche-candidat.md"
+    if not fiche.is_file():
+        return "absent"
+    first = fiche.read_text(encoding="utf-8").splitlines()[:1]
+    return "gabarit" if first and first[0].strip() == GABARIT else "rempli"
+
+
+def read_dossier(root, slug):
+    readme = pathlib.Path(root) / "candidatures" / slug / "README.md"
+    if not readme.is_file():
+        return None
+    return validate.parse_frontmatter(readme.read_text(encoding="utf-8"))
+
+
+def form_captured(fm):
+    return bool(fm and fm.get("formulaire"))
+
+
+def load_form(fm):
+    raw = (fm or {}).get("formulaire")
+    return json.loads(raw) if raw else []
+
+
+def set_frontmatter_key(text, key, value):
+    """Remplace ou insère key: value dans le bloc frontmatter de tête."""
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].strip() != "---":
+        raise ValueError("frontmatter de tête absent")
+    close = next(i for i in range(1, len(lines)) if lines[i].strip() == "---")
+    newline = f"{key}: {value}\n"
+    for i in range(1, close):
+        if lines[i].split(":", 1)[0].strip() == key:
+            lines[i] = newline
+            return "".join(lines)
+    lines.insert(close, newline)
+    return "".join(lines)

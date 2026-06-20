@@ -1,4 +1,5 @@
 # tests/test_dispatch.py
+import json
 import pathlib
 import sys
 
@@ -81,3 +82,31 @@ class TestTransition:
     def test_shortlist_is_ok_without_canal(self):
         ok, reason = dispatch.validate_transition("shortlist", {})
         assert ok is True
+
+
+class TestFrontmatterIO:
+    FM = "---\nentreprise: Goodays\nstatut: shortlist\n---\n\nCorps.\n"
+
+    def test_set_existing_key_replaces_value(self):
+        out = dispatch.set_frontmatter_key(self.FM, "statut", "en attente")
+        fm = dispatch.validate.parse_frontmatter(out)
+        assert fm["statut"] == "en attente"
+        assert fm["entreprise"] == "Goodays"
+
+    def test_set_new_key_inserts_before_close(self):
+        out = dispatch.set_frontmatter_key(self.FM, "canal", "Greenhouse")
+        fm = dispatch.validate.parse_frontmatter(out)
+        assert fm["canal"] == "Greenhouse"
+        assert out.rstrip().endswith("Corps.")
+
+    def test_form_record_roundtrips_as_json_value(self):
+        fields = [{"libelle": "Lettre", "type": "texte_libre", "taille": "10 lignes"}]
+        out = dispatch.set_frontmatter_key(self.FM, "formulaire", json.dumps(fields, ensure_ascii=False))
+        fm = dispatch.validate.parse_frontmatter(out)
+        assert dispatch.form_captured(fm) is True
+        assert dispatch.load_form(fm) == fields
+
+    def test_no_form_means_not_captured(self):
+        fm = dispatch.validate.parse_frontmatter(self.FM)
+        assert dispatch.form_captured(fm) is False
+        assert dispatch.load_form(fm) == []

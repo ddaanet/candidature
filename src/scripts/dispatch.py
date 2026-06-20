@@ -5,9 +5,12 @@ Le flux de contrôle vit ici, pas dans l'agent. Sous-commandes status, next,
 capture-form, transition. Chaque sous-commande imprime du markdown que l'agent
 lit et suit. Le JSON ne sert qu'en entrée complexe (capture-form --fields).
 """
+import argparse
+import datetime
 import json
 import pathlib
 import re
+import sys
 
 import validate
 
@@ -103,11 +106,6 @@ def set_frontmatter_key(text, key, value):
             return "".join(lines)
     lines.insert(close, newline)
     return "".join(lines)
-
-
-import argparse
-import datetime
-import sys
 
 
 def render_action(action, form=None):

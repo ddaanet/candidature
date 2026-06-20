@@ -42,6 +42,6 @@ rm -rf "$SKILLS_DIR"
 process_skill_tree "$SKILLS_DIR"
 
 mkdir -p "$SKILLS_DIR/scripts"
-cp "$SRC_DIR/scripts/init_repo.py" "$SRC_DIR/scripts/validate.py" "$SKILLS_DIR/scripts/"
+cp "$SRC_DIR/scripts/init_repo.py" "$SRC_DIR/scripts/validate.py" "$SRC_DIR/scripts/dispatch.py" "$SKILLS_DIR/scripts/"
 
 echo "$SKILLS_DIR ($VERSION)"

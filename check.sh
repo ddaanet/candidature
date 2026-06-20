@@ -69,6 +69,32 @@ if [ "$style_errors" -eq 0 ]; then
   pass "aucun marqueur de contamination dans ${#content_files[@]} fichiers"
 fi
 
+# --- Scripts embarques (leur sortie markdown est vue par l'agent) ---
+# Les scripts impriment du markdown que l'agent lit et presente au candidat.
+# Un tiret cadratin ou demi-cadratin dans une chaine imprimee contamine la
+# sortie au meme titre que dans un fichier de contenu. On ne verifie que ces
+# deux caracteres : ** (kwargs, puissance) et ; (separateur) sont de la
+# syntaxe Python legitime, les scanner produirait des faux positifs.
+
+echo "Contamination des scripts embarqués"
+
+script_errors=0
+for f in src/scripts/*.py; do
+  [ -f "$f" ] || continue
+  if grep -qP '\x{2014}' "$f"; then
+    fail "$f contient des tirets cadratins"
+    script_errors=$((script_errors + 1))
+  fi
+  if grep -qP '\x{2013}' "$f"; then
+    fail "$f contient des tirets demi-cadratins"
+    script_errors=$((script_errors + 1))
+  fi
+done
+
+if [ "$script_errors" -eq 0 ]; then
+  pass "aucun tiret long dans les scripts embarqués"
+fi
+
 # --- Preprocesseur ---
 
 echo "Préprocesseur"

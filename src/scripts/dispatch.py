@@ -148,7 +148,7 @@ def render_status(repo_status, version, rows, anomalies):
         md += ["| slug | entreprise | poste | statut | canal |",
                "|------|------------|-------|--------|-------|"]
         for r in rows:
-            md.append(f"| {r['slug']} | {r['entreprise']} | {r['poste']} | {r['statut']} | {r['canal'] or '—'} |")
+            md.append(f"| {r['slug']} | {r['entreprise']} | {r['poste']} | {r['statut']} | {r['canal'] or '-'} |")
         md.append("")
     if anomalies:
         md.append("Anomalies de métadonnées.")

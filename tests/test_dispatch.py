@@ -110,3 +110,82 @@ class TestFrontmatterIO:
         fm = dispatch.validate.parse_frontmatter(self.FM)
         assert dispatch.form_captured(fm) is False
         assert dispatch.load_form(fm) == []
+
+
+class TestRender:
+    def test_render_load_phase_names_file(self):
+        md = dispatch.render_action({"action": "load_phase", "phase": "preparation",
+                                     "file": "references/preparation.md"})
+        assert "## Action" in md
+        assert "references/preparation.md" in md
+
+    def test_render_capture_form_directs_to_explore(self):
+        md = dispatch.render_action({"action": "capture_form", "phase": "soumission",
+                                     "file": "references/soumission.md", "step": "explore_form"})
+        assert "references/soumission.md" in md
+        assert "formulaire" in md.lower()
+
+    def test_render_generate_lists_fields_as_markdown(self):
+        action = {"action": "load_phase", "phase": "soumission",
+                  "file": "references/soumission.md", "step": "generate"}
+        form = [{"libelle": "Lettre", "type": "texte_libre", "taille": "10 lignes"}]
+        md = dispatch.render_action(action, form=form)
+        assert "- Lettre" in md
+        assert "texte_libre" in md
+
+    def test_render_refused_carries_reason(self):
+        md = dispatch.render_action({"refused": True, "reason": "slug inconnu"})
+        assert "Refusé" in md
+        assert "slug inconnu" in md
+
+    def test_render_status_table_has_row(self):
+        rows = [{"slug": "2026-06-19-goodays", "entreprise": "Goodays",
+                 "poste": "Data Eng", "statut": "shortlist", "canal": ""}]
+        md = dispatch.render_status("ready", 1, rows, {})
+        assert "| Goodays |" in md
+        assert "prêt" in md
+
+
+class TestCli:
+    def _repo(self, tmp_path):
+        (tmp_path / ".candidature").write_text("format: 1\n", encoding="utf-8")
+        (tmp_path / "fiche-candidat.md").write_text("Parcours rempli.\n", encoding="utf-8")
+        d = tmp_path / "candidatures" / "2026-06-19-goodays"
+        d.mkdir(parents=True)
+        (d / "README.md").write_text(
+            "---\nentreprise: Goodays\nposte: Data Eng\nstatut: shortlist\n---\n\nCorps.\n",
+            encoding="utf-8")
+        return tmp_path
+
+    def test_next_submit_without_form_prints_capture(self, tmp_path, capsys):
+        root = self._repo(tmp_path)
+        code = dispatch.main(["next", "--intent", "submit", "--slug", "2026-06-19-goodays", "--root", str(root)])
+        out = capsys.readouterr().out
+        assert code == 0
+        assert "soumission.md" in out
+        assert "formulaire" in out.lower()
+
+    def test_capture_form_then_next_prints_generate(self, tmp_path, capsys):
+        root = self._repo(tmp_path)
+        fields = '[{"libelle": "Lettre", "type": "texte_libre", "taille": "10 lignes"}]'
+        dispatch.main(["capture-form", "--slug", "2026-06-19-goodays", "--fields", fields, "--root", str(root)])
+        capsys.readouterr()
+        dispatch.main(["next", "--intent", "submit", "--slug", "2026-06-19-goodays", "--root", str(root)])
+        out = capsys.readouterr().out
+        assert "- Lettre" in out
+
+    def test_transition_refused_when_incomplete(self, tmp_path, capsys):
+        root = self._repo(tmp_path)
+        # canal fourni mais date_soumission manquante : le refus cite la date.
+        code = dispatch.main(["transition", "--slug", "2026-06-19-goodays", "--to", "en attente",
+                              "--canal", "Lever", "--root", str(root)])
+        out = capsys.readouterr().out
+        assert code == 1
+        assert "date_soumission" in out
+
+    def test_status_prints_table(self, tmp_path, capsys):
+        root = self._repo(tmp_path)
+        code = dispatch.main(["status", "--root", str(root)])
+        out = capsys.readouterr().out
+        assert code == 0
+        assert "| Goodays |" in out

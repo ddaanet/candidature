@@ -103,3 +103,139 @@ def set_frontmatter_key(text, key, value):
             return "".join(lines)
     lines.insert(close, newline)
     return "".join(lines)
+
+
+import argparse
+import datetime
+import sys
+
+
+def render_action(action, form=None):
+    if action.get("refused"):
+        return f"## Refusé\n\n{action['reason']}.\n"
+    kind = action["action"]
+    if kind == "update_skill":
+        return "## Action : mettre à jour le skill\n\nLe repo utilise un format plus récent que ce skill.\n"
+    if kind == "init":
+        return f"## Action : initialiser le repo\n\nProposition : {action['proposal']}.\n"
+    if kind == "capture_form":
+        return (f"## Action : charger une phase\n\nCharger `{action['file']}`.\n"
+                "Étape : explorer le formulaire et capturer ses champs avant toute rédaction.\n")
+    body = f"## Action : charger une phase\n\nCharger `{action['file']}`.\n"
+    if action.get("step") == "generate":
+        body += "Étape : rédaction, le formulaire est capturé.\n\nChamps du formulaire.\n\n"
+        for f in form or []:
+            body += f"- {f['libelle']} ({f['type']}, {f['taille']})\n"
+    return body
+
+
+def index_rows(root):
+    rows = []
+    base = pathlib.Path(root) / "candidatures"
+    if not base.is_dir():
+        return rows
+    for readme in sorted(base.glob("*/README.md")):
+        fm = validate.parse_frontmatter(readme.read_text(encoding="utf-8")) or {}
+        rows.append({"slug": readme.parent.name, "entreprise": fm.get("entreprise", ""),
+                     "poste": fm.get("poste", ""), "statut": fm.get("statut", ""),
+                     "canal": fm.get("canal", "")})
+    return rows
+
+
+def render_status(repo_status, version, rows, anomalies):
+    label = {"ready": f"prêt (format {version})", "uninitialized": "non initialisé",
+             "adopt": "à adopter", "too-new": "format trop récent"}[repo_status]
+    md = [f"## Repo : {label}", ""]
+    if rows:
+        md += ["| slug | entreprise | poste | statut | canal |",
+               "|------|------------|-------|--------|-------|"]
+        for r in rows:
+            md.append(f"| {r['slug']} | {r['entreprise']} | {r['poste']} | {r['statut']} | {r['canal'] or '—'} |")
+        md.append("")
+    if anomalies:
+        md.append("Anomalies de métadonnées.")
+        for dossier in sorted(anomalies):
+            md.append(f"- {dossier} : {', '.join(anomalies[dossier])}")
+    else:
+        md.append("Aucune anomalie.")
+    return "\n".join(md) + "\n"
+
+
+def _derive_state(root, slug):
+    sentinel = pathlib.Path(root) / ".candidature"
+    text = sentinel.read_text(encoding="utf-8") if sentinel.is_file() else None
+    has_cand = (pathlib.Path(root) / "candidatures").is_dir()
+    repo_status, _ = derive_repo_status(text, has_cand)
+    fm = read_dossier(root, slug) if slug else None
+    return {"repo_status": repo_status, "fiche": read_fiche_status(root),
+            "slug_known": fm is not None, "form_captured": form_captured(fm)}, fm
+
+
+def main(argv):
+    p = argparse.ArgumentParser(prog="dispatch.py")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    s = sub.add_parser("status")
+    s.add_argument("--root", default=".")
+    n = sub.add_parser("next")
+    n.add_argument("--root", default=".")
+    n.add_argument("--intent", required=True)
+    n.add_argument("--slug")
+    c = sub.add_parser("capture-form")
+    c.add_argument("--root", default=".")
+    c.add_argument("--slug", required=True)
+    c.add_argument("--fields", required=True)
+    t = sub.add_parser("transition")
+    t.add_argument("--root", default=".")
+    t.add_argument("--slug", required=True)
+    t.add_argument("--to", required=True)
+    t.add_argument("--canal")
+    t.add_argument("--date-soumission")
+    a = p.parse_args(argv)
+
+    if a.cmd == "status":
+        sentinel = pathlib.Path(a.root) / ".candidature"
+        text = sentinel.read_text(encoding="utf-8") if sentinel.is_file() else None
+        repo_status, version = derive_repo_status(text, (pathlib.Path(a.root) / "candidatures").is_dir())
+        anomalies = validate.scan(a.root, datetime.date.today())
+        print(render_status(repo_status, version, index_rows(a.root), anomalies))
+        return 0
+
+    if a.cmd == "next":
+        state, fm = _derive_state(a.root, a.slug)
+        action = route(a.intent, state)
+        print(render_action(action, form=load_form(fm)))
+        return 0
+
+    if a.cmd == "capture-form":
+        readme = pathlib.Path(a.root) / "candidatures" / a.slug / "README.md"
+        fields = json.loads(a.fields)
+        text = set_frontmatter_key(readme.read_text(encoding="utf-8"), "formulaire",
+                                   json.dumps(fields, ensure_ascii=False))
+        readme.write_text(text, encoding="utf-8")
+        print(f"## Formulaire capturé\n\n{a.slug}, {len(fields)} champ(s) enregistré(s).\n")
+        return 0
+
+    if a.cmd == "transition":
+        readme = pathlib.Path(a.root) / "candidatures" / a.slug / "README.md"
+        text = readme.read_text(encoding="utf-8")
+        fm = dict(validate.parse_frontmatter(text) or {})
+        if a.canal:
+            fm["canal"] = a.canal
+        if a.date_soumission:
+            fm["date_soumission"] = a.date_soumission
+        ok, reason = validate_transition(a.to, fm)
+        if not ok:
+            print(f"## Transition refusée\n\n{reason}.\n")
+            return 1
+        text = set_frontmatter_key(text, "statut", a.to)
+        if a.canal:
+            text = set_frontmatter_key(text, "canal", a.canal)
+        if a.date_soumission:
+            text = set_frontmatter_key(text, "date_soumission", a.date_soumission)
+        readme.write_text(text, encoding="utf-8")
+        print(f"## Transition appliquée\n\nstatut : {a.to}.\n")
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

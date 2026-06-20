@@ -1,6 +1,6 @@
 {
   "name": "candidature",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Candidature assistée : préparation, lettre de motivation, CV adapté, relecture, suivi des retours. Stockage en fichiers locaux. Contenu français.",
   "author": {
     "name": "David Allouche"

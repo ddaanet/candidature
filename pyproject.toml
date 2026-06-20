@@ -1,0 +1,11 @@
+[project]
+name = "candidature-scripts"
+version = "0"
+description = "Dev harness for the candidature plugin scripts (not shipped)."
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-markdown-report"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

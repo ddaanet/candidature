@@ -17,38 +17,26 @@ charge la phase appropriée.
 
 ## 1. Vérification du repo de données
 
-Le travail s'appuie sur un repo de données local, un répertoire dont la
-racine porte la sentinelle `.candidature`. Lire la première ligne de ce
-fichier à la racine du répertoire courant. Trois cas.
+Le travail s'appuie sur un repo de données local. Le reducer rend le verdict de
+préparation du repo.
 
-Première ligne `format: 1` : le repo est initialisé au format que ce
-skill connaît. Continuer.
+    python3 "${CLAUDE_SKILL_DIR}/scripts/dispatch.py" status
 
-Fichier absent : la sentinelle manque. Ne rien créer sans accord. Le
-répertoire détermine la proposition.
-
-Pas de dossier `candidatures/` : le répertoire est vierge. Proposer
-l'initialisation :
+La sortie nomme l'état du repo. prêt, continuer. non initialisé, le répertoire
+est vierge, proposer la création de la structure de départ. à adopter, un dossier
+candidatures existe sans la marque de format, proposer l'enregistrement sans
+toucher aux données. format trop récent, demander la mise à jour du skill et
+s'arrêter.
 
 > Ce dossier n'est pas encore un repo de candidatures. Je peux créer la structure de départ (dossiers candidatures, sites, recherches, et une fiche candidat vide). On y va ?
 
-Un dossier `candidatures/` existe déjà mais sans sentinelle : c'est un
-repo existant à adopter, par exemple issu d'une migration. Le script
-d'init est idempotent, il ajoute seulement la sentinelle et les fichiers
-de structure manquants, et ne touche à aucune donnée déjà présente.
-Proposer l'adoption :
-
 > Ce dossier contient déjà des candidatures mais pas la marque de format que le skill attend. Je peux l'enregistrer en ajoutant cette marque, sans toucher à tes données. On y va ?
 
-Dans les deux cas, si le candidat accepte, lancer
-`python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"` puis continuer.
-Sinon, s'arrêter.
-
-Première ligne avec un numéro de format supérieur à 1 : le format sur
-disque est plus récent que ce que ce skill connaît. Dire de mettre à
-jour le skill, puis s'arrêter :
-
 > Ce repo utilise un format plus récent que ce skill. Mettre à jour le skill candidature, puis relancer.
+
+Sur accord de création ou d'adoption, lancer
+`python3 "${CLAUDE_SKILL_DIR}/scripts/init_repo.py"` puis continuer. Sinon,
+s'arrêter.
 
 ## 2. Détection du navigateur
 
@@ -59,66 +47,38 @@ phases (rappel avant navigation sur un site).
 
 ## 3. Lecture de l'index des candidatures
 
-L'index des candidatures n'est pas stocké. Il se régénère par lecture
-des frontmatter des README sous `candidatures/`. Quand le dispatcher a
-besoin de la situation d'ensemble (présenter l'avancement, router sur
-l'état), lire ces frontmatter et construire le tableau à la demande.
+L'index n'est pas stocké. La sortie de `status` ci-dessus porte le tableau des
+candidatures régénéré depuis les frontmatter, et les anomalies de métadonnées.
+Présenter les anomalies au candidat sans interrompre le travail. Une anomalie est
+un signalement, pas un blocage.
 
-À la lecture de l'index, lancer `python3 "${CLAUDE_SKILL_DIR}/scripts/validate.py" .`
-sur la racine du repo de données. Le script signale les
-anomalies de métadonnées sans corriger. Le code de sortie 1 signale au
-moins une anomalie, 0 leur absence, 2 une erreur d'usage. Présenter les
-anomalies au candidat sans interrompre le travail. Une anomalie est un
-signalement, pas un blocage.
+## 4. Boucle de routage
 
-## 4. Détermination de la phase
+Le contrôle de flux vit dans le reducer, pas dans cet agent. À chaque point de
+décision, interroger le reducer et suivre son instruction. Ne pas décider du
+routage par raisonnement.
 
-Déterminer la phase à charger selon le contexte de la conversation et
-l'état des fichiers du repo de données.
+Interpréter la demande du candidat en un jeton d'intention. feedback pour un
+retour à traiter. offer pour une offre à préparer. submit pour passer à la
+soumission d'un dossier. resume pour reprendre sans intention explicite.
 
-Les règles sont évaluées dans l'ordre. La première qui correspond est
-appliquée.
+    python3 "${CLAUDE_SKILL_DIR}/scripts/dispatch.py" next --intent <jeton> [--slug <slug>]
 
-1. Si le candidat signale un retour (refus, réponse, entretien à
-   débriefer) ou utilise un déclencheur de suivi ("refus", "rejeté",
-   "debrief", "compte rendu entretien"), charger
-   `references/suivi.md`.
-
-2. Si `fiche-candidat.md` à la racine manque ou porte sur sa première
-   ligne le marqueur `<!-- candidature:gabarit -->`, charger
-   `references/profil.md`.
-
-3. Si le candidat fournit une offre d'emploi ou demande à préparer une
-   candidature ("postuler", "adapter mon CV", ou une URL/texte d'offre),
-   charger `references/preparation.md`.
-
-4. Si un dossier sous `candidatures/` correspond à l'offre en cours, que
-   la recherche contextuelle pour ce type de poste existe sous
-   `recherches/`, et que le candidat passe à la soumission (ouvrir le
-   formulaire, remplir, envoyer), charger `references/soumission.md`.
-
-5. Si aucune des règles précédentes ne s'applique et que la fiche
-   candidat existe (sans marqueur gabarit), charger
-   `references/preparation.md`.
-
-Émettre une ligne de statut indiquant la phase chargée, par exemple :
-`Phase 2, préparation.`
+La sortie est une instruction en markdown. La suivre. Charger le fichier de phase
+qu'elle nomme, ou exécuter l'action décrite, initialiser le repo, capturer le
+formulaire, mettre à jour le skill. Une instruction de refus porte sa raison, la
+présenter au candidat sans la contourner.
 
 ## 5. Transitions entre phases
 
-Le dispatcher est le seul à décider de la phase suivante. Les phases
-ne se chargent pas entre elles.
+Le reducer décide de la phase suivante. Les phases ne se chargent pas entre
+elles. Quand une phase se termine ou que le contexte change, la phase émet sa
+transition d'état par le reducer puis rend la main à la boucle de routage, qui
+rappelle next.
 
-Quand une phase se termine ou que le contexte change (le candidat
-demande autre chose, un artefact est prêt pour la soumission, un
-retour arrive), réévaluer les règles de routage de la section 4 et
-charger la nouvelle phase.
-
-La phase 3 (relecture) est une boucle interne à la soumission. Elle
-est chargée par la phase 2 soumission, pas par le dispatcher.
-
-De même, `references/etayage.md` est chargé par les phases après
-chaque brouillon. Le dispatcher ne le charge pas directement.
+La relecture est une boucle interne à la soumission, chargée par la phase
+soumission. L'étayage est chargé par les phases après chaque brouillon. Le
+reducer ne les route pas.
 
 ## Erreurs de chargement
 

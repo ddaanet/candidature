@@ -205,3 +205,11 @@ ajusté avec le candidat au moment de l'adaptation.
 > [tel aspect] de votre CV pour mettre en avant [tel point]. On le fait ?"
 
 Si oui, voir `references/adaptation-cv.md`.
+
+## Sortie de phase
+
+La préparation ne rédige aucun texte de candidature et n'ouvre pas le
+formulaire. Quand le candidat veut candidater sur une offre shortlistée, ne pas
+continuer dans cette phase. Rendre la main à la boucle de routage du dispatcher
+avec l'intention submit et le slug du dossier. Le reducer charge la soumission et
+décide de l'étape, exploration du formulaire d'abord, rédaction ensuite.

@@ -4,9 +4,10 @@ Protocole d'audit des affirmations présentes dans un artefact de
 candidature. S'applique à tout texte produit par l'agent : lettre de
 motivation, réponse formulaire, message court, CV adapté.
 
-L'audit porte sur le texte réel, pas sur des intentions. L'artefact
-existe déjà, le brouillon a été écrit dans `candidatures/<slug>/`.
-L'objectif est de vérifier ce que le texte dit effectivement.
+L'audit porte sur le texte réel, pas sur des intentions. Il s'exécute dans la
+boucle par champ de la soumission, après que le reducer a ouvert la rédaction et
+qu'un brouillon a été écrit. Il ne justifie jamais d'écrire un brouillon hors de
+cette séquence. L'objectif est de vérifier ce que le texte dit effectivement.
 
 ---
 

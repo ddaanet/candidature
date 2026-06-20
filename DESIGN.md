@@ -1029,6 +1029,11 @@ charge la source qui fait autorité avant d'agir, ou s'il improvise sur une
 reconstruction. Les deux correctifs concrets nés de ces incidents sont D-39 et
 D-40, chacun une porte locale et ancrée, pas une instruction générale.
 
+La transition de phase appartient à la même famille. L'agent agissait sur l'état
+implicite porté dans son contexte, je suis en préparation, au lieu de lire l'état
+externalisé du repo. D-46 déplace le routage et la garde dans le reducer, une
+porte ancrée de plus, pas une consigne de vigilance.
+
 ### D-41 : Abandon de la cible claude.ai, plugin Claude Code pur
 
 Choix retenu : le skill devient un plugin Claude Code pur. La cible claude.ai
@@ -1176,6 +1181,38 @@ dernier tag et ne se ferait attraper qu'à la release suivante.
 Compromis accepté : une dépendance vendue de plus dans le repo, contre une infra
 de release reproductible et partagée entre plugins, au lieu d'un build maison à
 maintenir seul.
+
+### D-46 : Reducer de contrôle de flux, 12FA
+
+Choix retenu : implémenté. Le routage de phase, les transitions de statut et la
+garde form-first quittent l'inférence de l'agent pour un reducer Python embarqué,
+`scripts/dispatch.py`, invoqué via `${CLAUDE_SKILL_DIR}/scripts/`.
+
+Le bug déclencheur, une lettre rédigée en préparation avant l'ouverture du
+formulaire, vient d'une transition tenue par de la prose. SKILL.md §5 demandait
+de réévaluer le routage sans rien forcer. C'est la porte prose-only que NFR-2 et
+D-13 identifient comme sautée. Le cadre 12-factor-agents nomme les facteurs
+violés, le 8 own your control flow, le 12 stateless reducer, le 5 unify execution
+and business state. Le repo faisait déjà du proto-12FA, la porte ancrée [outil]
+est le facteur 4.
+
+Le reducer suit le patron du harnais LinkedIn (D-35), une CLI à sous-commandes
+que l'agent appelle et suit, le contrôle de flux dans le code. Il suit le
+packaging des scripts embarqués (D-43, D-44), stdlib seul, livré dans le plugin.
+Sous-commandes status, next, capture-form, transition. La sortie destinée à
+l'agent est du markdown, le JSON est réservé à l'entrée complexe capture-form
+--fields. Le reducer dérive la phase du frontmatter et de la présence des
+fichiers, sans champ phase stocké, cohérent avec D-42. La garde form-first est la
+fonction de transition, next renvoie capture_form tant que le formulaire n'est pas
+enregistré, et ne renvoie la rédaction qu'après. L'agent ne peut pas se router
+vers la rédaction.
+
+Limite acceptée, l'agent pourrait écrire un brouillon sans consulter le reducer.
+La garantie est la boucle, même modèle de confiance que walk.mjs. C'est une
+amélioration structurelle sur la prose, pas une preuve formelle.
+
+Sources, le dépôt 12-factor-agents de HumanLayer, StateFlow déjà cité en D-22,
+VOXAM. Pas de changement de format de stockage, le format reste 1.
 
 ---
 
@@ -1408,6 +1445,14 @@ concernés.
 | 32 | Release par plugin-dev vendu en subtree v0.2.1, plugin.json source de vérité, just release | DESIGN.md D-45 | plugin-dev/ subtree (tag v0.2.1), .claude-plugin/plugin.json, plugin-dev/release.just | Étayé |
 | 33 | Hook version-guard interdit l'édition manuelle du champ version | DESIGN.md D-45 | .claude/settings.json, plugin-dev/version-guard.sh | Étayé |
 | 34 | Disparition de VERSION, plugin.json.tmpl, dev-stub.md, target stripping | DESIGN.md D-45 | spec 2026-06-19 §Build et check, arbre du repo | Étayé |
+
+### Affirmations du reducer 12FA (décision D-46)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 35 | Facteurs 12FA 8, 12, 5, 4 décrivent le bug et le correctif | DESIGN.md D-46 | dépôt 12-factor-agents (HumanLayer) | Étayé |
+| 36 | FSM déterministe de transition d'état, instructions par état | DESIGN.md D-46 | StateFlow (Wu et al., 2024), VOXAM, déjà cités D-22 | Étayé |
+| 37 | Patron CLI du harnais, contrôle de flux dans le code | DESIGN.md D-46 | tools/linkedin-harness/walk.mjs, scripts/dispatch.py | Étayé |
 
 ### Bilan
 

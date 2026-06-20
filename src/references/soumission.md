@@ -59,7 +59,21 @@ de rédiger.
 Si le navigateur n'est pas disponible : travailler avec la description fournie
 par le candidat.
 
+Une fois les champs identifiés, enregistrer le formulaire par le reducer. C'est
+l'écriture qui ouvre la rédaction.
+
+    python3 "${CLAUDE_SKILL_DIR}/scripts/dispatch.py" capture-form --slug <slug> --fields '<json>'
+
+Les champs sont une liste JSON, un objet par champ avec libelle, type et taille.
+Le type distingue texte_libre des champs factuels. Tant que le formulaire n'est
+pas enregistré, le reducer renvoie la soumission à l'exploration, pas à la
+rédaction.
+
 ## 2.7 Génération par champ
+
+La rédaction n'est atteinte que lorsque le reducer renvoie l'étape rédaction,
+formulaire capturé. La sortie de next porte alors la liste des champs. Ne pas
+rédiger un brouillon avant cette étape.
 
 Le formulaire détermine ce qui est généré. Pas de lettre de motivation
 si le formulaire n'a pas de champ pour une lettre. Pas de message

@@ -21,3 +21,4 @@ __pycache__/
 
 # Environnement de développement uv (non livré)
 .venv/
+uv.lock

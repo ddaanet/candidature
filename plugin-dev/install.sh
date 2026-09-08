@@ -2,18 +2,23 @@
 # Install or re-wire the claude-plugin-dev toolkit in the current
 # Claude Code plugin repository.
 #
-# First-time install (toolkit not yet vendored):
+# First-time install (toolkit not yet vendored). A dist- tag's root tree
+# IS toolkit/, so the tag being vendored also serves this file:
 #
-#     git clone --depth 1 -b vX.Y.Z \
-#         git@github.com:ddaanet/claude-plugin-dev.git /tmp/cpd
+#     repo=ddaanet/claude-plugin-dev
 #     cd /path/to/plugin
-#     bash /tmp/cpd/toolkit/install.sh dist-vX.Y.Z
+#     tag=$(git ls-remote --tags --refs --sort=-v:refname \
+#             "https://github.com/$repo.git" 'dist-v*' \
+#             | head -1 | sed 's|.*/||')
+#     curl -fsSL "https://raw.githubusercontent.com/$repo/$tag/install.sh" \
+#         | bash -s -- "$tag"
 #
-# Clone the SOURCE tag (vX.Y.Z) to get the script; vendor the DIST tag
-# (dist-vX.Y.Z), whose root tree is only the consumer-facing files. A
-# subtree add of the source tag would copy this repo's whole working
-# environment into the plugin -- see docs/design.md "Consumers vendor a
-# split dist ref".
+# Passing the resolved tag pins fetched script and vendored tree to one
+# release; with no ref, the newest dist- tag is resolved here instead.
+# Only the DIST tag (dist-vX.Y.Z) is vendorable -- a subtree add of the
+# SOURCE tag (vX.Y.Z) copies this repo's whole working environment into
+# the plugin. See the toolkit repo's docs/references/distribution.md,
+# "Consumers vendor a split dist ref".
 #
 # The script will:
 #   1. git subtree add the toolkit at plugin-dev/ (skipped if present)
@@ -48,7 +53,9 @@ hook_cmd='bash ${CLAUDE_PROJECT_DIR}/plugin-dev/version-guard.sh'
 # Pre-flight: validate any existing settings.json BEFORE the slow subtree
 # add, so a malformed file fails fast instead of leaving a half-installed
 # state behind.
-if [ -f "$settings" ] && ! jq empty "$settings" 2>/dev/null; then
+# jq's own parse error goes to stderr and names the line and column, which is
+# the only actionable half of this report — so it is not redirected away.
+if [ -f "$settings" ] && ! jq empty "$settings"; then
     echo "error: $settings exists but is not valid JSON. Fix it first." >&2
     exit 1
 fi
@@ -56,9 +63,16 @@ fi
 # 1. Vendor the toolkit if missing.
 if [ ! -d "$TOOLKIT_PREFIX" ]; then
     if [ -z "$ref" ]; then
-        echo "error: $TOOLKIT_PREFIX/ not found and no ref given." >&2
-        echo "usage: bash install.sh dist-vX.Y.Z   (pass a dist tag to vendor on first install)" >&2
-        exit 1
+        # Same resolver as update.sh's no-ref default. Kept as a copy here:
+        # the bootstrap script must stay runnable on its own, without
+        # depending on a sibling file.
+        ref="$(git ls-remote --tags --refs --sort=-v:refname "$TOOLKIT_URL" 'dist-v*' | sed -n '1s|.*/||p')"
+        if [ -z "$ref" ]; then
+            echo "error: could not resolve a dist tag from $TOOLKIT_URL" >&2
+            echo "hint: pass one explicitly: bash install.sh dist-vX.Y.Z" >&2
+            exit 1
+        fi
+        echo "install: resolved newest dist tag: $ref"
     fi
     # Only a dist tag is vendorable. Every other ref -- source tag, branch,
     # sha -- resolves to the toolkit's root tree, which is its own working
@@ -89,7 +103,9 @@ fi
 import_line="import 'plugin-dev/release.just'"
 if [ -f justfile ]; then
     if ! grep -qxF "$import_line" justfile; then
-        printf '%s\n\n%s' "$import_line" "$(cat justfile)" > justfile.tmp
+        # Trailing '\n': $(cat justfile) strips every trailing newline, so
+        # without one the consumer's justfile comes back with no final newline.
+        printf '%s\n\n%s\n' "$import_line" "$(cat justfile)" > justfile.tmp
         mv justfile.tmp justfile
         changed+=("justfile (added import)")
     fi
@@ -107,31 +123,52 @@ EOF
     changed+=("justfile (created)")
 fi
 
-# 3. .claude/settings.json hook block. Single jq pass: read (or stub),
-# append the hook only if not already present, write only if changed.
+# 3. .claude/settings.json hook block. Append the hook only if not already
+# present, and write only if that changed something.
+#
+# The two cases are separate branches, not a jq failure falling through to a
+# fallback: the fallback writes a document holding nothing but this hook, so
+# reaching it with an existing settings.json replaces the consumer's whole
+# configuration. `.matcher == null` is what used to get there — a PreToolUse
+# entry with no matcher is legal and matches every tool, but `null | test(...)`
+# aborts jq with exit 5.
 mkdir -p .claude
 tmp="$(mktemp)"
-jq --arg cmd "$hook_cmd" '
-  if ([.hooks.PreToolUse[]? | select(.matcher | test("Write|Edit"))
-       | .hooks[]? | select(.command == $cmd)] | length > 0)
-  then .
-  else .hooks //= {} |
-       .hooks.PreToolUse //= [] |
-       .hooks.PreToolUse += [{
-         matcher: "Write|Edit",
-         hooks: [{type: "command", command: $cmd}]
-       }]
-  end
-' "${settings}" 2>/dev/null > "$tmp" || jq --arg cmd "$hook_cmd" -n '
-  {hooks: {PreToolUse: [{matcher: "Write|Edit",
-                         hooks: [{type: "command", command: $cmd}]}]}}
-' > "$tmp"
-
-if ! [ -f "$settings" ] || ! cmp -s "$settings" "$tmp"; then
-    mv "$tmp" "$settings"
-    changed+=("$settings (added version-guard hook)")
+if [ -f "$settings" ]; then
+    jq --arg cmd "$hook_cmd" '
+      if ([.hooks.PreToolUse[]?
+           | select(.matcher == null or (.matcher | test("Write|Edit")))
+           | .hooks[]? | select(.command == $cmd)] | length > 0)
+      then .
+      else .hooks //= {} |
+           .hooks.PreToolUse //= [] |
+           .hooks.PreToolUse += [{
+             matcher: "Write|Edit",
+             hooks: [{type: "command", command: $cmd}]
+           }]
+      end
+    ' "$settings" > "$tmp" || {
+        rm -f "$tmp"
+        echo "error: could not rewrite $settings — left unchanged." >&2
+        exit 1
+    }
 else
+    jq --arg cmd "$hook_cmd" -n '
+      {hooks: {PreToolUse: [{matcher: "Write|Edit",
+                             hooks: [{type: "command", command: $cmd}]}]}}
+    ' > "$tmp"
+fi
+
+if [ -f "$settings" ] && cmp -s "$settings" "$tmp"; then
     rm -f "$tmp"
+else
+    # Write through the destination rather than `mv`-ing the mktemp file over
+    # it: mktemp creates 0600, and mv carries that mode onto the consumer's
+    # settings file. Redirection keeps an existing file's mode, ownership and
+    # ACL, and creates a new one at the umask like any other tool would.
+    cat "$tmp" > "$settings"
+    rm -f "$tmp"
+    changed+=("$settings (added version-guard hook)")
 fi
 
 if [ "${#changed[@]}" -eq 0 ]; then

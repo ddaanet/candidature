@@ -6,3 +6,6 @@ import 'plugin-dev/release.just'
 precommit:
     ./build/build.sh
     ./check.sh
+
+# Porte de release. Le toolkit plugin-dev exige cette recette.
+prerelease: precommit

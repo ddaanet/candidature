@@ -10,21 +10,9 @@
           }
         ]
       }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '{\"systemMessage\":\"Directive CLAUDE.local.md : charger la page Notion CLAUDE.md (notion_claude_md) avant de repondre.\"}'",
-            "timeout": 5
-          }
-        ]
-      }
     ]
   },
   "enabledPlugins": {
-    "superpowers@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "gitlore@ddaanet": true,
     "plugin-dev@claude-plugins-official": true,

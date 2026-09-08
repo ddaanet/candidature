@@ -10,7 +10,7 @@ description: >-
 
 # Candidature, dispatcher
 
-Version: 0.6.0
+Version: 0.7.0
 
 Point d'entrée. Vérifie le repo de données, détecte les capacités,
 charge la phase appropriée.

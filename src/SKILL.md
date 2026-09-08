@@ -10,8 +10,6 @@ description: >-
 
 # Candidature, dispatcher
 
-Version: {{VERSION}}
-
 Point d'entrée. Vérifie le repo de données, détecte les capacités,
 charge la phase appropriée.
 

@@ -45,19 +45,100 @@ check_marketplace_writable() {
     # bump_marketplace replaces marketplace.json with mktemp + mv, which unlinks
     # and recreates the file in its directory — so probe the directory, not just
     # the file's mode bits. A sandboxed Bash call commonly can't write here.
+    # 2>&1, not 2>/dev/null: on failure $probe carries mktemp's own diagnosis
+    # (permission denied, read-only file system, no such directory), which is
+    # the only thing that distinguishes them. The sandbox line below is advice
+    # for the common case, not a cause this probe established.
     local probe
-    probe=$(mktemp "$marketplace_dir/.release-writability-check.XXXXXX" 2>/dev/null) \
-        || die "$marketplace_dir is not writable — release needs to replace marketplace.json there. If this is a Claude Code sandbox restriction: rerun this Bash call with dangerouslyDisableSandbox, or run '/add-dir $MARKETPLACE_DIR' first."
+    probe=$(mktemp "$marketplace_dir/.release-writability-check.XXXXXX" 2>&1) \
+        || die "$marketplace_dir is not writable: $probe — release needs to replace marketplace.json there. If this is a Claude Code sandbox restriction: rerun this Bash call with dangerouslyDisableSandbox, or run '/add-dir $MARKETPLACE_DIR' first."
     rm -f "$probe"
+}
+
+tree_is_clean() {
+    # $1=repo root. True when nothing tracked is uncommitted there, ignoring the
+    # paths clean_pathspecs exempts.
+    clean_pathspecs "$1"
+    git -C "$1" diff --quiet HEAD -- "${clean_specs[@]}"
+}
+
+clean_pathspecs() {
+    # $1=repo root. Sets two globals describing the check tree_is_clean applies
+    # there: $clean_specs, the pathspecs, and $clean_exempt, the same set in the
+    # words report_dirty prints. They are built together so a refusal names the
+    # exemptions that were actually applied rather than a list written from
+    # memory — a consumer whose vendored plugin-dev/ predates one of them would
+    # otherwise be told about an exclusion its own copy does not make.
+    #
+    # Two paths are exempt, both because an agent session moves them by design
+    # between commits.
+    #
+    # `.claude/` is the repo's own agent working environment — settings, hooks,
+    # and the task frames the handoff and precompact skills stage for "whatever
+    # commit lands next". None of it is plugin content: a plugin ships
+    # .claude-plugin/ and the component directories beside it. Excluded whole
+    # rather than by filename, because the set of files written there is a
+    # function of which skills the maintainer runs, not of this script. The
+    # pathspec matches at the path separator, so .claude-plugin/ — where a dirty
+    # file must still stop a release — is untouched by it.
+    #
+    # The second is a gitlore-mounted memory submodule: its gitlink sits ahead
+    # of what HEAD records between commits by design — gitlore's own pre-commit
+    # hook folds that in on the next commit, not this one.
+    #
+    # The mount path is read from .gitmodules rather than assumed to be
+    # `memory`: that is only gitlore's default, the path being $1 to gitlore's
+    # install.sh. Keyed on the submodule NAME, which gitlore fixes, not its url
+    # — git absolutises a relative url on the way into .git/config, so a url
+    # only ever matches .gitmodules itself. `--get` of a single key returns the
+    # value whole, so a path containing spaces needs no -z splitting.
+    #
+    # Deliberately this narrow. A consumer that vendors some other submodule
+    # and forgets to commit its moved gitlink should be refused, so
+    # `--ignore-submodules=all` is not the shortcut it looks like.
+    local dir="$1" mem=""
+    clean_specs=(. ':(exclude).claude')
+    clean_exempt=(".claude/ — agent working state (settings, hooks, staged handoff frames), none of it plugin content")
+    if [ -f "$dir/.gitmodules" ]; then
+        mem=$(git config -f "$dir/.gitmodules" --get submodule.gitlore-memory.path) || mem=""
+    fi
+    if [ -n "$mem" ]; then
+        clean_specs+=(":(exclude)$mem")
+        clean_exempt+=("$mem/ — the gitlore memory submodule, whose gitlink the next commit folds in")
+    fi
+}
+
+report_dirty() {
+    # $1=repo root, $2=what to call it in the message. Prints what made it
+    # dirty, then the exemptions that did not save it. Callers add the
+    # site-specific consequence and next command, then die.
+    #
+    # -z / read -d '': a path containing a space is one path, and a word-split
+    # read of --name-only would report it as several. A path containing a
+    # newline still prints across two lines — git has no quoting mode that
+    # survives -z — which is the residual bound here.
+    local dir="$1" label="$2" p
+    clean_pathspecs "$dir"
+    printf 'hint: these tracked paths in %s differ from HEAD:\n' "$label" >&2
+    while IFS= read -r -d '' p; do
+        printf '        %s\n' "$p" >&2
+    done < <(git -C "$dir" diff -z --name-only HEAD -- "${clean_specs[@]}")
+    printf '      exempt from this check, and so not among the paths above:\n' >&2
+    for p in "${clean_exempt[@]}"; do
+        printf '        %s\n' "$p" >&2
+    done
+    printf '      .claude-plugin/ is NOT exempt — git pathspecs match at the path\n' >&2
+    printf '      separator, so a dirty manifest still refuses.\n' >&2
 }
 
 common_preflight() {
     [ -f "$manifest" ] || die "$manifest not found — run from the plugin root"
-    # Exclude memory/: a gitlore-mounted memory submodule sits at a gitlink SHA
-    # ahead of what HEAD records between commits by design — its own pre-commit
-    # hook folds that in on the next commit, not this one. A no-op pathspec in
-    # any repo without a memory/ path.
-    git diff --quiet HEAD -- . ':(exclude)memory' || die "uncommitted changes"
+    tree_is_clean "." || {
+        report_dirty "." "the plugin repo"
+        printf '      commit or stash them, then run the same command again. the release\n' >&2
+        printf '      commit must be the only thing this run lands.\n' >&2
+        die "uncommitted changes"
+    }
     branch=$(git symbolic-ref -q --short HEAD || echo "")
     # Use symbolic-ref (not rev-parse): when origin/HEAD is unset, rev-parse
     # exits non-zero AND prints "origin/HEAD" to stdout, so the substitution
@@ -69,12 +150,20 @@ common_preflight() {
         || die "MARKETPLACE_DIR not set (set in .envrc to the claude-plugins repo root)"
     marketplace_json="$MARKETPLACE_DIR/.claude-plugin/marketplace.json"
     [ -f "$marketplace_json" ] || die "$marketplace_json not found"
+    # A detached HEAD there is only discovered by the marketplace push, which
+    # runs after the plugin's commit, tag, tag push and GitHub release are all
+    # public. Catch it here instead, with the other MARKETPLACE_DIR checks.
+    git -C "$MARKETPLACE_DIR" symbolic-ref -q --short HEAD >/dev/null \
+        || die "$MARKETPLACE_DIR is on a detached HEAD — check out its branch first"
     marketplace_dir=$(dirname "$marketplace_json")
     # A release always bumps to a version the marketplace doesn't have yet, so
     # the write is never a no-op — check fails fast here, before the tag and
     # the GitHub release. A resume may find the marketplace already correct
     # (a true no-op bump_marketplace can skip entirely); its own writability
     # need is checked there, only when a write actually happens.
+    # Keep this off the last line of the function: a false `&&` list is exempt
+    # from errexit mid-function, but as the final command its status becomes the
+    # function's, and `common_preflight` would exit 1 with no message on resume.
     [ "$mode" = "release" ] && check_marketplace_writable
     plugin_name=$(jq -r .name "$manifest")
     # A missing entry is not an error: on first publication we create one from
@@ -87,8 +176,23 @@ common_preflight() {
         git remote get-url origin >/dev/null 2>&1 \
             || die "'$plugin_name' has no entry in $marketplace_json and no 'origin' remote to derive one from"
     fi
-    git -C "$MARKETPLACE_DIR" diff --quiet HEAD -- . ':(exclude)memory' \
-        || die "$MARKETPLACE_DIR has uncommitted changes"
+    # This refusal costs more than the plugin-repo one. The marketplace bump is
+    # the last step of a release and its only write outside the plugin repo, so
+    # a run that already reached it — and staged the bump before its commit was
+    # refused — has everything before it public. That state reads here as an
+    # unrelated dirty file, and stops the very command that would finish the
+    # release. Say so, and name it.
+    tree_is_clean "$MARKETPLACE_DIR" || {
+        report_dirty "$MARKETPLACE_DIR" "$MARKETPLACE_DIR"
+        printf '      the marketplace bump is the last step of a release and its only write\n' >&2
+        printf '      outside the plugin repo, so a run refused here may have left the version\n' >&2
+        printf '      commit, tag, branch push and GitHub release already public.\n' >&2
+        # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+        printf '      commit or stash the paths above in that repo, then run `just resume-release`\n' >&2
+        printf '      to finish a release that got that far — or the same command again if the\n' >&2
+        printf '      tag for the version being released does not exist yet.\n' >&2
+        die "$MARKETPLACE_DIR has uncommitted changes"
+    }
 }
 
 release_preflight() {
@@ -124,6 +228,10 @@ release_preflight() {
             printf 'hint: a first release publishes the manifest version as-is — there is no\n' >&2
             printf '      previous release to bump forward from. Re-run with no bump argument\n' >&2
             printf '      to publish v%s.\n' "$manifest_version" >&2
+            printf '      to publish some other version instead, set .version in %s\n' "$manifest" >&2
+            printf '      to it first and then re-run with no bump argument. That edit is the\n' >&2
+            printf '      one the version-guard hook refuses from an agent: it is the\n' >&2
+            printf '      maintainer who decides what a plugin first ships as.\n' >&2
             die "'$bump_arg' bump refused: this plugin has never been released"
         fi
         V="$manifest_version"
@@ -133,11 +241,25 @@ release_preflight() {
         return
     fi
 
-    latest_tag=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || true)
+    # `git tag --list 'v*'` for the same reason as the first-release check
+    # above, plus one more: describe returns the nearest tag of ANY name,
+    # distance-ordered rather than version-ordered, so any unrelated tag on a
+    # later commit reads as the last release. --sort=-v:refname orders by
+    # version; sed -n '1s…p' takes the newest without exiting early, which
+    # under pipefail would surface as a SIGPIPE on a repo with many tags.
+    latest_tag=$(git tag --list 'v*' --sort=-v:refname | sed -n '1s/^v//p')
     if [ -n "$latest_tag" ] && [ "$manifest_version" != "$latest_tag" ]; then
+        printf 'hint: plugin.json holds the LAST released version, never the next one.\n' >&2
         # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
-        printf 'hint: plugin.json holds the LAST released version. `just release` bumps from there.\n' >&2
-        printf '      revert any manual version bump and re-run.\n' >&2
+        printf '      `just release <bump>` computes the next one from it, so a manifest\n' >&2
+        printf '      ahead of the newest tag means the bump was already written by hand and\n' >&2
+        printf '      this run would publish a version past the one that was intended.\n' >&2
+        # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+        printf '      revert it with `git checkout HEAD -- %s`, then re-run\n' "$manifest" >&2
+        printf '      with the bump you want.\n' >&2
+        printf '      if v%s was in fact released and only the tag is missing here,\n' "$manifest_version" >&2
+        # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+        printf '      `git fetch --tags` and re-run.\n' >&2
         die "plugin.json version ($manifest_version) does not match latest tag (v$latest_tag)"
     fi
     V=$(jq -r --arg bump "$bump" '
@@ -177,11 +299,24 @@ bump_commit_tag() {
         note "tag: $tag created locally (manifest already at $V)"
         return
     fi
+    local prev
+    prev=$(jq -r .version "$manifest")
     tmp=$(mktemp)
     jq --arg v "$V" '.version = $v' "$manifest" > "$tmp"
     mv "$tmp" "$manifest"
     git add "$manifest"
-    git commit -m "release: $V"
+    # A consumer's pre-commit hook can refuse this commit. Dying here with the
+    # bump written and staged strands it: nothing committed, nothing tagged, and
+    # a dirty manifest that then blocks BOTH a re-run and --resume on
+    # common_preflight's "uncommitted changes" — which names neither the gate nor
+    # the leftover. Restoring from HEAD leaves the tree as this run found it, so
+    # satisfying the gate and re-running is the whole recovery.
+    git commit -m "release: $V" || {
+        git checkout HEAD -- "$manifest"
+        printf 'hint: the manifest was rolled back to %s and nothing was tagged.\n' "$prev" >&2
+        printf '      fix what the gate reported above, then run the same command again.\n' >&2
+        die "commit gate refused the release commit"
+    }
     git tag -a "$tag" -m "Release $V"
     acted=1
     note "manifest + tag: $tag created locally"
@@ -194,7 +329,23 @@ push_branch() {
         note "branch $branch: already pushed"
         return
     fi
-    git push
+    # A consumer's pre-push hook can refuse this. gitlore's publishes every
+    # memory store before the parent push and refuses when one diverged, and the
+    # window it opens is human-paced: the release commit's own approval round
+    # sits inside it. The commit and the tag are already local, so the recovery
+    # is resume — never an amend re-pinning the gitlink at the merged memory.
+    # The gitlink a release commit records is always an ancestor of memory's
+    # `live` or `live` itself (each merge takes the pending commit as its second
+    # parent), and a push of `live` publishes every ancestor — so nothing needs
+    # the tagged commit to name the merge, and the tag is never rewritten.
+    # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+    git push || {
+        printf 'hint: the release commit and tag %s are local; nothing was pushed.\n' "$tag" >&2
+        printf '      clear what the push reported above, then run `just resume-release`.\n' >&2
+        printf '      gitlore refuses the push while a memory store is diverged: `/gitlore:resolve`\n' >&2
+        printf '      in Claude Code clears it. Repeat the pair if the push is refused again.\n' >&2
+        die "push of $branch failed"
+    }
     acted=1
     note "branch $branch: pushed"
 }
@@ -258,6 +409,12 @@ bump_marketplace() {
         rm -f "$mp_tmp"
     else
         check_marketplace_writable
+        # mktemp creates 0600 and mv carries that mode onto the destination, so
+        # every bump silently narrowed a tracked file. 644 is the mode a clone
+        # of the marketplace repo gets under the usual umask; the mv is kept
+        # (rather than writing through the file) because the no-op guard above
+        # depends on the replace needing directory write, not file write.
+        chmod 644 "$mp_tmp"
         mv "$mp_tmp" "$marketplace_json"
         git -C "$MARKETPLACE_DIR" add .claude-plugin/marketplace.json
     fi
@@ -269,7 +426,23 @@ bump_marketplace() {
     if git -C "$MARKETPLACE_DIR" diff --cached --quiet; then
         : # already at $V locally; still must check whether it reached origin
     else
-        git -C "$MARKETPLACE_DIR" commit -m "release: $plugin_name $V"
+        # A hook in the marketplace repo can refuse this, and by now everything
+        # before it is public. Leaving the bump staged strands it: common_preflight
+        # reads that as an unrelated dirty tree and refuses `resume-release`, the
+        # one command that would finish the release. Restore from HEAD for the
+        # same reason bump_commit_tag does — common_preflight established that
+        # tree clean, so this leaves it as this run found it, and resume can then
+        # write the bump again and push it with no manual repair in between.
+        git -C "$MARKETPLACE_DIR" commit -m "release: $plugin_name $V" || {
+            git -C "$MARKETPLACE_DIR" checkout HEAD -- .claude-plugin/marketplace.json
+            printf 'hint: %s is public through its GitHub release; only the\n' "$tag" >&2
+            printf '      marketplace entry is behind. the bump to %s was rolled back, so\n' "$V" >&2
+            printf '      %s is as this run found it.\n' "$MARKETPLACE_DIR" >&2
+            # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+            printf '      fix what the gate reported above, then run `just resume-release`,\n' >&2
+            printf '      which writes the bump again and pushes it.\n' >&2
+            die "commit gate refused the marketplace bump"
+        }
         committed=1
         acted=1
     fi
@@ -290,7 +463,21 @@ bump_marketplace() {
         return
     fi
 
-    git -C "$MARKETPLACE_DIR" push
+    # The last outward step of the whole release, and the only one in another
+    # repo. Under Claude Code's auto-mode classifier this is where a push is
+    # refused as an external repo outside the trusted source-control org —
+    # check_marketplace_writable's /add-dir advice covers the file write, not
+    # this. Everything else is already public by now, so the message has to say
+    # that rather than leave a bare git error as the last word.
+    git -C "$MARKETPLACE_DIR" push || {
+        printf 'hint: %s is public through its GitHub release, and the marketplace bump\n' "$tag" >&2
+        printf '      to %s is committed in %s — only the push is missing.\n' "$V" "$MARKETPLACE_DIR" >&2
+        # shellcheck disable=SC2016  # backticks are literal markdown, not command substitution
+        printf '      clear what the push reported above, then run `just resume-release`.\n' >&2
+        printf '      if Claude Code refused it as a repo outside the trusted source-control\n' >&2
+        printf "      org, run '/add-dir %s' first.\n" "$MARKETPLACE_DIR" >&2
+        die "push of the marketplace bump failed"
+    }
     acted=1
     if [ "$committed" = 1 ]; then
         if [ "$marketplace_entry_exists" = 1 ]; then

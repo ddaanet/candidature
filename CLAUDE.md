@@ -83,15 +83,13 @@ anglicismes quand un équivalent courant existe. Exception : les termes sans
 
 ## Branches
 
-`main` reçoit des livrables, pas des brouillons. `dev` sert au travail en
-cours, aux explorations, aux plans.
+Le développement se fait directement sur `main`. Il n'y a plus de branche
+`dev` ni de merge de livraison. L'historique est linéaire, chaque commit est
+une unité thématique cohérente qui laisse l'arbre au vert.
 
-Merger `dev` vers `main` en `--no-ff` pour les livrables de plus d'un commit,
-avec un message de merge rédigé (pas le message par défaut). La friction est
-faible, le signal est élevé. Si quelqu'un regarde l'historique, il voit des
-livrables nommés.
-
-Un commit unique peut aller directement sur `main`.
+Une branche reste utile pour un travail long qui casserait `main` entre deux
+étapes. La refermer en `--no-ff` avec un message rédigé, pas le message par
+défaut.
 
 ## Messages de commit
 

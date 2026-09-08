@@ -95,16 +95,6 @@ if [ "$script_errors" -eq 0 ]; then
   pass "aucun tiret long dans les scripts embarqués"
 fi
 
-# --- Preprocesseur ---
-
-echo "Préprocesseur"
-if preprocess_output=$(bash build/preprocess.test.sh 2>&1); then
-  pass "preprocess.test.sh OK"
-else
-  fail "preprocess.test.sh a échoué"
-  echo "$preprocess_output"
-fi
-
 # --- References internes ---
 
 echo "References internes"

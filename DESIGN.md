@@ -796,8 +796,9 @@ compris les fichiers techniques et le dispatcher.
 
 Caduque depuis le pivot du 2026-06-19. Supersédée par D-41 et D-45, le dépôt ne
 produit plus qu'un seul artefact, `skills/candidature/`, pour la cible Claude
-Code. Les blocs `target:` ont disparu et le préprocesseur ne substitue plus que
-`{{VERSION}}`. L'historique ci-dessous décrit l'état antérieur au pivot.
+Code. Les blocs `target:` ont disparu avec le pivot, et le préprocesseur avec
+eux : l'artefact ne porte plus de numéro de version, le build est une copie
+pure. L'historique ci-dessous décrit l'état antérieur au pivot.
 
 Choix retenu : le dépôt produit deux artefacts depuis une source unique
 `src/`. Les blocs `<!-- target: claude-ai|claude-code -->` isolent le
@@ -1328,7 +1329,6 @@ candidature/
     plugin.json
   build/
     build.sh
-    preprocess.awk
   plugin-dev/
   tools/
 ```
@@ -1336,8 +1336,9 @@ candidature/
 `src/` est la source unique. `build.sh` en dérive un seul artefact, le plugin
 Claude Code versionné sous `skills/candidature/` avec son
 `.claude-plugin/plugin.json` (D-34). La cible claude.ai et son `.skill` sont
-abandonnés (D-41), le build deux-cibles, le stub dev et le template
-`plugin.json.tmpl` ont disparu (D-45). `plugin-dev/` est le toolkit de release
+abandonnés (D-41), le build deux-cibles, le stub dev, le template
+`plugin.json.tmpl` et le préprocesseur ont disparu (D-45). `build.sh` est une
+copie pure. `plugin-dev/` est le toolkit de release
 vendu par git subtree (D-45). Les scripts `init_repo.py` et `validate.py` sont
 embarqués dans le plugin (D-43, D-44). Les fichiers de phase dans `references/`
 remplacent le workflow monolithique SKILL.md (D-24). Le dispatcher charge une

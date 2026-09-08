@@ -1,35 +1,33 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Assemble le plugin Claude Code depuis src/ via le préprocesseur :
+# Assemble le plugin Claude Code depuis src/ :
 #   skills/candidature/   contenu versionné, lu depuis le cache plugin
 #
-# La version est lue depuis .claude-plugin/plugin.json, la source de vérité.
-# Le manifeste n'est plus généré ici, et le build ne tague plus : la release
-# passe par `just release {patch|minor|major}` (toolkit plugin-dev).
+# Copie pure, sans transformation. L'artefact ne porte plus de numéro de
+# version : il dérivait à chaque release, la version vit dans
+# .claude-plugin/plugin.json, la source de vérité. Le manifeste n'est pas
+# généré ici, et le build ne tague pas : la release passe par
+# `just release {patch|minor|major}` (toolkit plugin-dev).
 #
 # Usage :
-#   ./build/build.sh   assemble skills/candidature/ à la version du manifeste
+#   ./build/build.sh   assemble skills/candidature/
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 SRC_DIR="$REPO_DIR/src"
-PREPROCESS="$SCRIPT_DIR/preprocess.awk"
 SKILLS_DIR="$REPO_DIR/skills/candidature"
-PLUGIN_JSON="$REPO_DIR/.claude-plugin/plugin.json"
 
-VERSION="$(jq -r .version "$PLUGIN_JSON")"
-
-# Compile un arbre src/ (SKILL.md + references/) vers un répertoire de sortie.
+# Copie un arbre src/ (SKILL.md + references/) vers un répertoire de sortie.
 # $1 répertoire de sortie. Préserve la hiérarchie references/sites/.
 process_skill_tree() {
     local out="$1" f rel
     mkdir -p "$out"
-    awk -v version="$VERSION" -f "$PREPROCESS" "$SRC_DIR/SKILL.md" > "$out/SKILL.md"
+    cp "$SRC_DIR/SKILL.md" "$out/SKILL.md"
     while IFS= read -r -d '' f; do
         rel="${f#"$SRC_DIR"/}"
         mkdir -p "$out/$(dirname "$rel")"
-        awk -v version="$VERSION" -f "$PREPROCESS" "$f" > "$out/$rel"
+        cp "$f" "$out/$rel"
     done < <(find "$SRC_DIR/references" -name '*.md' -print0)
 }
 
@@ -44,4 +42,4 @@ process_skill_tree "$SKILLS_DIR"
 mkdir -p "$SKILLS_DIR/scripts"
 cp "$SRC_DIR/scripts/init_repo.py" "$SRC_DIR/scripts/validate.py" "$SRC_DIR/scripts/dispatch.py" "$SKILLS_DIR/scripts/"
 
-echo "$SKILLS_DIR ($VERSION)"
+echo "$SKILLS_DIR"

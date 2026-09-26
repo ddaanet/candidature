@@ -986,9 +986,18 @@ La sous-commande `walk.mjs dismiss --jobId` réutilise `gotoStream`,
 candidature, ce qui relie le dossier fichier à la carte. L'écartement d'une
 offre passe par ce frontmatter, l'agent met `statut: écartée` dans le README,
 là où l'ancien backend Notion faisait une suppression douce REST. La création
-de dossier remplace `createShortlistPage`. À l'écartement d'une offre issue
-d'un parcours, mettre `statut: écartée` et dismisser la carte vont de pair,
-sans quoi l'offre annulée réapparaît au parcours suivant.
+de dossier remplace `createShortlistPage`.
+
+Révision du 2026-09-26. LinkedIn ne connaît pas le statut shortlist. Le
+Dismiss n'existe que dans la liste paginée des flux et signifie seulement
+« carte traitée ». Son absence de `/jobs/view/<id>/` est normale, et le flux
+ouvert avec `?currentJobId=<id>` ne rend pas la carte dans la liste. Une carte
+que le flux ne rend plus ne peut donc plus être marquée traitée. `dismiss` a
+rendu not-found sur sept cartes retenues entre le 2026-09-01 et le 2026-09-08,
+sur `recommended` comme sur `top-applicant`. Le statut `écartée` du dossier
+fait alors garde contre le retour de l'offre, et la comparaison d'entreprise
+et de titre aux dossiers existants rattrape les republications sous un nouveau
+jobId.
 
 Écarté : navigation ad hoc réécrite à chaque besoin, fragile et ignorant les
 helpers éprouvés. Couplage du dismiss à la machine à états du parcours, qui ne
@@ -1454,6 +1463,12 @@ concernés.
 | 35 | Facteurs 12FA 8, 12, 5, 4 décrivent le bug et le correctif | DESIGN.md D-46 | dépôt 12-factor-agents (HumanLayer) | Étayé |
 | 36 | FSM déterministe de transition d'état, instructions par état | DESIGN.md D-46 | StateFlow (Wu et al., 2024), VOXAM, déjà cités D-22 | Étayé |
 | 37 | Patron CLI du harnais, contrôle de flux dans le code | DESIGN.md D-46 | tools/linkedin-harness/walk.mjs, scripts/dispatch.py | Étayé |
+
+### Affirmations du harnais LinkedIn (révision D-40)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 38 | Le Dismiss n'existe que dans la liste paginée du flux, une carte que le flux ne rend plus ne peut plus être marquée traitée | DESIGN.md D-40 | Emploi/sites/linkedin.md 2026-09-01 et 2026-09-08, sonde du 2026-09-26 dans tools/linkedin-harness/DESIGN.md | Étayé |
 
 ### Bilan
 

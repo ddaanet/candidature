@@ -8,13 +8,15 @@ Sources : `inbox/brief-correctifs-candidature-2026-08-27.md`,
 datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
 `correctifs.md` intégrée en sort, côté session Emploi.
 
-- [ ] Lot 1, défauts du harnais. `decide --action shortlist` sans `--record`
+- [x] Lot 1, défauts du harnais. `decide --action shortlist` sans `--record`
   plante en TypeError (`walk.mjs`, `loadRecord(undefined)`), refus explicite
   et test. `attach.mjs` reprend `ctx.pages()[0]` (brouillon InMail perdu le
   2026-09-13), ouvrir un onglet propre par `/json/new`. Supprimer la
   découverte de `streams.mjs`, documenter `recommended` et `top-applicant`.
   `dismiss --jobId` sur carte shortlistée : sonder `/jobs/view/<id>/` en
-  direct, sinon documenter l'impossibilité. README réaligné sur les fichiers
+  direct. Le Dismiss n'existe que dans la liste du flux (carte traitée), une
+  carte que le flux ne rend plus ne peut plus être marquée. README réaligné
+  sur les fichiers
   (plus de `NOTION_TOKEN`, `--root` racine du repo de données, `slug` dans
   l'exemple JSON, `--record` obligatoire).
 - [ ] Lot 2, outils navigateur multi-agents. `tab.mjs` et `cdp.mjs` dans le

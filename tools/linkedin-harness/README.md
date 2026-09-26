@@ -6,7 +6,8 @@ Code. La conception détaillée et la carte des flux sont dans DESIGN.md.
 ## Prérequis
 
 Un chromium système et node. La dépendance s'installe avec npm install dans ce
-dossier. Elle ne télécharge pas de navigateur.
+dossier. Elle ne télécharge pas de navigateur. Les commandes qui attachent le
+navigateur tournent hors sandbox.
 
 ## Lancer le navigateur
 
@@ -16,31 +17,37 @@ dossier. Elle ne télécharge pas de navigateur.
 Se connecter à LinkedIn à la main dans cette fenêtre. La session persiste dans
 le profil entre les lancements, jusqu'à expiration du cookie côté LinkedIn.
 
-## Identifier les flux
+## Onglet du harnais
 
-npm run streams attache Playwright à la session ouverte et liste les sections et
-les collections de la page jobs. Si la session n'est pas connectée, le script le
-signale et s'arrête.
+Le harnais ne touche à aucun onglet ouvert par le candidat. Au premier appel,
+il ouvre son propre onglet et l'inscrit sous le nom flux dans
+/tmp/claude/tabs/linkedin-harness.json. Les appels suivants reprennent cet
+onglet et le mettent au premier plan. S'il a été fermé, le harnais en ouvre un
+neuf.
+
+## Flux pris en charge
+
+Deux flux, désignés par leur slug. recommended correspond à « Top job picks for
+you », top-applicant à « Jobs where you're more likely to hear back ». La page
+jobs ne rend plus les liens de collection, la découverte automatique des flux
+a donc été retirée.
 
 ## Parcourir un flux
 
 npm run walk pilote le parcours de cartes. La boucle lit la carte au focus,
 attend une décision, et passe à la carte suivante. L'agent décide, le driver
 tient l'état dans tmp/run.json et exécute les effets. Une décision parmi trois,
-shortlist crée une page candidature Notion, reject écarte la carte par Dismiss,
-stop arrête le parcours.
+shortlist crée un dossier candidature dans le repo de données, reject écarte la
+carte par Dismiss, stop arrête le parcours.
 
-Avant un parcours, le jeton d'intégration Notion doit être en place. Le code le
-lit dans la variable NOTION_TOKEN, sinon dans ~/.config/candidature/notion.env
-sous la forme NOTION_TOKEN=ntn_... Ce fichier porte un secret, le passer en
-chmod 600. L'intégration doit aussi être connectée à la page racine Notion qui
-reçoit les candidatures, sans quoi l'écriture échoue avec un refus d'accès.
+La séquence commence par un démarrage qui rend la première carte. --root
+désigne la racine du repo de données, celle qui contient candidatures/.
 
-La séquence commence par un démarrage qui rend la première carte.
+    node walk.mjs start --stream recommended --target 3 --root ~/code/Emploi
 
-    node walk.mjs start --stream recommended --target 3 --root <pageId>
-
-Chaque décision suit, sur la carte rendue par l'appel précédent.
+Chaque décision suit, sur la carte rendue par l'appel précédent. shortlist
+exige --record, le chemin du dossier de décision JSON décrit plus bas. Sans
+lui, la commande refuse avant tout effet.
 
     node walk.mjs decide --action reject
     node walk.mjs decide --action shortlist --record tmp/record.json
@@ -50,22 +57,32 @@ node walk.mjs status relit l'état courant sans rien changer. Le parcours se
 termine de lui-même quand la cible de shortlists est atteinte ou quand le flux
 est épuisé, et rend alors un objet avec done à vrai et la raison.
 
-La page candidature créée par shortlist porte le jobId de la carte, ce qui
-relie la page Notion à la carte LinkedIn pour un écartement ultérieur.
+shortlist écrit candidatures/<date>-<slug>/README.md sous la racine, avec un
+frontmatter statut shortlist, date_shortlist et le jobId de la carte. La date
+du jour est ajoutée par le harnais. Si le dossier existe déjà, la commande
+refuse et demande d'ajuster le slug.
 
-## Écarter une carte hors parcours
+## Dossier de décision
 
-Le candidat peut annuler une shortlist après le parcours. La sous-commande
-dismiss écarte une carte par son jobId, indépendamment d'un parcours. Elle
-réutilise la navigation robuste et le Dismiss du driver, sans toucher à
-tmp/run.json.
+Le dossier lu par shortlist est un JSON écrit par l'agent. Tous les champs sont
+obligatoires. slug porte l'entreprise et le poste, sans date, sous peine d'un
+dossier au nom doublement daté.
 
-    node walk.mjs dismiss --jobId 4417156077 --stream recommended
-
-Si la carte n'est plus dans le flux, la commande le signale par dismissed à
-faux et ne fait rien. Pour garder Notion et LinkedIn cohérents, archiver la
-page candidature (archivePage de lib/notion.mjs) et dismisser la carte vont de
-pair.
+    {
+      "title": "Ornikar, Data Software Engineer",
+      "company": "Ornikar",
+      "role": "Data Software Engineer",
+      "location": "Paris",
+      "workplace": "hybrid",
+      "url": "https://www.linkedin.com/jobs/view/123",
+      "summary": "Data Software Engineer, Python, Paris hybride. Via LinkedIn.",
+      "slug": "ornikar-data-software-engineer",
+      "analysis": {
+        "fit": "Forte correspondance sur Python et les pipelines de données.",
+        "company": "Mission éducative, produit grand public.",
+        "differentiation": "Expérience des outils agentiques."
+      }
+    }
 
 ## Contraintes du candidat avant un parcours
 
@@ -74,27 +91,30 @@ laissée à l'agent. Avant un parcours, l'agent charge les contraintes dures de
 la fiche candidat. Une offre hors contraintes, par exemple en télétravail
 intégral quand la fiche exige du présentiel, est un reject d'office.
 
-Le dossier de décision lu par shortlist est un JSON. La forme attendue.
+Le flux ne retient pas les écartements d'un parcours à l'autre et republie des
+offres déjà traitées, parfois sous un nouveau jobId. Avant de retenir une
+carte, l'agent compare entreprise et titre aux dossiers de candidatures/.
 
-    {
-      "title": "Ornikar — Data Software Engineer",
-      "company": "Ornikar",
-      "role": "Data Software Engineer",
-      "location": "Paris",
-      "workplace": "hybrid",
-      "url": "https://www.linkedin.com/jobs/view/123",
-      "summary": "Data Software Engineer, Python, Paris hybrid. Via LinkedIn.",
-      "analysis": {
-        "fit": "forte correspondance Python",
-        "company": "mission édutech",
-        "differentiation": "profil agentic"
-      }
-    }
+## Écarter une carte hors parcours
+
+La sous-commande dismiss écarte une carte par son jobId, indépendamment d'un
+parcours, sans toucher à tmp/run.json.
+
+    node walk.mjs dismiss --jobId 4417156077 --stream recommended
+
+LinkedIn ne connaît pas le statut shortlist, qui n'existe que dans le dossier
+candidature. Son Dismiss vit dans la liste paginée des flux et marque seulement
+la carte comme traitée. La page /jobs/view/<id>/ n'en a pas, et c'est normal.
+La commande n'agit donc que sur une carte encore rendue dans la liste. Une carte
+que le flux ne rend plus ne peut plus être marquée traitée, et la commande rend
+dismissed à faux avec la raison not-found. Le flux cesse souvent de rendre une
+carte retenue d'un parcours à l'autre. Pour une offre retenue puis abandonnée,
+le statut écartée dans le frontmatter du dossier fait alors garde contre son
+retour.
 
 ## Variables d'environnement
 
 LINKEDIN_HARNESS_PROFILE règle le dossier de profil. LINKEDIN_HARNESS_CHROMIUM
 règle le binaire chromium. LINKEDIN_HARNESS_CDP_PORT et LINKEDIN_HARNESS_CDP_URL
-règlent le point CDP utilisé par les scripts. NOTION_TOKEN porte le jeton
-d'intégration Notion utilisé par le parcours, à défaut lu dans
-~/.config/candidature/notion.env.
+règlent le point CDP utilisé par les scripts. LINKEDIN_HARNESS_TAB_DIR déplace
+le registre d'onglets, /tmp/claude/tabs par défaut.

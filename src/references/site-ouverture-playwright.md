@@ -25,9 +25,10 @@ commandes du harnais hors sandbox.
 
 Le parcours d'offres LinkedIn passe par le harnais
 `tools/linkedin-harness/` du dépôt candidature. Suivre son `README.md`.
-Le harnais ouvre le navigateur (`./launch.sh`), liste les flux
-(`npm run streams`) et pilote le parcours de cartes (`npm run walk`).
-Une décision parmi trois, shortlist crée un dossier candidature
+Le harnais ouvre le navigateur (`./launch.sh`) et pilote le parcours
+de cartes (`npm run walk`) sur l'un des deux flux pris en charge,
+`recommended` ou `top-applicant`. Il travaille dans son propre onglet et
+ne navigue jamais un onglet ouvert par le candidat. Une décision parmi trois, shortlist crée un dossier candidature
 `candidatures/<slug>/` avec `statut: shortlist`, reject écarte la carte,
 stop arrête le parcours. La création du dossier est l'affaire du harnais.
 
@@ -38,13 +39,15 @@ contraintes en contexte avant de parcourir. Une offre hors contraintes, par
 exemple en télétravail intégral quand la fiche exige du présentiel, est un
 reject d'office.
 
-Pour écarter une carte hors d'un parcours, quand le candidat annule une
-shortlist plus tard, `node walk.mjs dismiss --jobId <id>`. La commande
-réutilise la navigation robuste et le Dismiss du parcours, sans toucher à
-l'état de run. Le dossier candidature issu d'un parcours porte son jobId
-dans son frontmatter, ce qui relie le dossier à la carte. À l'écartement
-d'une telle offre, mettre `statut: écartée` dans le frontmatter du dossier
-et dismisser la carte gardent les deux états cohérents.
+LinkedIn ne connaît pas le statut shortlist. Son Dismiss n'existe que
+dans la liste paginée des flux et marque seulement la carte comme traitée.
+`node walk.mjs dismiss --jobId <id>` n'agit donc que sur une carte encore
+rendue dans cette liste. Le flux cesse souvent de rendre une carte retenue
+d'un parcours à l'autre, et elle ne peut alors plus être marquée traitée.
+Quand le candidat abandonne une offre retenue, mettre `statut: écartée`
+dans le frontmatter du dossier, c'est lui qui fait garde. Le flux republie
+des offres déjà traitées, parfois sous un nouveau jobId. Avant de retenir
+une carte, comparer entreprise et titre aux dossiers de `candidatures/`.
 
 ## Autres sites, Playwright ad hoc
 

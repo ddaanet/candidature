@@ -19,14 +19,16 @@ FR-1. Se connecter à une session LinkedIn déjà authentifiée et la piloter. L
 harnais attache Playwright à un navigateur en tête déjà ouvert. Il ne lance pas
 de navigateur jetable.
 
-FR-2. Identifier les flux d'offres disponibles sur la page jobs. Un flux est
-une section de recommandations ou une collection navigable.
+FR-2. Parcourir un flux d'offres nommé. Deux flux sont pris en charge,
+recommended et top-applicant, passés par leur slug à walk.mjs. La découverte
+automatique des flux par la page jobs est retirée, LinkedIn ne rend plus les
+liens de collection qu'elle lisait.
 
 FR-3. Parcourir les cartes d'un flux une à une, décider de chacune, et écrire
-les retenues dans Notion. Le driver walk.mjs lit la carte au focus, attend une
-décision parmi shortlist, reject et stop, écarte les rejetées par Dismiss, crée
-une page candidature Notion par retenue, et avance jusqu'à une cible de
-shortlists ou l'épuisement du flux.
+les retenues dans le repo de données. Le driver walk.mjs lit la carte au focus,
+attend une décision parmi shortlist, reject et stop, écarte les rejetées par
+Dismiss, crée un dossier candidature par retenue, et avance jusqu'à une cible
+de shortlists ou l'épuisement du flux.
 
 ## Besoins non fonctionnels
 
@@ -72,7 +74,22 @@ Choix retenu. attach.mjs centralise la connexion CDP et le test
 d'authentification. Les scripts de flux l'importent. Cela évite de réécrire la
 séquence de connexion et le test de page de login dans chaque script.
 
-### Parcours par réduction, état externalisé, écriture Notion directe
+### Onglet propre au harnais
+
+Choix retenu. Le harnais travaille dans son propre onglet, créé par PUT
+/json/new sur le point HTTP du navigateur et inscrit sous le nom flux dans le
+registre /tmp/claude/tabs/linkedin-harness.json. Les appels suivants reprennent
+cet onglet tant qu'il vit, et en créent un neuf s'il a été fermé. Aucun autre
+onglet n'est jamais repris.
+
+L'ancienne attache prenait la première page du contexte, quelle qu'elle soit.
+Le 2026-09-13, cette page portait un message InMail en cours de rédaction chez
+le candidat, et walk.mjs start l'a naviguée vers le flux. Le brouillon est
+perdu, LinkedIn ne sauvegarde pas un message vers un fil inexistant. Le
+registre suit le format des outils multi-agents, un fichier par propriétaire,
+un targetId par nom d'onglet.
+
+### Parcours par réduction, état externalisé, dossier en fichiers
 
 Choix retenu. Le parcours suit le principe 12-factor-agents. L'agent est un
 réducteur sans état qui rend une décision par carte. Le driver walk.mjs tient
@@ -90,14 +107,13 @@ ce qui rend le parcours insensible au rechargement et aux réordonnancements du
 flux. La bannière de consentement aux cookies est refusée au chargement, son
 titre de niveau 1 passait sinon avant celui du détail de l'offre.
 
-L'écriture Notion passe par l'API REST avec un jeton d'intégration, pas par le
-MCP. Le harnais tourne sur Claude Code où le MCP Notion authentifié via
-claude.ai n'est pas garanti présent. Le jeton se lit dans NOTION_TOKEN ou dans
-~/.config/candidature/notion.env. Une page candidature est créée par offre
-retenue sous la racine, avec un paragraphe d'index daté ajouté au corps de la
-racine.
+Une retenue crée un dossier candidatures/<date>-<slug>/ sous la racine du
+repo de données passée par --root, avec un README à frontmatter statut
+shortlist (lib/dossier.mjs). L'écriture Notion par jeton REST des débuts a été
+retirée au passage du skill aux fichiers. Le parcours refuse une shortlist sans
+--record avant tout effet sur le navigateur.
 
-### Écartement hors parcours et réconciliation Notion
+### Écartement hors parcours
 
 Choix retenu. Une sous-commande dismiss écarte une carte par son jobId, en
 dehors d'un parcours. Le candidat annule parfois une shortlist plus tard, et le
@@ -106,13 +122,18 @@ sous-commande réutilise gotoStream, listCards, readFocusedCard et dismissCard,
 sans état de run. Elle ne réécrit pas la navigation, l'incident fondateur étant
 un script ad hoc qui contournait ces helpers et timeoutait sur une nav nue.
 
-La page candidature créée par shortlist porte désormais le jobId de la carte,
-inscrit dans le méta par buildPagePayload. Ce lien permet de retrouver la carte
-à écarter à partir de la page Notion. lib/notion.mjs expose archivePage, une
-suppression douce REST (archived à vrai), symétrique de createShortlistPage. À
-l'écartement d'une offre, archiver la page et dismisser la carte gardent Notion
-et le flux LinkedIn cohérents, sans quoi une offre annulée réapparaît au
-parcours suivant.
+Le dossier créé par shortlist porte le jobId de la carte dans son
+frontmatter. LinkedIn ne connaît pas le statut shortlist. Le Dismiss n'existe
+que dans la liste paginée des flux et signifie seulement que la carte est
+traitée. Son absence de /jobs/view/<id>/ est normale, le menu More options de
+cette page ne propose que l'envoi, le partage et le signalement. Le flux ouvert
+avec ?currentJobId=<id> affiche l'offre dans le panneau de détail sans rendre
+sa carte dans la liste. Une carte que le flux ne rend plus ne peut donc plus
+être marquée traitée. C'est arrivé aux cartes retenues d'un parcours, dismiss a
+rendu not-found sur sept d'entre elles les 2026-09-01 et 2026-09-08, sur
+recommended comme sur top-applicant. Le statut écartée du dossier fait alors
+garde, et l'agent compare entreprise et titre aux dossiers existants avant de
+retenir une carte.
 
 ### Contraintes du candidat chargées par l'agent
 
@@ -135,6 +156,12 @@ rôle y sont directs. Le placeholder Python de la spec est antérieur à cette
 validation.
 
 ## Carte des flux LinkedIn
+
+Relevé du 2026-06-08, conservé comme origine des deux slugs pris en charge.
+Depuis 2026-08, la page jobs ne rend plus qu'une section « Jobs based on your
+preferences » sans lien de collection, d'où le retrait de streams.mjs. Les
+slugs recommended et top-applicant restent valides dans l'URL
+/jobs/collections/<slug>/.
 
 Page de départ, https://www.linkedin.com/jobs/. Quatre sections de premier
 niveau, chacune un titre de niveau 2 dans le repère main, chacune avec un lien
@@ -191,3 +218,10 @@ par jobId non vu et le refus de la bannière de consentement ont été tranchés
 le DOM vivant, le premier jet par clic de listitem ne naviguait pas. Choix de
 l'écriture Notion directe par jeton REST plutôt que par le MCP, pour ne pas
 dépendre d'un MCP authentifié sur la cible Claude Code.
+
+Session du 2026-09-26. Onglet propre au harnais par /json/new à la place de la
+première page du contexte, suite à la perte d'un brouillon InMail. Refus d'une
+shortlist sans --record avant tout effet, qui plantait en TypeError. Retrait
+de streams.mjs. Sonde du Dismiss hors de la liste du flux, absent de
+/jobs/view/<id>/ comme attendu, une carte que le flux ne rend plus ne peut plus
+être marquée traitée.

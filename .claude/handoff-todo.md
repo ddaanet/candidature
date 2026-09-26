@@ -1,6 +1,9 @@
+## Open decisions
+
+- decide --action shortlist doit-il aussi faire Dismiss sur la carte dans le flux (carte traitée, comme reject) ? Pour : la carte ne revient plus. Contre possible : Emploi/sites/linkedin.md 2026-03-17 note que le Dismiss améliore le ciblage, donc signal négatif au recommandeur. À demander à David avant de coder.
+
 ## Remaining
 
-- Lot 1, défauts du harnais (détail dans TODO.md).
 - Lot 2, tab.mjs et cdp.mjs dans le harnais, open par /json/new, site-ouverture-playwright.md.
 - Lot 3, règles de préparation et de soumission (preparation.md, soumission.md, cover-letter.md, etayage.md, suivi.md).
 - Lot 4, references/orchestration.md, renvoi SKILL.md, D-47.

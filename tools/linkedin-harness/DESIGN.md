@@ -71,7 +71,9 @@ Elle est donc le point d'accroche le plus durable.
 ### Bootstrap partagé
 
 Choix retenu. attach.mjs centralise la connexion CDP et le test
-d'authentification. Les scripts de flux l'importent. Cela évite de réécrire la
+d'authentification. Les scripts de flux l'importent. Le registre d'onglets et le
+point HTTP du navigateur vivent dans lib/tabs.mjs, partagé avec tab.mjs et
+cdp.mjs. Cela évite de réécrire la
 séquence de connexion et le test de page de login dans chaque script.
 
 ### Onglet propre au harnais
@@ -88,6 +90,34 @@ le candidat, et walk.mjs start l'a naviguée vers le flux. Le brouillon est
 perdu, LinkedIn ne sauvegarde pas un message vers un fil inexistant. Le
 registre suit le format des outils multi-agents, un fichier par propriétaire,
 un targetId par nom d'onglet.
+
+### Onglets nommés pour plusieurs agents
+
+Choix retenu. tab.mjs et cdp.mjs, nés dans le repo de données entre le
+2026-09-09 et le 2026-09-12, vivent dans le harnais et partagent avec attach.mjs
+le registre et le point HTTP du navigateur (lib/tabs.mjs). Plusieurs agents
+pilotaient le même chromium par des scripts jetables qui ouvraient des onglets
+anonymes et les mettaient au premier plan, chacun délogeant le travail des
+autres.
+
+connectOverCDP attache toutes les cibles du navigateur et expire à 30 s dès
+qu'un iframe tiers ne répond pas, hCaptcha ou « Apply with LinkedIn » sur
+Recruitee. Tout ce qui peut passer par le point HTTP y passe donc, création
+par PUT /json/new, reprise et adoption par /json/list, premier plan par
+/json/activate, fermeture par /json/close. La navigation d'un onglet repris
+passe par le websocket de la page seule (lib/cdp-client.mjs). Seules goto,
+text, links et eval de tab.mjs gardent Playwright. cdp.mjs couvre les mêmes
+besoins sur la page seule quand l'attache expire.
+
+adopt n'existait pas dans les outils d'origine. Quand le candidat fermait un
+onglet et rouvrait le formulaire ailleurs, l'agent relisait /json/list et
+réécrivait le registre à la main. La commande fait ce geste et refuse un
+fragment d'URL ambigu.
+
+Écarté : un verrou sur le registre. Un propriétaire est un agent, qui enchaîne
+ses commandes. Écarté aussi : l'évaluation dans un iframe de même site par
+uniqueContextId dans cdp.mjs. Le seul cas relevé est Welcomekit, son script
+reste dans le repo de données et la méthode est décrite dans le skill.
 
 ### Parcours par réduction, état externalisé, dossier en fichiers
 
@@ -224,4 +254,7 @@ première page du contexte, suite à la perte d'un brouillon InMail. Refus d'une
 shortlist sans --record avant tout effet, qui plantait en TypeError. Retrait
 de streams.mjs. Sonde du Dismiss hors de la liste du flux, absent de
 /jobs/view/<id>/ comme attendu, une carte que le flux ne rend plus ne peut plus
-être marquée traitée.
+être marquée traitée. Intégration de tab.mjs et cdp.mjs, open par /json/new,
+commande adopt, registre et point HTTP mis en commun dans lib/tabs.mjs.
+Vérifiés en réel, open, list, close et cdp.mjs eval passent avec des onglets
+Welcomekit ouverts.

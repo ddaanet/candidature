@@ -25,6 +25,29 @@ il ouvre son propre onglet et l'inscrit sous le nom flux dans
 onglet et le mettent au premier plan. S'il a été fermé, le harnais en ouvre un
 neuf.
 
+## Onglets nommés pour plusieurs agents
+
+tab.mjs et cdp.mjs pilotent le même navigateur pour tout site, au-delà de
+LinkedIn. Chaque agent possède un jeu d'onglets nommés, inscrits dans
+/tmp/claude/tabs/<propriétaire>.json, le même registre que l'onglet du
+harnais. node tab.mjs --help détaille les commandes.
+
+    node tab.mjs --owner wwr --tab listing open https://weworkremotely.com/
+    node tab.mjs --owner wwr --tab listing text
+    node cdp.mjs --owner wwr --tab listing eval 'document.title'
+
+tab.mjs open crée l'onglet par PUT /json/new, ou le reprend s'il vit encore.
+adopt réinscrit sous un nom la page vivante dont l'URL contient un fragment,
+pour un onglet que le candidat a rouvert ailleurs. open, adopt, list, show et
+close passent par le point HTTP du navigateur. goto, text, links et eval
+attachent Playwright, qui expire dès qu'un onglet à iframe tiers est ouvert.
+cdp.mjs prend alors le relais sur la page seule, avec eval, evalfile, text,
+upload, click, keys, key, screenshot, show et raw. Il ne crée jamais d'onglet.
+
+Le registre n'a pas de verrou, deux commandes du même propriétaire ne tournent
+jamais en parallèle. close refuse de fermer le dernier onglet du navigateur,
+ce qui l'arrêterait.
+
 ## Flux pris en charge
 
 Deux flux, désignés par leur slug. recommended correspond à « Top job picks for

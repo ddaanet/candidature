@@ -21,6 +21,63 @@ et un port CDP. Le navigateur tourne hors de la sandbox de l'agent,
 l'isolation PID et réseau de la sandbox couperait la session. Lancer les
 commandes du harnais hors sandbox.
 
+## Plusieurs agents sur le même navigateur
+
+Chaque agent travaille dans ses propres onglets nommés, jamais dans un
+onglet anonyme et jamais dans un onglet ouvert par le candidat. L'outil
+est `tab.mjs`, dans le dossier du harnais `tools/linkedin-harness/`.
+Il tient un registre par propriétaire qui associe chaque nom d'onglet à
+sa cible dans le navigateur.
+
+    node tab.mjs --owner wwr --tab listing open https://weworkremotely.com/
+    node tab.mjs --owner wwr --tab listing links /remote-jobs/
+    node tab.mjs --owner wwr --tab listing close
+
+Le propriétaire est le nom de l'agent ou du dossier, l'onglet par défaut
+s'appelle `navette`. Le registre n'a pas de verrou, deux commandes du
+même propriétaire ne tournent jamais en parallèle. Fermer le dernier
+onglet arrête le navigateur, `close` le refuse. Un script jetable qui
+ouvre un onglet sans nom et le met au premier plan déloge le travail des
+autres agents, il n'a plus cours.
+
+Les commandes `goto`, `text`, `links` et `eval` de `tab.mjs`, comme le
+parcours LinkedIn, attachent Playwright à tout le navigateur. Cette
+attache expire au bout de 30 secondes dès qu'un onglet porte un iframe
+tiers qui ne répond pas, un hCaptcha ou le bouton « Apply with
+LinkedIn » d'un formulaire Recruitee, quel que soit l'onglet visé. Sur
+une telle page, passer à `cdp.mjs`, qui parle à la page seule avec les
+mêmes `--owner` et `--tab`. Il évalue du JavaScript (`eval`, ou
+`evalfile` pour un texte long), lit le texte, téléverse un fichier,
+clique et frappe par de vrais événements souris et clavier, et prend une
+capture. Les commandes `open`, `adopt`, `list`, `show` et `close` de
+`tab.mjs` passent par le point HTTP du navigateur et n'expirent pas.
+
+Un onglet gardé d'une session à l'autre peut avoir perdu son moteur de
+rendu. L'évaluation expire alors, fermer l'onglet et en ouvrir un neuf.
+Quand le candidat ferme lui-même un onglet et rouvre la page ailleurs,
+le registre pointe sur une cible morte. `tab.mjs adopt <fragment d'URL>`
+inscrit la page vivante sous le nom de l'onglet, sans en recréer un. Le
+formulaire déjà rempli est dans cette page.
+
+Un iframe servi par le même domaine que sa page hôte n'est pas une cible
+séparée du navigateur, et `cdp.mjs` évalue dans le document de la page
+hôte, où les sélecteurs du formulaire ne trouvent rien. Le formulaire
+Welcomekit est dans ce cas. Activer le domaine `Runtime` sur la page,
+relever les contextes d'exécution annoncés, et évaluer avec le
+`uniqueContextId` du contexte de l'iframe.
+
+Les cartes du flux LinkedIn et les descriptions d'annonce ne se chargent
+que dans l'onglet au premier plan, et le parcours expire tant que des
+onglets tiers d'autres agents sont ouverts. Un parcours LinkedIn ne
+tourne donc pas pendant qu'un autre agent remplit un formulaire. Faire
+la prospection LinkedIn d'abord, fermer les onglets tiers, puis lancer
+les remplissages.
+
+Avant de conclure qu'un site bloque l'adresse IP, vérifier par où sort
+le navigateur, avec `ps -eo args | grep -o -- '--proxy[^ ]*'` ou en
+ouvrant `https://ipinfo.io/json` dans un onglet. Le navigateur peut
+sortir par un proxy que `curl` n'emprunte pas.
+
 ## LinkedIn, harnais dédié
 
 Le parcours d'offres LinkedIn passe par le harnais

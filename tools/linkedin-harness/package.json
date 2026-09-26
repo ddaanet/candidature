@@ -5,6 +5,8 @@
   "description": "Harnais Playwright de contrôle navigateur pour le parcours d'offres LinkedIn (cible Claude Code).",
   "scripts": {
     "walk": "node walk.mjs",
+    "tab": "node tab.mjs",
+    "cdp": "node cdp.mjs",
     "test": "node --test test/*.test.mjs"
   },
   "dependencies": {

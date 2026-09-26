@@ -836,6 +836,11 @@ LinkedIn et décrit l'approche ad hoc pour les autres sites. Le harnais
 reste hors du contenu skill, il vit dans une copie locale du dépôt, pas
 dans le cache plugin. Spec 2026-04-24, section 5, réconciliée.
 
+Le harnais porte aussi `tab.mjs` et `cdp.mjs` depuis le 2026-09-26, des
+onglets nommés par agent pour tout site, parce que plusieurs agents pilotent
+le même navigateur. `site-ouverture-playwright.md` en tire les règles de
+partage du navigateur.
+
 ### D-36 : Suppression de la vérification de version sur Claude Code
 
 Caduque depuis le pivot du 2026-06-19. Le bloc `claude-ai` a disparu avec la
@@ -1469,6 +1474,15 @@ concernés.
 | # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
 | 38 | Le Dismiss n'existe que dans la liste paginée du flux, une carte que le flux ne rend plus ne peut plus être marquée traitée | DESIGN.md D-40 | Emploi/sites/linkedin.md 2026-09-01 et 2026-09-08, sonde du 2026-09-26 dans tools/linkedin-harness/DESIGN.md | Étayé |
+
+### Affirmations de la couche navigateur partagée (D-35)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 39 | L'attache Playwright expire à 30 s dès qu'un onglet porte un iframe tiers, hCaptcha ou « Apply with LinkedIn » | references/site-ouverture-playwright.md | Emploi/correctifs.md 2026-09-11 et 2026-09-12 | Étayé |
+| 40 | Un iframe de même domaine que sa page hôte n'est pas une cible séparée, il s'évalue par uniqueContextId | references/site-ouverture-playwright.md | Emploi/sites/welcomekit-ekie.md, Emploi/outils/welcomekit-frame.mjs | Étayé |
+| 41 | Les cartes et descriptions LinkedIn ne se chargent qu'au premier plan, le parcours expire avec des onglets tiers ouverts | references/site-ouverture-playwright.md | Emploi/correctifs.md 2026-09-16, Emploi/sites/linkedin.md | Étayé |
+| 42 | Le navigateur peut sortir par un proxy que curl n'emprunte pas | references/site-ouverture-playwright.md | Emploi/correctifs.md 2026-09-19, Emploi/sites/lever-pigment.md | Étayé |
 
 ### Bilan
 

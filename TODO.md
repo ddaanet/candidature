@@ -19,7 +19,7 @@ datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
   sur les fichiers
   (plus de `NOTION_TOKEN`, `--root` racine du repo de données, `slug` dans
   l'exemple JSON, `--record` obligatoire).
-- [ ] Lot 2, outils navigateur multi-agents. `tab.mjs` et `cdp.mjs` dans le
+- [x] Lot 2, outils navigateur multi-agents. `tab.mjs` et `cdp.mjs` dans le
   harnais avec entrées npm, `tab.mjs open` par `PUT /json/new`. Dans
   `site-ouverture-playwright.md` : onglets nommés, cible morte et registre,
   iframes tiers qui font expirer `connectOverCDP`, iframe de même site par

@@ -1,0 +1,3 @@
+## Current task
+
+Exécution du triage de l'inbox du 2026-09-26 : six lots consignés dans TODO.md (section « Triage inbox du 2026-09-26 »), sources dans inbox/ et ../Emploi/correctifs.md. Le lot 1, défauts du harnais tools/linkedin-harness, est le prochain : TypeError de shortlist sans --record (walk.mjs, loadRecord(undefined)), onglet repris par attach.mjs ctx.pages()[0], suppression de la découverte de streams.mjs, dismiss d'une carte shortlistée à sonder en direct, README encore rédigé pour Notion. Lot 5 tranché : adaptation-cv.md adopte le flux pratiqué (expansion XML, pack-cv.py dans src/scripts/, rendu mesuré avant proposition). Les modifications de src/ exigent une session Opus et un rebuild committé avec la source.

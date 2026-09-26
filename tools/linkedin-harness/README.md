@@ -60,8 +60,9 @@ a donc été retirée.
 npm run walk pilote le parcours de cartes. La boucle lit la carte au focus,
 attend une décision, et passe à la carte suivante. L'agent décide, le driver
 tient l'état dans tmp/run.json et exécute les effets. Une décision parmi trois,
-shortlist crée un dossier candidature dans le repo de données, reject écarte la
-carte par Dismiss, stop arrête le parcours.
+shortlist crée un dossier candidature dans le repo de données et marque la
+carte traitée par Dismiss, reject marque la carte traitée sans dossier, stop
+arrête le parcours.
 
 La séquence commence par un démarrage qui rend la première carte. --root
 désigne la racine du repo de données, celle qui contient candidatures/.
@@ -83,7 +84,9 @@ est épuisé, et rend alors un objet avec done à vrai et la raison.
 shortlist écrit candidatures/<date>-<slug>/README.md sous la racine, avec un
 frontmatter statut shortlist, date_shortlist et le jobId de la carte. La date
 du jour est ajoutée par le harnais. Si le dossier existe déjà, la commande
-refuse et demande d'ajuster le slug.
+refuse et demande d'ajuster le slug. Le dossier créé, shortlist clique Dismiss
+sur la carte. Un échec du clic ne défait pas le dossier, la sortie porte alors
+cardDismissed à faux.
 
 ## Dossier de décision
 
@@ -131,9 +134,9 @@ la carte comme traitée. La page /jobs/view/<id>/ n'en a pas, et c'est normal.
 La commande n'agit donc que sur une carte encore rendue dans la liste. Une carte
 que le flux ne rend plus ne peut plus être marquée traitée, et la commande rend
 dismissed à faux avec la raison not-found. Le flux cesse souvent de rendre une
-carte retenue d'un parcours à l'autre. Pour une offre retenue puis abandonnée,
-le statut écartée dans le frontmatter du dossier fait alors garde contre son
-retour.
+carte d'un parcours à l'autre, c'est pourquoi shortlist la marque pendant le
+parcours. dismiss sert à rattraper une shortlist sortie avec cardDismissed à
+faux.
 
 ## Variables d'environnement
 

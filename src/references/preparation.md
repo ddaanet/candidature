@@ -142,11 +142,9 @@ d'entrée a déjà vérifié qu'aucun dossier n'existe pour cette offre.
 Le candidat décide quoi en faire. S'il veut candidater, le README de la
 shortlist est enrichi en dossier de candidature complet au lancement de la
 phase de soumission. S'il veut écarter l'offre, passer son frontmatter à
-`statut: écartée`, le dossier reste en place. Si l'offre vient d'un parcours
-LinkedIn et que son README porte un jobId, changer le statut seul la laisse
-dans le flux LinkedIn, qui la repropose au parcours suivant. Écarter aussi la
-carte correspondante pour garder les deux états cohérents, par la couche
-navigateur. S'il veut différer, le dossier reste en l'état.
+`statut: écartée`, le dossier reste en place. Une offre retenue par un
+parcours LinkedIn a déjà sa carte marquée traitée dans le flux, rien d'autre
+n'est à faire côté LinkedIn. S'il veut différer, le dossier reste en l'état.
 
 Avec 3+ offres en attente, l'agent peut proposer un tri comparatif :
 quelles offres sont les plus différenciantes pour ce profil. Le candidat

@@ -46,10 +46,10 @@ candidat.
 le frontmatter du README. Le dossier et ses brouillons restent, la trace est
 conservée et l'index recalculé ignore les candidatures écartées.
 
-L'écartement d'une offre issue d'un parcours LinkedIn ne s'arrête pas au
-fichier. Le README porte un jobId, et changer le statut seul laisse la carte
-dans le flux LinkedIn. Écarter aussi la carte par la couche navigateur, pour
-que le stockage fichiers et le flux ne divergent pas.
+Une offre retenue par un parcours LinkedIn a sa carte marquée traitée dès la
+shortlist, et son écartement s'arrête au fichier. Si la shortlist a rendu
+`cardDismissed` à faux, tenter de marquer la carte par la couche navigateur
+avec le jobId du README.
 
 ## Cas particuliers
 

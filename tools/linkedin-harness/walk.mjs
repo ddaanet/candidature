@@ -79,11 +79,15 @@ async function cmdDecide() {
       const record = loadRecord(flag('record'));
       const dateStr = new Date().toISOString().slice(0, 10);
       const created = createShortlistDossier(record, { root: state.root, dateStr, jobId: state.current?.jobId ?? null });
+      // La carte retenue est marquée traitée tant que le flux la rend encore,
+      // plus tard elle n'est souvent plus dismissable. Un échec ne défait pas
+      // le dossier, il est signalé par cardDismissed à faux.
+      const cardDismissed = await dismissCard(page, state.current.title).then(() => true, () => false);
       let after = addShortlist(state, { jobId: state.current?.jobId ?? null, title: record.title, url: record.url, summary: record.summary, dossierPath: created.path });
-      if (targetMet(after)) { saveState(STATE_PATH, after); out({ done: true, reason: 'target-met', created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
+      if (targetMet(after)) { saveState(STATE_PATH, after); out({ done: true, reason: 'target-met', created, cardDismissed, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
       const adv = await advance(page, state.stream, after.seen);
-      if (adv.done) { saveState(STATE_PATH, after); out({ done: true, reason: adv.reason, created, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
-      out({ created, ...(await readAndStore(page, after)) });
+      if (adv.done) { saveState(STATE_PATH, after); out({ done: true, reason: adv.reason, created, cardDismissed, progress: { accepted: after.accepted.length, target: after.target, dismissed: after.dismissed } }); return; }
+      out({ created, cardDismissed, ...(await readAndStore(page, after)) });
       return;
     }
   } finally {

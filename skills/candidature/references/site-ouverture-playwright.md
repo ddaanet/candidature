@@ -86,8 +86,8 @@ Le harnais ouvre le navigateur (`./launch.sh`) et pilote le parcours
 de cartes (`npm run walk`) sur l'un des deux flux pris en charge,
 `recommended` ou `top-applicant`. Il travaille dans son propre onglet et
 ne navigue jamais un onglet ouvert par le candidat. Une décision parmi trois, shortlist crée un dossier candidature
-`candidatures/<slug>/` avec `statut: shortlist`, reject écarte la carte,
-stop arrête le parcours. La création du dossier est l'affaire du harnais.
+`candidatures/<slug>/` avec `statut: shortlist` et marque la carte traitée,
+reject marque la carte traitée sans dossier, stop arrête le parcours. La création du dossier est l'affaire du harnais.
 
 Avant de lancer un parcours, charger les contraintes dures de la fiche
 candidat (`references/preparation.md`). Le harnais laisse la décision
@@ -98,11 +98,12 @@ reject d'office.
 
 LinkedIn ne connaît pas le statut shortlist. Son Dismiss n'existe que
 dans la liste paginée des flux et marque seulement la carte comme traitée.
-`node walk.mjs dismiss --jobId <id>` n'agit donc que sur une carte encore
-rendue dans cette liste. Le flux cesse souvent de rendre une carte retenue
-d'un parcours à l'autre, et elle ne peut alors plus être marquée traitée.
-Quand le candidat abandonne une offre retenue, mettre `statut: écartée`
-dans le frontmatter du dossier, c'est lui qui fait garde. Le flux republie
+Le flux cesse souvent de rendre une carte d'un parcours à l'autre, et elle
+ne peut alors plus être marquée. C'est pourquoi shortlist marque la carte
+pendant le parcours, tant qu'elle est rendue. Si la sortie porte
+`cardDismissed` à faux, `node walk.mjs dismiss --jobId <id>` retente plus
+tard, sans garantie. Quand le candidat abandonne une offre retenue, mettre
+`statut: écartée` dans le frontmatter du dossier suffit. Le flux republie
 des offres déjà traitées, parfois sous un nouveau jobId. Avant de retenir
 une carte, comparer entreprise et titre aux dossiers de `candidatures/`.
 

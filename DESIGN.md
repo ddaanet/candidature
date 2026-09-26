@@ -999,14 +999,20 @@ Dismiss n'existe que dans la liste paginée des flux et signifie seulement
 ouvert avec `?currentJobId=<id>` ne rend pas la carte dans la liste. Une carte
 que le flux ne rend plus ne peut donc plus être marquée traitée. `dismiss` a
 rendu not-found sur sept cartes retenues entre le 2026-09-01 et le 2026-09-08,
-sur `recommended` comme sur `top-applicant`. Le statut `écartée` du dossier
-fait alors garde contre le retour de l'offre, et la comparaison d'entreprise
-et de titre aux dossiers existants rattrape les republications sous un nouveau
+sur `recommended` comme sur `top-applicant`. `decide --action shortlist`
+clique donc Dismiss sur la carte retenue pendant le parcours, tant qu'elle
+est rendue. Le dossier est créé d'abord, un échec du clic ne le défait pas et
+se signale par `cardDismissed` à faux. Une offre retenue puis abandonnée se
+marque dans le seul frontmatter du dossier. La comparaison d'entreprise et de
+titre aux dossiers existants rattrape les republications sous un nouveau
 jobId.
 
 Écarté : navigation ad hoc réécrite à chaque besoin, fragile et ignorant les
 helpers éprouvés. Couplage du dismiss à la machine à états du parcours, qui ne
-couvre pas l'annulation tardive.
+couvre pas l'annulation tardive. Carte retenue laissée dans le flux, par
+crainte qu'un Dismiss dégrade le ciblage du recommandeur. Cette crainte
+reposait sur une note non mesurée, et la carte laissée revenait à chaque
+parcours.
 
 ### Axe d'audit : agir sans charger la source qui fait autorité
 

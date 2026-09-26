@@ -161,9 +161,13 @@ avec ?currentJobId=<id> affiche l'offre dans le panneau de détail sans rendre
 sa carte dans la liste. Une carte que le flux ne rend plus ne peut donc plus
 être marquée traitée. C'est arrivé aux cartes retenues d'un parcours, dismiss a
 rendu not-found sur sept d'entre elles les 2026-09-01 et 2026-09-08, sur
-recommended comme sur top-applicant. Le statut écartée du dossier fait alors
-garde, et l'agent compare entreprise et titre aux dossiers existants avant de
-retenir une carte.
+recommended comme sur top-applicant. Depuis le 2026-09-26, shortlist clique
+Dismiss sur la carte retenue pendant le parcours, tant qu'elle est rendue. Une
+carte retenue ne revient plus, et l'abandon ultérieur de l'offre se marque
+dans le seul dossier. Écarté : laisser la carte retenue dans le flux par
+crainte qu'un Dismiss dégrade le ciblage du recommandeur, crainte qu'aucune
+observation ne fonde. L'agent compare toujours entreprise et titre aux
+dossiers existants, contre les republications sous un nouveau jobId.
 
 ### Contraintes du candidat chargées par l'agent
 

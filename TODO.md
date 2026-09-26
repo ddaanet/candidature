@@ -26,7 +26,7 @@ datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
   `uniqueContextId`, prospection LinkedIn avant les remplissages, sortie
   proxy du navigateur vérifiée avant de conclure à un blocage d'IP.
   `show.mjs` abandonné.
-- [ ] Lot 3, règles de préparation et de soumission. `preparation.md` §2.2 :
+- [x] Lot 3, règles de préparation et de soumission. `preparation.md` §2.2 :
   contrôle d'entrée (offre vivante, canal direct, salaire contre plancher),
   annonce dépliée et grille lue dans le corps, prérequis obligatoires lus
   dans la structure, éligibilité lue chez l'employeur, sourcing ancien

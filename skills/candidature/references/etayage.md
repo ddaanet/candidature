@@ -26,6 +26,14 @@ par une recherche web. Les inférences comme la projection
 dans l'équipe ou l'adéquation culturelle doivent être qualifiées
 comme telles et ne pas être présentées comme des faits.
 
+Une affirmation attribuée à la fiche candidat se vérifie par une lecture
+effective de la fiche au moment de la passe, pas de mémoire. Chercher le
+terme revendiqué dans `fiche-candidat.md`. Si la fiche ne le porte pas,
+l'affirmation est « à vérifier » et bloque, quelle que soit sa
+vraisemblance. Les termes qui viennent de l'annonce demandent le plus de
+vigilance. Un brouillon projette facilement une exigence du poste sur le
+profil, et l'étayage l'attribue ensuite à la fiche sans l'y avoir lue.
+
 ### 2. Crédibilité du signal (Spence, 1973)
 
 L'affirmation est-elle un signal coûteux ou gratuit ?

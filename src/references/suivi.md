@@ -27,6 +27,13 @@ entretien, passe à `refus`. Une candidature sans suite donnée passe à
 `classée sans suite`. Les entretiens et leur tour vivent dans les comptes
 rendus, pas dans le statut.
 
+### Avant une relance
+
+Un refus arrive souvent par un courriel type qui passe inaperçu, parfois
+classé en indésirables. Avant de proposer ou de rédiger une relance, demander
+au candidat de vérifier sa boîte de réception pour cette candidature,
+indésirables compris.
+
 ## 4.2 Entretiens
 
 Deux moments distincts.

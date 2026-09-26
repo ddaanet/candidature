@@ -56,6 +56,39 @@ Si le navigateur est disponible : utiliser des captures d'écran pour lire les
 champs. Si le formulaire est multi-étapes, explorer chaque étape avant
 de rédiger.
 
+Actionner les cases à cocher et les interrupteurs optionnels visibles avant
+d'arrêter la liste des champs. Un contrôle d'apparence décorative peut révéler
+un champ texte libre, parfois le seul du formulaire.
+
+Le critère d'un champ est sa visibilité effective à l'écran, pas sa présence
+dans le document. Un champ texte présent dans le code de la page mais
+invisible est presque toujours un piège anti-spam, que le site laisse vide
+pour un humain et qui fait classer comme robot tout envoi qui le renseigne. Ne
+jamais le remplir. Une exploration qui liste les champs par sélecteur fait
+remonter ces pièges comme les vrais champs, relever donc la visibilité de
+chacun à l'inventaire. Consigner les pièges trouvés dans le fichier du site
+sous `sites/`.
+
+Lire les limites de longueur à l'écran. Un champ peut imposer une limite
+signalée par un compteur sans porter d'attribut de longueur maximale, et le
+remplissage automatique accepte alors un texte trop long sans erreur.
+
+Chercher un CAPTCHA dès l'inventaire. Un inventaire fait sans navigateur
+cherche `g-recaptcha`, `hcaptcha`, `turnstile` et `captcha` dans le HTML et
+les scripts qu'il charge, et consigne le résultat comme un champ. Un CAPTCHA
+à case impose la présence du candidat à l'envoi (§2.9).
+
+Un inventaire par l'API publique d'un ATS ne dispense pas de l'exploration à
+l'écran. Des champs affichés au candidat manquent dans l'API, comme un pays,
+un consentement de protection des données ou un bloc de questionnaire sur la
+diversité. Le formulaire à l'écran fait foi.
+
+Relever l'état de chaque champ, fichiers joints et cases compris. Le candidat
+remplit souvent lui-même des champs factuels pendant que le texte s'écrit, avec
+des valeurs qui diffèrent de celles que l'agent aurait proposées. Le
+remplissage ne touchera que les champs vides et les textes validés, et ne
+remplace jamais une valeur déjà saisie.
+
 Si le navigateur n'est pas disponible : travailler avec la description fournie
 par le candidat.
 
@@ -84,8 +117,8 @@ d'accompagnement si le formulaire ne le demande pas.
 Si le formulaire n'a aucun champ texte libre (pas de lettre, pas de
 message, pas de question ouverte), les livrables se limitent au CV et
 aux champs factuels. Pas de brouillon à générer, pas d'étayage, pas de
-relecture. Passer directement aux champs factuels (2.8), puis à la
-capture site (2.9) et à l'archivage (2.10).
+relecture. Passer directement aux champs factuels (2.8), puis à l'envoi
+(2.9), à la capture site (2.10) et à l'archivage (2.11).
 
 ### Boucle par champ texte libre
 
@@ -118,7 +151,10 @@ formulaire :
    le brouillon. Cette séparation est intentionnelle (voir DESIGN.md
    D-22). Corriger le brouillon selon les résultats de l'audit.
 
-4. Charger le protocole de relecture
+4. Si le navigateur est disponible, ouvrir la page de l'offre puis celle
+   du formulaire, le formulaire au premier plan. Le candidat se prononce
+   sur un texte avec l'offre et le champ sous les yeux. Charger ensuite
+   le protocole de relecture
    (`references/relecture.md`) et passer le brouillon en
    revue point par point avec le candidat. La relecture est une boucle
    interne à la soumission, pas une phase séquentielle. Chaque champ
@@ -162,13 +198,49 @@ Remplir les champs qui ne demandent pas de rédaction :
 - Les liens (LinkedIn, portfolio, GitHub) proviennent du profil candidat.
 - Les listes déroulantes et cases à cocher sont renseignées selon le
   profil et le poste.
+- Les groupes répétables facultatifs Expérience et Formation sont remplis
+  depuis le CV joint. Un bloc par expérience salariée du CV, avec
+  l'intitulé, la société ou l'école et les dates, sans résumé. Une activité
+  sans employeur reste au CV seul, qui porte aussi le détail.
+
+Seuls les champs relevés vides à l'exploration reçoivent une valeur. Une
+valeur saisie par le candidat reste en place, même si elle diffère du profil.
 
 Si le navigateur n'est pas disponible, indiquer au candidat les valeurs à
 saisir pour chaque champ.
 
-## 2.9 Capture site
+## 2.9 Envoi
 
-Après soumission, demander au candidat :
+Le clic final sur le bouton d'envoi revient au candidat. La porte de
+permission de l'agent refuse ce clic comme une transaction réelle, même quand
+l'accord explicite du candidat lui est transmis. Confier le clic à un autre
+agent serait contourner ce refus.
+
+L'agent remplit et vérifie tout, champs requis valides, textes en place, CV
+joint. Il amène le bouton d'envoi à l'écran et rend la main. Le candidat
+clique et le dit. Si le formulaire porte un CAPTCHA à case, le candidat le
+coche juste avant de cliquer, son jeton expire en quelques minutes. L'agent
+constate ensuite la confirmation à l'écran et la conserve dans le dossier.
+
+Le dossier reste en `statut: shortlist` tant que le candidat n'a pas dit
+qu'il a envoyé. La transition vers `en attente` suit la confirmation, pas le
+remplissage.
+
+Si le site refuse l'envoi en le signalant comme spam, ne pas enchaîner les
+essais en changeant de réseau. Vérifier d'abord qu'aucun champ invisible n'a
+été rempli (§2.6) et par où sort le navigateur (couche navigateur). Dès le
+deuxième refus, passer à la saisie manuelle. Consigner la liste complète des
+valeurs dans le README du dossier avant de rendre la main, l'écran d'erreur
+efface le remplissage à chaque essai. Le candidat saisit et envoie depuis sa
+propre machine avec cette liste.
+
+Le README consigne qui a saisi quoi, le clic final manuel, une saisie
+manuelle et sa raison, et la valeur finale de chaque champ avec son auteur,
+agent ou candidat.
+
+## 2.10 Capture site
+
+Après l'envoi, demander au candidat :
 
 > "Des difficultés avec le site de candidature ?"
 
@@ -198,14 +270,15 @@ La capture alimente directement le rappel (§2.6) des candidatures
 suivantes sur le même site. La consolidation périodique des
 observations est décrite dans `references/consolidation.md`.
 
-## 2.10 Archivage
+## 2.11 Archivage
 
-Après la soumission et la capture site, enrichir le README de la
+Après l'envoi et la capture site, enrichir le README de la
 candidature. Les champs factuels vont dans le frontmatter YAML :
 `date_soumission`, `canal`, la plateforme, et les prétentions salariales
-si elles ont été communiquées. Le statut passe à `en attente` à la
-soumission. Voir `references/backend-write.md` pour le contrôle
-d'écriture et `references/modele-fichiers.md` pour les noms de champs.
+si elles ont été communiquées. Le statut passe à `en attente` quand le
+candidat confirme l'envoi (§2.9). Voir `references/backend-write.md` pour
+le contrôle d'écriture et `references/modele-fichiers.md` pour les noms de
+champs.
 
 Les champs analytiques complètent le corps du README en sections.
 Adéquation et écarts confronte le profil aux exigences. Motivation porte
@@ -219,7 +292,7 @@ Le texte complet reste dans les fichiers brouillon créés en 2.7. Les
 fichiers brouillon contiennent le contenu, le README contient les
 métadonnées et l'analyse.
 
-## 2.11 Clôture
+## 2.12 Clôture
 
 Avant de clore, vérifier que tous les artefacts sont enregistrés dans le
 dossier de candidature : brouillons en fichiers frères, métadonnées et

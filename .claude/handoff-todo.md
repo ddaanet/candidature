@@ -4,7 +4,6 @@
 
 ## Remaining
 
-- Lot 3, règles de préparation et de soumission (preparation.md, soumission.md, cover-letter.md, etayage.md, suivi.md).
 - Lot 4, references/orchestration.md, renvoi SKILL.md, D-47.
 - Lot 5, adaptation-cv.md sur le flux pratiqué, pack-cv.py depuis inbox/harnais-2026-09-13/.
 - Lot 6, consolidation des fiches sites depuis ../Emploi/sites/.

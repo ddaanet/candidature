@@ -56,6 +56,42 @@ aucun fichier de site n'existe pour cette plateforme, procéder avec le
 fichier de référence s'il existe, ou avec prudence si aucune source n'est
 disponible.
 
+### Contrôle d'entrée
+
+Avant toute analyse, recherche ou adaptation de CV, établir trois faits sur la
+page de l'offre chez l'employeur. L'offre est-elle encore ouverte ? Quel est le
+canal direct pour candidater ? Le salaire affiché, s'il y en a un, atteint-il
+le plancher de la fiche ? Une offre fermée ou sous le plancher s'arrête là.
+
+Un agrégateur ou un cabinet de recrutement ne fait pas foi sur l'offre. Un
+message de sourcing vieux de plusieurs semaines se vérifie chez l'employeur
+avant tout travail. L'annonce a pu fermer, ou être remplacée sous le même
+intitulé par un autre poste aux exigences différentes. Le message du cabinet
+ne vaut pas description de l'offre, seule la page de l'employeur compte.
+
+Vérifier aussi que l'offre n'est pas déjà traitée. Une plateforme qui
+republie une annonce lui donne un nouvel identifiant, et la même offre revient
+sous un autre numéro. Comparer l'entreprise et l'intitulé du poste aux dossiers
+existants sous `candidatures/`, pas seulement l'identifiant ou l'URL. Si un
+dossier existe, signaler son statut au candidat au lieu d'en créer un second.
+
+### Lecture de l'annonce
+
+Lire l'annonce entière avant de se prononcer, description dépliée par le
+bouton « voir plus » quand la page la tronque. Une décision prise sur
+l'en-tête et le début de la description manque ce qui est écrit plus bas.
+Une grille salariale se trouve souvent en fin de description, parfois après
+la notice de confidentialité, et c'est elle qui compte pour le plancher. Les
+montants affichés sur les cartes d'offres similaires en bas de page
+appartiennent à d'autres offres, les ignorer.
+
+La distinction entre prérequis obligatoire et atout se lit dans la structure
+de l'annonce. Un intertitre comme « à lire avant de postuler » ou
+« requirements », un modalisateur comme « indispensable », « obligatoire » ou
+« required » marquent un prérequis. « Idéalement », « un plus », « nice to
+have » marquent un atout. Relever les prérequis obligatoires un par un et
+les confronter à la fiche candidat.
+
 ### Barrière de contraintes dures
 
 Avant d'analyser l'adéquation d'une offre, la confronter aux contraintes dures
@@ -63,6 +99,18 @@ de la fiche candidat chargées à l'entrée de phase. Une offre qui viole une
 contrainte dure est écartée d'office, sans passer par l'analyse à trois
 dimensions et sans être proposée au candidat. L'agent signale l'offre écartée
 et la contrainte violée.
+
+L'éligibilité géographique se lit sur la page de l'employeur, jamais sur la
+fiche d'un agrégateur. Un agrégateur pose sa propre valeur de pays, et une
+mention comme « Worldwide » y signifie souvent qu'il n'a pas su la
+déterminer. Deux signaux font foi chez l'employeur, le champ de localisation
+de l'annonce et les questions obligatoires du formulaire du type « êtes-vous
+situé dans tel pays ». Une clause générique en bas de page, identique sur
+toutes les annonces de l'employeur, ne dit rien du poste.
+
+Un prérequis obligatoire que le profil ne tient pas écarte l'offre comme une
+contrainte dure. Il ne se consigne pas en écart honnête dans l'analyse
+d'adéquation.
 
 Ce n'est pas l'agent qui décide à la place du candidat. Les contraintes dures
 sont des décisions que le candidat a déjà prises et inscrites dans sa fiche,
@@ -79,7 +127,7 @@ Pour chaque offre qui franchit la barrière, analyser l'adéquation avec le
 profil du candidat sur trois dimensions :
 
 1. Quelles compétences et expériences correspondent aux exigences du
-   poste ? Quels écarts honnêtes ?
+   poste ? Quels écarts honnêtes sur les atouts demandés ?
 2. Pourquoi cette entreprise ? Qu'est-ce qui, dans la culture, la
    mission, le produit ou l'équipe, correspond au candidat ?
 3. Qu'est-ce qui distingue ce candidat des autres pour ce poste précis ?
@@ -88,9 +136,8 @@ Chaque offre analysée est stockée immédiatement dans un dossier
 `candidatures/AAAA-MM-JJ-slug/`, avec un `README.md` dont le frontmatter
 porte `statut: shortlist`, l'entreprise et le poste. Le slug se calcule depuis
 l'entreprise et le poste, la date est celle du jour. Voir
-`references/backend-write.md` pour le contrôle d'écriture. Avant de créer le
-dossier, parcourir `candidatures/` pour vérifier qu'un dossier pour cette
-offre n'existe pas déjà.
+`references/backend-write.md` pour le contrôle d'écriture. Le contrôle
+d'entrée a déjà vérifié qu'aucun dossier n'existe pour cette offre.
 
 Le candidat décide quoi en faire. S'il veut candidater, le README de la
 shortlist est enrichi en dossier de candidature complet au lancement de la
@@ -117,8 +164,9 @@ ou d'écarter.
 
 ## 2.3 Canal de candidature
 
-Quand le candidat lance une candidature sur une offre shortlistée,
-chercher le meilleur canal. Si l'offre a été trouvée via un agrégateur
+Quand le candidat lance une candidature sur une offre shortlistée, refaire
+d'abord le contrôle d'entrée (§2.2). L'offre a pu fermer ou changer depuis la
+shortlist. Puis chercher le meilleur canal. Si l'offre a été trouvée via un agrégateur
 (LinkedIn, WTTJ, Indeed...), chercher d'abord le site carrière direct de
 l'entreprise (page "rejoindre", "careers", ATS propre). Candidater via le
 canal direct quand il existe, car il y a moins de bruit et une meilleure

@@ -732,7 +732,7 @@ synchronisation.
 
 Choix retenu : implémenté (v0.4).
 
-La capture site (§2.9) distingue deux sources d'observation. Le feedback
+La capture site (§2.10) distingue deux sources d'observation. Le feedback
 candidat est ce que l'utilisateur signale après soumission. L'observation
 autonome est ce que l'agent détecte pendant la soumission (contournement,
 comportement non standard). Chaque observation porte sa source.
@@ -1483,6 +1483,26 @@ concernés.
 | 40 | Un iframe de même domaine que sa page hôte n'est pas une cible séparée, il s'évalue par uniqueContextId | references/site-ouverture-playwright.md | Emploi/sites/welcomekit-ekie.md, Emploi/outils/welcomekit-frame.mjs | Étayé |
 | 41 | Les cartes et descriptions LinkedIn ne se chargent qu'au premier plan, le parcours expire avec des onglets tiers ouverts | references/site-ouverture-playwright.md | Emploi/correctifs.md 2026-09-16, Emploi/sites/linkedin.md | Étayé |
 | 42 | Le navigateur peut sortir par un proxy que curl n'emprunte pas | references/site-ouverture-playwright.md | Emploi/correctifs.md 2026-09-19, Emploi/sites/lever-pigment.md | Étayé |
+
+### Affirmations des règles de préparation et de soumission
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 43 | Une plateforme qui republie une annonce lui donne un nouvel identifiant, le doublon se détecte par entreprise et intitulé | references/preparation.md §2.2 | inbox/brief-correctifs-candidature-2026-08-27.md (Mobiskill MedTech 4427368009 puis 4443262290) | Étayé |
+| 44 | Un message de sourcing ancien peut viser une annonce remplacée sous le même intitulé | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-15 (ZenML/Kitaru) | Étayé |
+| 45 | La grille salariale peut se trouver en fin de description, les cartes d'offres similaires portent d'autres montants | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-08 (Proton), inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
+| 46 | Prérequis obligatoire et atout se distinguent par les intertitres et les modalisateurs de l'annonce | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-08 (Urban Linker LegalTech) | Étayé |
+| 47 | Un agrégateur pose sa propre valeur de pays, « Worldwide » y masque une restriction de l'employeur | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-09 (GitLab via EU Remote Jobs) | Étayé |
+| 48 | Un champ invisible présent au DOM est un piège anti-spam | references/soumission.md §2.6 | Emploi/correctifs.md 2026-09-08 (lity.so, input website sans offsetParent) | Étayé |
+| 49 | Un contrôle optionnel peut révéler le seul champ texte libre, une limite de longueur peut n'exister qu'au compteur | references/soumission.md §2.6 | Emploi/correctifs.md 2026-09-01 (LinkedIn Easy Apply, Urban Linker EDS) | Étayé |
+| 50 | Un CAPTCHA se repère dans le HTML servi, son jeton de case expire en quelques minutes | references/soumission.md §2.6, §2.9 | Emploi/correctifs.md 2026-09-15 (Ekie, Welcomekit) | Étayé |
+| 51 | L'API publique d'un ATS omet des champs affichés, pays, consentement, bloc diversité | references/soumission.md §2.6 | Emploi/correctifs.md 2026-09-14 (Greenhouse Datadog), 2026-09-17 (Ashby Mistral) | Étayé |
+| 52 | Le candidat remplit des champs factuels pendant la rédaction, avec des valeurs différentes des défauts | references/soumission.md §2.6, §2.8 | Emploi/correctifs.md 2026-09-09, ajout 2026-09-15 (Ekie) | Étayé |
+| 53 | La porte de permission refuse à l'agent le clic d'envoi, même avec l'accord transmis | references/soumission.md §2.9 | Emploi/correctifs.md 2026-09-14 (Greenhouse Datadog, Canonical) | Étayé |
+| 54 | Un refus anti-spam a persisté malgré un changement de réseau, la saisie manuelle est passée | references/soumission.md §2.9 | Emploi/correctifs.md 2026-09-01 (Ashby), 2026-09-19 (Lever Pigment) | Étayé |
+| 55 | Les groupes Expérience et Formation se remplissent depuis le CV, un bloc par expérience salariée, sans résumé | references/soumission.md §2.8 | Emploi/correctifs.md 2026-09-17 (Workable Terabase) | Étayé |
+| 56 | Un étayage de mémoire a attribué à la fiche un terme venu de l'annonce | references/etayage.md | Emploi/correctifs.md 2026-09-10 (Hostaway, MCP) | Étayé |
+| 57 | Un refus par courriel type est passé inaperçu avant une relance | references/suivi.md §4.1 | Emploi/correctifs.md 2026-09-17 (LITY) | Étayé |
 
 ### Bilan
 

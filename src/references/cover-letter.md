@@ -26,6 +26,13 @@ L'accroche ouvre toujours la lettre. Elle dit pourquoi ce poste et
 pourquoi cette entreprise, avec un élément spécifique qui ne serait pas
 interchangeable entre deux entreprises.
 
+Le texte ne commence pas par une phrase qui nomme le poste visé, du type
+« je vous adresse ma candidature au poste de ». Un texte saisi dans le
+formulaire de l'offre arrive au lecteur avec l'offre, il sait pour quel
+poste il lit et la phrase ne lui apprend rien. Après la salutation, entrer
+directement dans l'accroche. Dans un courriel hors formulaire, où ce
+contexte manque, nommer le poste reste utile.
+
 Vient ensuite l'adéquation : ce qui fait que le profil correspond au
 poste, en faits concrets. Puis la différenciation : ce qui distingue
 ce candidat des autres pour ce poste précis. La clôture est courte : disponibilité,

@@ -89,3 +89,8 @@ lisible, le skill est probablement mal installé. Dire :
 
 Suivre les instructions de la phase chargée. Quand la phase se
 termine, revenir aux règles de routage pour déterminer la suite.
+
+Le fil principal dialogue avec le candidat et confie le travail lourd,
+prospection, préparation de dossier, exploration et remplissage de
+formulaire, à des sous-agents. Charger `references/orchestration.md` avant
+de lancer le premier.

@@ -40,7 +40,7 @@ datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
   Experience et Education. `cover-letter.md` sans ouverture nommant le
   poste. `etayage.md` source fiche vérifiée par lecture effective.
   `suivi.md` boîte de réception avant relance.
-- [ ] Lot 4, orchestration par sous-agents. `references/orchestration.md`,
+- [x] Lot 4, orchestration par sous-agents. `references/orchestration.md`,
   renvoi dans SKILL.md, décision D-47. Navigateur aux sous-agents, rédaction
   dans le fil principal, brief type, rapport long en fichier, `/json/list`
   vérifié en fin de sous-agent.

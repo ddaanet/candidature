@@ -1235,6 +1235,33 @@ amélioration structurelle sur la prose, pas une preuve formelle.
 Sources, le dépôt 12-factor-agents de HumanLayer, StateFlow déjà cité en D-22,
 VOXAM. Pas de changement de format de stockage, le format reste 1.
 
+### D-47 : Orchestration par sous-agents, rédaction dans le fil principal
+
+Choix retenu : implémenté. `references/orchestration.md`, chargé depuis SKILL.md
+avant le premier sous-agent, décrit le mode de travail pratiqué dans le repo
+Emploi depuis le 2026-09-09. Le fil principal dialogue avec le candidat, garde
+la boucle du reducer (D-46) et pose les décisions. Le travail lourd va à des
+sous-agents, un par plateforme ou par dossier, pour que le fil reste court et
+lisible, à la demande du candidat.
+
+Le partage suit une limite relevée le 2026-09-15. Le navigateur va aux
+sous-agents, chacun sous son propriétaire d'onglets (D-35). La rédaction des
+textes destinés à l'employeur reste dans le fil principal, parce qu'un
+sous-agent n'a que la fiche et que la bonne réponse tenait à un fait qu'elle ne
+portait pas. Le fil principal enregistre l'inventaire par `capture-form`, la
+garde form-first protège donc la rédaction là où elle a lieu.
+
+Le brief type fixe ce qu'un sous-agent ne peut pas déduire, l'ordre de
+lecture, les interdits, l'accès au navigateur dit en toutes lettres, la
+vérification prioritaire et sa condition d'arrêt, la réponse courte avec
+rapport long en fichier. Chaque clause répond à un incident daté de
+`Emploi/correctifs.md`. La vérification de `/json/list` en fin de sous-agent
+est une porte locale côté orchestrateur, un brief ne suffisant pas à empêcher
+un onglet oublié.
+
+Alternative écartée, déléguer aussi la rédaction à un sous-agent avec la fiche
+en contexte. Quatre angles successifs ont été rejetés sur un même champ.
+
 ---
 
 ## Alternatives écartées globales
@@ -1336,6 +1363,7 @@ candidature/
       site-cloture.md
       consolidation.md
       modele-fichiers.md
+      orchestration.md
       sites/
         smartrecruiters.md
         teamtailor.md
@@ -1509,6 +1537,18 @@ concernés.
 | 55 | Les groupes Expérience et Formation se remplissent depuis le CV, un bloc par expérience salariée, sans résumé | references/soumission.md §2.8 | Emploi/correctifs.md 2026-09-17 (Workable Terabase) | Étayé |
 | 56 | Un étayage de mémoire a attribué à la fiche un terme venu de l'annonce | references/etayage.md | Emploi/correctifs.md 2026-09-10 (Hostaway, MCP) | Étayé |
 | 57 | Un refus par courriel type est passé inaperçu avant une relance | references/suivi.md §4.1 | Emploi/correctifs.md 2026-09-17 (LITY) | Étayé |
+
+### Affirmations de l'orchestration par sous-agents (D-47)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 58 | Deux prospections et deux dossiers ont tenu en parallèle par sous-agents sans alourdir le fil principal | references/orchestration.md, DESIGN.md D-47 | Emploi/correctifs.md 2026-09-09 | Étayé |
+| 59 | Quatre angles d'un sous-agent pour une réponse de formulaire rejetés, le candidat a écrit à partir d'un fait absent de la fiche | references/orchestration.md, DESIGN.md D-47 | Emploi/correctifs.md 2026-09-09, limite du 2026-09-15 (Alan) | Étayé |
+| 60 | Le canal de retour d'un sous-agent tronque au-delà d'une trentaine de lignes | references/orchestration.md | Emploi/correctifs.md 2026-09-09, inbox/brief-harnais-candidature-2026-09-13.md | Étayé |
+| 61 | Un sous-agent briefé sans navigateur a ouvert un onglet et l'a laissé ouvert | references/orchestration.md | Emploi/correctifs.md 2026-09-18 (WTTJ) | Étayé |
+| 62 | Sans condition d'arrêt écrite, un sous-agent de préparation s'est arrêté sur un README court | references/orchestration.md | Emploi/correctifs.md 2026-09-18 (EPI), Emploi/tmp/brief-preparation-2026-09-18.md | Étayé |
+| 63 | Le canal de retour répète un rapport dans les notifications d'inactivité | references/orchestration.md | Emploi/correctifs.md 2026-09-18 | Étayé |
+| 64 | Un sous-agent a attribué à la fiche une affirmation venue de l'annonce | references/orchestration.md | Emploi/correctifs.md 2026-09-10 (Hostaway, MCP) | Étayé |
 
 ### Bilan
 

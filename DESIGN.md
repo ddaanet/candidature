@@ -1248,8 +1248,12 @@ Le partage suit une limite relevée le 2026-09-15. Le navigateur va aux
 sous-agents, chacun sous son propriétaire d'onglets (D-35). La rédaction des
 textes destinés à l'employeur reste dans le fil principal, parce qu'un
 sous-agent n'a que la fiche et que la bonne réponse tenait à un fait qu'elle ne
-portait pas. Le fil principal enregistre l'inventaire par `capture-form`, la
-garde form-first protège donc la rédaction là où elle a lieu.
+portait pas. Le sous-agent qui fait l'inventaire l'enregistre lui-même par
+`capture-form`, il a les champs en contexte et sa réponse courte ne les
+porterait pas au fil principal. La garde form-first reste à la porte de la
+rédaction, puisque c'est `next`, appelé par le fil principal, qui l'ouvre. Ce
+branchement du reducer sur les sous-agents est une décision de conception, les
+briefs d'Emploi n'appelaient pas `dispatch.py`.
 
 Le brief type fixe ce qu'un sous-agent ne peut pas déduire, l'ordre de
 lecture, les interdits, l'accès au navigateur dit en toutes lettres, la

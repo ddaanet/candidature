@@ -13,7 +13,8 @@ court et lisible pour le candidat. Plusieurs sous-agents tournent en
 parallèle sans l'alourdir.
 
 Le fil principal garde la boucle de routage et les transitions du reducer
-(SKILL.md §4). Il pose les décisions au candidat avec le minimum de contexte
+(SKILL.md §4), sauf l'enregistrement du formulaire, qui revient au sous-agent
+qui en fait l'inventaire. Il pose les décisions au candidat avec le minimum de contexte
 utile, une ligne par décision.
 
 Les sous-agents pilotent le navigateur. Ils explorent les sites, font
@@ -27,9 +28,11 @@ référence en donne la raison et l'ordre à suivre.
 La rédaction des textes destinés à l'employeur reste dans le fil principal,
 avec le candidat. Cela vaut pour la lettre, les réponses de formulaire et les
 messages courts. Le sous-agent relève les champs texte libre avec leur
-libellé exact et leurs limites. Le fil principal enregistre l'inventaire par
-`capture-form`, puis rédige dans la boucle par champ
-(`references/soumission.md` §2.7). Un sous-agent qui rédige seul n'a que la
+libellé exact et leurs limites, et enregistre l'inventaire par
+`capture-form` (`references/soumission.md` §2.6). Le fil principal appelle
+ensuite `next`, qui lui rend la liste des champs et ouvre la rédaction, puis
+rédige dans la boucle par champ (§2.7). Sans enregistrement, `next` renvoie
+à l'exploration et la rédaction reste fermée. Un sous-agent qui rédige seul n'a que la
 fiche, et il lui manque les faits qu'elle ne porte pas. Quatre angles
 successifs d'un sous-agent pour une même réponse ont été rejetés, et le
 candidat a fini par l'écrire lui-même à partir d'un fait absent de la fiche.
@@ -41,8 +44,8 @@ place (`references/soumission.md` §2.9).
 ## Brief d'un sous-agent
 
 Le sous-agent ne voit pas la conversation. Son brief porte tout ce qu'il doit
-savoir, avec des chemins absolus, y compris celui du dossier `references/` du
-skill, qu'il ne connaît pas.
+savoir, avec des chemins absolus, y compris ceux des dossiers `references/`
+et `scripts/` du skill, qu'il ne connaît pas.
 
 Le brief donne d'abord les fichiers à lire dans l'ordre : les instructions du
 repo de données s'il en porte, `fiche-candidat.md` en entier, les références
@@ -73,6 +76,10 @@ Le brief rappelle que chaque affirmation sur le candidat se vérifie par une
 recherche effective dans `fiche-candidat.md` (`references/etayage.md`). Un
 sous-agent qui analyse l'adéquation projette facilement une exigence de
 l'annonce sur le profil, puis l'attribue à la fiche.
+
+Un sous-agent qui fait l'inventaire d'un formulaire termine par
+`capture-form` sur le dossier, avec le chemin absolu de `dispatch.py` que le
+brief lui donne, et le rapporte dans sa réponse.
 
 Un sous-agent de remplissage travaille en deux temps. Il relève d'abord
 l'état de chaque champ, fichiers joints et cases compris, et le rapporte. Il

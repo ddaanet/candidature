@@ -69,13 +69,14 @@ lettre qui ne fait que résumer le CV rate sa cible.
 
 Modification du CV DOCX du candidat en préservant la mise en forme.
 
-Le mécanisme utilise python-docx, avec un travail au niveau du run (pas du
-paragraphe). Ajustements ciblés, pas de réécriture. Le candidat décide si
-l'adaptation est faite.
+Le mécanisme édite le texte dans l'expansion XML du DOCX, versionnée dans le
+repo de données, puis reconstruit le DOCX et rend le PDF par LibreOffice
+(D-48). Ajustements ciblés, pas de réécriture. Chaque proposition est mesurée
+au rendu avant d'être présentée, le candidat décide sur le PDF rendu.
 
-Les zones de texte flottantes, les mises en page multi-colonnes et les images
-positionnées sont des limites connues de python-docx. Si le CV est trop
-complexe, proposer des modifications manuelles.
+Une image ou un cadre positionné peut se déplacer quand le texte change de
+longueur, le rendu le montre. Une mise en page que LibreOffice rend mal se
+traite comme un CV fourni en PDF, le candidat applique les modifications.
 
 ### FR-5 : Relecture structurée
 
@@ -283,16 +284,17 @@ pour tout profil.
 
 Choix retenu : DOCX comme format de référence.
 
-python-docx permet de modifier le texte en préservant les styles, polices,
-couleurs du candidat. Markdown perd toute information visuelle. Les formats
+Le XML du DOCX permet de modifier le texte en préservant les styles, polices,
+couleurs du candidat. Le mécanisme d'édition est décrit en D-48, python-docx
+d'origine y est écarté. Markdown perd toute information visuelle. Les formats
 natifs (Pages, Canva) ne sont pas manipulables programmatiquement.
 
 Écartés : Markdown (perte de mise en forme), édition directe via
 AppleScript dans Pages (fragile et limité), PDF (lecture seule).
 
-Compromis accepté : python-docx ne gère pas les zones de texte flottantes
-ni les mises en page très complexes. Le candidat qui a un CV avec un design
-élaboré recevra des suggestions de modifications manuelles.
+Compromis accepté : une mise en page que LibreOffice rend mal ne se mesure
+pas fidèlement. Le candidat qui a un CV avec un design élaboré recevra des
+suggestions de modifications manuelles.
 
 ### D-6 : Données persistantes, mémoire projet vs fichiers
 
@@ -1266,6 +1268,35 @@ un onglet oublié.
 Alternative écartée, déléguer aussi la rédaction à un sous-agent avec la fiche
 en contexte. Quatre angles successifs ont été rejetés sur un même champ.
 
+### D-48 : CV en expansion XML versionnée, mesuré au rendu
+
+Choix retenu : implémenté. `references/adaptation-cv.md` décrit le flux pratiqué
+dans le repo Emploi depuis juin 2026. Le CV vit sous `cv/` du repo de données
+en expansion XML indentée, une par langue, versionnée en clair. On édite le
+texte des éléments `<w:t>`, `scripts/cv_docx.py` reconstruit le DOCX (`pack`)
+et rend le PDF par LibreOffice (`render`), le DOCX reconstruit étant ignoré
+par git. L'historique de `cv/` garde chaque version envoyée, le diff de l'arbre
+de travail est l'adaptation en cours.
+
+Toute proposition se mesure au rendu avant d'être présentée. Le 2026-09-19,
+cinq propositions acceptées sur estimation donnaient un CV de deux pages.
+`render` refuse de conclure quand le PDF n'a pas été réécrit : en bac à sable,
+LibreOffice échoue sur « no valid pipe path found » et laisse en place le PDF
+précédent, lu ensuite comme neuf le 2026-09-08.
+
+`cv_docx.py` suit le packaging des scripts embarqués (D-43, D-44), stdlib seul.
+Il remplace `pack.py` et `unpack.py`, retirés du skill docx d'Anthropic en
+septembre 2026, et le `pack-cv.py` du repo Emploi, qui dépendait de lxml. Son
+`pack` produit un XML canoniquement identique à celui de `pack-cv.py` sur le CV
+d'Emploi.
+
+Alternatives écartées. python-docx, la mécanique d'origine (D-5), est une
+dépendance hors stdlib, et le repo Emploi a suivi l'expansion XML en dépit de
+la référence qui la décrivait. `cvtry.py` d'Emploi
+tel quel, aux chemins codés en dur. Des budgets de caractères par type de
+ligne, propres à un CV donné, que `cv/README.md` du repo de données note au
+lieu du skill.
+
 ---
 
 ## Alternatives écartées globales
@@ -1349,6 +1380,8 @@ candidature/
     scripts/
       init_repo.py
       validate.py
+      dispatch.py
+      cv_docx.py
     references/
       profil.md
       preparation.md
@@ -1553,6 +1586,14 @@ concernés.
 | 62 | Sans condition d'arrêt écrite, un sous-agent de préparation s'est arrêté sur un README court | references/orchestration.md | Emploi/correctifs.md 2026-09-18 (EPI), Emploi/tmp/brief-preparation-2026-09-18.md | Étayé |
 | 63 | Le canal de retour répète un rapport dans les notifications d'inactivité | references/orchestration.md | Emploi/correctifs.md 2026-09-18 | Étayé |
 | 64 | Un sous-agent a attribué à la fiche une affirmation venue de l'annonce | references/orchestration.md | Emploi/correctifs.md 2026-09-10 (Hostaway, MCP) | Étayé |
+| 65 | Des propositions de CV acceptées sur estimation ont donné deux pages, une ligne de titre coûte plus qu'une ligne de corps | references/adaptation-cv.md, DESIGN.md D-48 | Emploi/correctifs.md 2026-09-19 (Pigment) | Étayé |
+| 66 | En bac à sable, LibreOffice échoue sur « no valid pipe path found » et laisse le PDF précédent en place | references/adaptation-cv.md, DESIGN.md D-48, scripts/cv_docx.py | Emploi/memory/cv-pdf-soffice.md (relevé 2026-09-08), reproduit le 2026-09-27 | Étayé |
+| 67 | Le skill docx n'a plus pack.py ni unpack.py | DESIGN.md D-48 | inbox/brief-harnais-candidature-2026-09-13.md, Emploi/cv/README.md (constaté 2026-09-12) | Étayé |
+| 68 | Le nom de fichier livré qui révèle le sur-mesure fait mauvais effet | references/adaptation-cv.md | Emploi/memory/cv-nom-fichier-candidat.md, consigne du candidat | Étayé |
+| 69 | Le flux expansion XML, historique linéaire, adaptation non commitée jusqu'à l'envoi | references/adaptation-cv.md, DESIGN.md D-48 | Emploi/cv/README.md, Emploi/Archive/passations/2026-06-17-2, Emploi git log -- cv/ | Étayé |
+| 72 | Le repo Emploi n'a pas suivi python-docx, il a édité l'expansion XML | DESIGN.md D-48 | Emploi/candidatures/2026-09-13-qrt-researcher-experience/adaptation-cv-proposition.md | Étayé |
+| 70 | Le candidat valide sur le PDF rendu, ses corrections de fond vont dans la fiche | references/adaptation-cv.md | Emploi/correctifs.md 2026-09-19, Emploi/fiche-candidat.md arbitrages du 2026-09-19 | Étayé |
+| 71 | pack de cv_docx.py canoniquement identique à pack-cv.py sur le CV anglais d'Emploi | DESIGN.md D-48 | comparaison C14N du 2026-09-27, toutes parties | Étayé |
 
 ### Bilan
 

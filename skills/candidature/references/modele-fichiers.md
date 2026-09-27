@@ -85,6 +85,15 @@ interlocuteurs, les points clés et les apprentissages transférables.
 Les prospects repérés mais pas encore qualifiés en candidature restent dans
 `candidatures/_a-trier.md`, une ligne chacun, jusqu'à promotion en dossier.
 
+## CV
+
+Le répertoire `cv/` naît à la première adaptation du CV. Il porte une
+expansion XML par langue, `cv-fr/` ou `cv-en/`, source de vérité versionnée,
+le PDF rendu, et un `.gitignore` qui exclut les DOCX reconstruits. Son
+`README.md` note les limites de mise en page mesurées. Le protocole est dans
+`references/adaptation-cv.md`. Une proposition d'adaptation vit dans
+`adaptation-cv-proposition.md` du dossier de candidature.
+
 ## Fichier recherche
 
 Chaque recherche contextuelle est un fichier sous `recherches/`, nommé par

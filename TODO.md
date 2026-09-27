@@ -44,10 +44,11 @@ datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
   renvoi dans SKILL.md, décision D-47. Navigateur aux sous-agents, rédaction
   dans le fil principal, brief type, rapport long en fichier, `/json/list`
   vérifié en fin de sous-agent.
-- [ ] Lot 5, adaptation du CV sur le flux pratiqué. `adaptation-cv.md`
-  réécrit : expansion XML versionnée, `pack-cv.py` dans `src/scripts/`, PDF
-  rendu et nombre de pages mesurés avant toute proposition. python-docx
-  retiré.
+- [x] Lot 5, adaptation du CV sur le flux pratiqué. `adaptation-cv.md`
+  réécrit : expansion XML versionnée, PDF rendu et nombre de pages mesurés
+  avant toute proposition. python-docx retiré. `pack-cv.py` devenu
+  `scripts/cv_docx.py` en stdlib (unpack, pack, render avec garde contre le
+  PDF périmé), décision D-48.
 - [ ] Lot 6, consolidation des fiches sites (`references/consolidation.md`)
   depuis `../Emploi/sites/`. Créer `ashby.md`, `greenhouse.md`, `lever.md`,
   enrichir `linkedin.md`, `wttj.md`, `teamtailor.md`. Plateforme seulement.

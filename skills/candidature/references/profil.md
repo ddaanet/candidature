@@ -11,8 +11,8 @@ Demander au candidat de fournir son CV.
 Le format préféré est le DOCX. Il permet de modifier le contenu en
 préservant la mise en forme. Si le candidat utilise un autre outil (Pages,
 Canva, Google Docs, LaTeX...), lui demander d'exporter en DOCX. En dernier
-recours, un PDF suffit pour la lecture, mais les adaptations produiront un
-nouveau fichier plutôt qu'une modification de l'existant.
+recours, un PDF suffit pour la lecture, et le candidat applique lui-même les
+adaptations dans son outil.
 
 Lire le CV, par lecture directe ou programmatique. Confirmer au candidat ce qu'on
 a compris : parcours, compétences principales, expériences clés. Signaler

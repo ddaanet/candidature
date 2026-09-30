@@ -448,10 +448,13 @@ du skill, et porte sa source (feedback candidat ou observation autonome de
 l'agent). Quand l'agent adopte un contournement, il enregistre le problème, la
 solution et le résultat. Porte `[outil]` cohérente avec D-13.
 
-La consolidation (references/consolidation.md, différée) lit les observations
-terrain du repo de données, les déduplique, et met à jour les fichiers
+La consolidation (references/consolidation.md) lit les observations terrain du
+repo de données, les déduplique, et met à jour les fichiers
 `references/sites/*.md` du plugin. Les observations consolidées restent dans le
-repo de données (source primaire).
+repo de données (source primaire). Première passe le 2026-09-30, depuis les
+fiches du repo Emploi : Ashby, Greenhouse, Lever, Recruitee et Workable créés,
+LinkedIn, Teamtailor et WTTJ enrichis. Plusieurs fiches d'employeur d'une même
+plateforme alimentent un seul fichier de référence.
 
 L'expérience d'intégration avec les ATS s'accumule naturellement au fil
 des candidatures. Sans structuration, elle reste éparpillée dans les
@@ -1594,6 +1597,20 @@ concernés.
 | 72 | Le repo Emploi n'a pas suivi python-docx, il a édité l'expansion XML | DESIGN.md D-48 | Emploi/candidatures/2026-09-13-qrt-researcher-experience/adaptation-cv-proposition.md | Étayé |
 | 70 | Le candidat valide sur le PDF rendu, ses corrections de fond vont dans la fiche | references/adaptation-cv.md | Emploi/correctifs.md 2026-09-19, Emploi/fiche-candidat.md arbitrages du 2026-09-19 | Étayé |
 | 71 | pack de cv_docx.py canoniquement identique à pack-cv.py sur le CV anglais d'Emploi | DESIGN.md D-48 | comparaison C14N du 2026-09-27, toutes parties | Étayé |
+
+### Affirmations des fiches de plateforme (consolidation du 2026-09-30)
+
+| # | Affirmation | Fichier | Source | Statut |
+|---|-------|---------|--------|--------|
+| 73 | Ashby : API posting et GraphQL, champs absents de l'API, reCAPTCHA de plateforme, envoi accepté au clic du candidat quatre fois sur quatre | references/sites/ashby.md | Emploi/sites/ashby.md (2026-04-02 à 2026-09-17), inbox/brief-correctifs-candidature-2026-08-27.md, Emploi/tmp/prospection-linkedin-2026-09-18.md (403 sans User-Agent) | Étayé |
+| 74 | Greenhouse : boards-api et `location.name`, grille dans `content`, iframe chez l'employeur, react-select par événements CDP | references/sites/greenhouse.md | Emploi/sites/greenhouse.md, Emploi/sites/greenhouse-2.md, Emploi/correctifs.md 2026-09-09 et 2026-09-14 | Étayé |
+| 75 | Lever : lecture par curl et API, cartes `baseTemplate`, hCaptcha de plateforme, envoi piloté refusé et saisie manuelle acceptée | references/sites/lever.md | Emploi/sites/lever-kraken.md, lever-scaleway.md, lever-pigment.md, lever-c12.md, Emploi/correctifs.md 2026-09-19 | Étayé |
+| 76 | Recruitee : `data-props`, offres `internal`, attache Playwright expirée, téléphone au format international | references/sites/recruitee.md | Emploi/sites/recruitee-hostaway.md, Emploi/correctifs.md 2026-09-11 | Étayé |
+| 77 | Workable : API publique du formulaire, type JSON contre DOM, adresse géolocalisée, dates `react-datepicker` à frappes réelles | references/sites/workable.md | Emploi/sites/workable-datagalaxy.md, workable-runware.md, workable-riot.md, workable-terabase.md, Emploi/correctifs.md 2026-09-17 | Étayé |
+| 78 | LinkedIn : vivacité lue dans l'en-tête, Easy Apply contre Apply, retitrage sans changement de jobId, bridage après une quarantaine de lectures, `recommended` au-delà de dix pages, annonces STATION F anonymisées | references/sites/linkedin.md | Emploi/sites/linkedin.md, inbox/brief-correctifs-candidature-2026-08-27.md, Emploi/correctifs.md 2026-09-18, Emploi/tmp/prospection-linkedin-2026-09-18.md | Étayé |
+| 79 | Teamtailor : `jobs.json`, JSON-LD non fiable, `data-question-mandatory`, bannière qui capture le focus, curseur répondu d'office | references/sites/teamtailor.md | Emploi/sites/teamtailor.md, Emploi/sites/teamtailor-chapsvision.md, inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
+| 80 | WTTJ : recherche fermée, sitemaps et API v1, dates et métadonnées différentes de l'employeur, `application_fields` décrit l'agrégateur | references/sites/wttj.md | Emploi/sites/wttj-welcome-to-the-jungle.md, Emploi/sites/workable-riot.md, Emploi/sites/lever-pigment.md, inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
+| 81 | Un script `connectOverCDP` sans déconnexion ne se termine pas, `browser.close()` ne ferme aucun onglet | references/site-ouverture-playwright.md | inbox/brief-correctifs-candidature-2026-08-27.md, essai du 2026-09-30 sur un chromium jetable, playwright-core 1.60.0 | Étayé |
 
 ### Bilan
 

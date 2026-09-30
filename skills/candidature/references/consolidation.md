@@ -23,7 +23,11 @@ Un fichier par plateforme (pas par employeur).
 # <Nom de la plateforme>
 
 ## Approche
-DOM, visuelle ou mixte. Résumé en une phrase.
+L'approche, DOM, visuelle ou mixte, résumée en une phrase.
+
+## Lecture sans navigateur
+API publiques et HTML servi, ce qu'ils donnent et ce qu'ils omettent par
+rapport au formulaire rendu.
 
 ## Contraintes techniques
 Observations factuelles. Chaque contrainte est formulée comme un
@@ -43,10 +47,19 @@ Solutions validées, classées par problème. Chaque contournement porte
 le problème rencontré, la solution adoptée et le résultat.
 
 ## Historique
-Date, entreprise, observation. Traçabilité des entrées consolidées, en
-commentaires markdown datés ou en prose dans le corps du fichier, pas dans
-des propriétés de page.
+Date, entreprise, observation en une phrase. Traçabilité des entrées
+consolidées, pas dans des propriétés de page.
 ```
+
+Consolider la plateforme seulement. Une observation propre à un employeur
+reste dans `sites/` du repo de données, sauf quand elle illustre une
+contrainte de la plateforme, citée alors comme instance datée. Quand
+plusieurs fichiers de `sites/` couvrent la même plateforme sous des noms
+d'employeur (`lever-pigment.md`, `lever-c12.md`), ils alimentent un seul
+fichier de référence. Une observation corrigée par une observation plus
+récente se consolide dans son état corrigé. Une conduite datée de l'époque
+du navigateur par extension, remplacée depuis par le pilotage CDP, ne se
+consolide pas.
 
 ## Sources
 

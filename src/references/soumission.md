@@ -36,10 +36,10 @@ Si le navigateur est disponible, ouvrir directement la page de
 candidature. Refuser les cookies marketing et
 pistage. Accepter les cookies fonctionnels si nécessaire au bon
 fonctionnement du site (session, CSRF, état multi-étapes). Les
-particularités des plateformes ATS (clipboard WTTJ, dropzone
-Teamtailor, native setter Lever) sont documentées dans la couche
-navigateur chargée par le dispatcher quand le navigateur est
-disponible.
+particularités des plateformes ATS (dropzone Teamtailor, react-select
+Greenhouse, saisie manuelle sur Lever) sont documentées dans les fichiers
+`references/sites/*.md`, et le pilotage du navigateur dans la couche
+navigateur chargée par le dispatcher.
 
 Si le navigateur n'est pas disponible, demander au candidat de décrire les
 champs du formulaire : libellés, type (texte libre, liste déroulante,

@@ -117,6 +117,13 @@ les cookies fonctionnels nécessaires au flux. Commencer par l'approche
 DOM (sélecteurs CSS, remplissage de formulaire) et basculer en approche
 visuelle (captures d'écran) quand le DOM est peu fiable.
 
+Un script attaché par `connectOverCDP` ne se termine pas tant qu'il ne se
+déconnecte pas, et la commande qui le lance attend jusqu'à expiration. Le
+finir par `browser.close()` ou `process.exit()`. Sur une connexion
+`connectOverCDP`, `browser.close()` coupe la connexion sans fermer aucun
+onglet, ni ceux du candidat ni ceux que le script a ouverts. Fermer par
+`page.close()` les onglets du script qui ne servent plus.
+
 ## Consolidation
 
 Les patterns réutilisables remontent au fil des candidatures dans

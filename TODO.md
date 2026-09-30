@@ -51,11 +51,24 @@ datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
   PDF périmé), décision D-48.
 - [ ] Lot 6, consolidation des fiches sites (`references/consolidation.md`)
   depuis `../Emploi/sites/`. Créer `ashby.md`, `greenhouse.md`, `lever.md`,
-  enrichir `linkedin.md`, `wttj.md`, `teamtailor.md`. Plateforme seulement.
+  `recruitee.md`, enrichir `linkedin.md`, `wttj.md`, `teamtailor.md`.
+  Plateforme seulement. Restes de `correctifs.md` : API Greenhouse
+  `boards-api` et react-select, `react-datepicker` Workable, Lever refuse
+  l'envoi piloté, limite d'une quarantaine de lectures LinkedIn, flux
+  `recommended` au-delà de dix pages dont la qualité chute après la page 3,
+  republications « STATION F », téléphone Recruitee saisi en `+33 …`. Du
+  brief du 2026-08-27 : `posting-api` Ashby et hypothèse reCAPTCHA, API WTTJ,
+  GET `applications/new` Teamtailor, vivacité LinkedIn lue dans l'en-tête,
+  Easy Apply contre Apply, retitrage sans changement de jobId. Dans
+  `site-ouverture-playwright.md`, un script `connectOverCDP` sans
+  `process.exit()` ne se termine jamais, et vérifier si `browser.close()`
+  ferme les onglets du candidat. Le lot vide `../Emploi/correctifs.md` à
+  l'en-tête près.
 
-Écartés : `walk.mjs check --jobId` (backlog), `welcomekit-frame.mjs`,
-`cvtry.py` tel quel, budgets de caractères du CV, méthode Notion
-`loadPageChunk`, qui restent dans Emploi.
+Écartés : `walk.mjs check --jobId` (backlog, fonction nouvelle du harnais).
+`welcomekit-frame.mjs`, `cvtry.py`, budgets de caractères du CV et méthode
+Notion `loadPageChunk` sont propres au repo Emploi, déplacés de
+`correctifs.md` vers `../Emploi/CLAUDE.md`.
 
 ### Migration Notion vers fichiers locaux
 

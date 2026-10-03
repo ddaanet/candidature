@@ -1571,9 +1571,9 @@ concernés.
 
 | # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 43 | Une plateforme qui republie une annonce lui donne un nouvel identifiant, le doublon se détecte par entreprise et intitulé | references/preparation.md §2.2 | inbox/brief-correctifs-candidature-2026-08-27.md (Mobiskill MedTech 4427368009 puis 4443262290) | Étayé |
+| 43 | Une plateforme qui republie une annonce lui donne un nouvel identifiant, le doublon se détecte par entreprise et intitulé | references/preparation.md §2.2 | Emploi/sites/linkedin.md 2026-08-26, Emploi/candidatures/2026-07-07-mobiskill-medtech/README.md (Mobiskill MedTech 4427368009 puis 4443262290) | Étayé |
 | 44 | Un message de sourcing ancien peut viser une annonce remplacée sous le même intitulé | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-15 (ZenML/Kitaru) | Étayé |
-| 45 | La grille salariale peut se trouver en fin de description, les cartes d'offres similaires portent d'autres montants | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-08 (Proton), inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
+| 45 | La grille salariale peut se trouver en fin de description, les cartes d'offres similaires portent d'autres montants | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-08 (Proton), brief du 2026-08-27 (non conservé) | Étayé |
 | 46 | Prérequis obligatoire et atout se distinguent par les intertitres et les modalisateurs de l'annonce | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-08 (Urban Linker LegalTech) | Étayé |
 | 47 | Un agrégateur pose sa propre valeur de pays, « Worldwide » y masque une restriction de l'employeur | references/preparation.md §2.2 | Emploi/correctifs.md 2026-09-09 (GitLab via EU Remote Jobs) | Étayé |
 | 48 | Un champ invisible présent au DOM est un piège anti-spam | references/soumission.md §2.6 | Emploi/correctifs.md 2026-09-08 (lity.so, input website sans offsetParent) | Étayé |
@@ -1593,14 +1593,14 @@ concernés.
 |---|-------|---------|--------|--------|
 | 58 | Deux prospections et deux dossiers ont tenu en parallèle par sous-agents sans alourdir le fil principal | references/orchestration.md, DESIGN.md D-47 | Emploi/correctifs.md 2026-09-09 | Étayé |
 | 59 | Quatre angles d'un sous-agent pour une réponse de formulaire rejetés, le candidat a écrit à partir d'un fait absent de la fiche | references/orchestration.md, DESIGN.md D-47 | Emploi/correctifs.md 2026-09-09, limite du 2026-09-15 (Alan) | Étayé |
-| 60 | Le canal de retour d'un sous-agent tronque au-delà d'une trentaine de lignes | references/orchestration.md | Emploi/correctifs.md 2026-09-09, inbox/brief-harnais-candidature-2026-09-13.md | Étayé |
+| 60 | Le canal de retour d'un sous-agent tronque au-delà d'une trentaine de lignes | references/orchestration.md | Emploi/correctifs.md 2026-09-09, brief du 2026-09-13 (non conservé) | Étayé |
 | 61 | Un sous-agent briefé sans navigateur a ouvert un onglet et l'a laissé ouvert | references/orchestration.md | Emploi/correctifs.md 2026-09-18 (WTTJ) | Étayé |
 | 62 | Sans condition d'arrêt écrite, un sous-agent de préparation s'est arrêté sur un README court | references/orchestration.md | Emploi/correctifs.md 2026-09-18 (EPI), Emploi/tmp/brief-preparation-2026-09-18.md | Étayé |
 | 63 | Le canal de retour répète un rapport dans les notifications d'inactivité | references/orchestration.md | Emploi/correctifs.md 2026-09-18 | Étayé |
 | 64 | Un sous-agent a attribué à la fiche une affirmation venue de l'annonce | references/orchestration.md | Emploi/correctifs.md 2026-09-10 (Hostaway, MCP) | Étayé |
 | 65 | Des propositions de CV acceptées sur estimation ont donné deux pages, une ligne de titre coûte plus qu'une ligne de corps | references/adaptation-cv.md, DESIGN.md D-48 | Emploi/correctifs.md 2026-09-19 (Pigment) | Étayé |
 | 66 | En bac à sable, LibreOffice échoue sur « no valid pipe path found » et laisse le PDF précédent en place | references/adaptation-cv.md, DESIGN.md D-48, scripts/cv_docx.py | Emploi/memory/cv-pdf-soffice.md (relevé 2026-09-08), reproduit le 2026-09-27 | Étayé |
-| 67 | Le skill docx n'a plus pack.py ni unpack.py | DESIGN.md D-48 | inbox/brief-harnais-candidature-2026-09-13.md, Emploi/cv/README.md (constaté 2026-09-12) | Étayé |
+| 67 | Le skill docx n'a plus pack.py ni unpack.py | DESIGN.md D-48 | brief du 2026-09-13 (non conservé), Emploi/cv/README.md (constaté 2026-09-12) | Étayé |
 | 68 | Le nom de fichier livré qui révèle le sur-mesure fait mauvais effet | references/adaptation-cv.md | Emploi/memory/cv-nom-fichier-candidat.md, consigne du candidat | Étayé |
 | 69 | Le flux expansion XML, historique linéaire, adaptation non commitée jusqu'à l'envoi | references/adaptation-cv.md, DESIGN.md D-48 | Emploi/cv/README.md, Emploi/Archive/passations/2026-06-17-2, Emploi git log -- cv/ | Étayé |
 | 72 | Le repo Emploi n'a pas suivi python-docx, il a édité l'expansion XML | DESIGN.md D-48 | Emploi/candidatures/2026-09-13-qrt-researcher-experience/adaptation-cv-proposition.md | Étayé |
@@ -1611,15 +1611,15 @@ concernés.
 
 | # | Affirmation | Fichier | Source | Statut |
 |---|-------|---------|--------|--------|
-| 73 | Ashby : API posting et GraphQL, champs absents de l'API, reCAPTCHA de plateforme, envoi accepté au clic du candidat quatre fois sur quatre | references/sites/ashby.md | Emploi/sites/ashby.md (2026-04-02 à 2026-09-17), inbox/brief-correctifs-candidature-2026-08-27.md, Emploi/tmp/prospection-linkedin-2026-09-18.md (403 sans User-Agent) | Étayé |
+| 73 | Ashby : API posting et GraphQL, champs absents de l'API, reCAPTCHA de plateforme, envoi accepté au clic du candidat quatre fois sur quatre | references/sites/ashby.md | Emploi/sites/ashby.md (2026-04-02 à 2026-09-17), brief du 2026-08-27 (non conservé), Emploi/tmp/prospection-linkedin-2026-09-18.md (403 sans User-Agent) | Étayé |
 | 74 | Greenhouse : boards-api et `location.name`, grille dans `content`, iframe chez l'employeur, react-select par événements CDP | references/sites/greenhouse.md | Emploi/sites/greenhouse.md, Emploi/sites/greenhouse-2.md, Emploi/correctifs.md 2026-09-09 et 2026-09-14 | Étayé |
 | 75 | Lever : lecture par curl et API, cartes `baseTemplate`, hCaptcha de plateforme, envoi piloté refusé et saisie manuelle acceptée | references/sites/lever.md | Emploi/sites/lever-kraken.md, lever-scaleway.md, lever-pigment.md, lever-c12.md, Emploi/correctifs.md 2026-09-19 | Étayé |
 | 76 | Recruitee : `data-props`, offres `internal`, attache Playwright expirée, téléphone au format international | references/sites/recruitee.md | Emploi/sites/recruitee-hostaway.md, Emploi/correctifs.md 2026-09-11 | Étayé |
 | 77 | Workable : API publique du formulaire, type JSON contre DOM, adresse géolocalisée, dates `react-datepicker` à frappes réelles | references/sites/workable.md | Emploi/sites/workable-datagalaxy.md, workable-runware.md, workable-riot.md, workable-terabase.md, Emploi/correctifs.md 2026-09-17 | Étayé |
-| 78 | LinkedIn : vivacité lue dans l'en-tête, Easy Apply contre Apply, retitrage sans changement de jobId, bridage après une quarantaine de lectures, `recommended` au-delà de dix pages, annonces STATION F anonymisées | references/sites/linkedin.md | Emploi/sites/linkedin.md, inbox/brief-correctifs-candidature-2026-08-27.md, Emploi/correctifs.md 2026-09-18, Emploi/tmp/prospection-linkedin-2026-09-18.md | Étayé |
-| 79 | Teamtailor : `jobs.json`, JSON-LD non fiable, `data-question-mandatory`, bannière qui capture le focus, curseur répondu d'office | references/sites/teamtailor.md | Emploi/sites/teamtailor.md, Emploi/sites/teamtailor-chapsvision.md, inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
-| 80 | WTTJ : recherche fermée, sitemaps et API v1, dates et métadonnées différentes de l'employeur, `application_fields` décrit l'agrégateur | references/sites/wttj.md | Emploi/sites/wttj-welcome-to-the-jungle.md, Emploi/sites/workable-riot.md, Emploi/sites/lever-pigment.md, inbox/brief-correctifs-candidature-2026-08-27.md | Étayé |
-| 81 | Un script `connectOverCDP` sans déconnexion ne se termine pas, `browser.close()` ne ferme aucun onglet | references/site-ouverture-playwright.md | inbox/brief-correctifs-candidature-2026-08-27.md, essai du 2026-09-30 sur un chromium jetable, playwright-core 1.60.0 | Étayé |
+| 78 | LinkedIn : vivacité lue dans l'en-tête, Easy Apply contre Apply, retitrage sans changement de jobId, bridage après une quarantaine de lectures, `recommended` au-delà de dix pages, annonces STATION F anonymisées | references/sites/linkedin.md | Emploi/sites/linkedin.md, brief du 2026-08-27 (non conservé), Emploi/correctifs.md 2026-09-18, Emploi/tmp/prospection-linkedin-2026-09-18.md | Étayé |
+| 79 | Teamtailor : `jobs.json`, JSON-LD non fiable, `data-question-mandatory`, bannière qui capture le focus, curseur répondu d'office | references/sites/teamtailor.md | Emploi/sites/teamtailor.md, Emploi/sites/teamtailor-chapsvision.md, brief du 2026-08-27 (non conservé) | Étayé |
+| 80 | WTTJ : recherche fermée, sitemaps et API v1, dates et métadonnées différentes de l'employeur, `application_fields` décrit l'agrégateur | references/sites/wttj.md | Emploi/sites/wttj-welcome-to-the-jungle.md, Emploi/sites/workable-riot.md, Emploi/sites/lever-pigment.md, brief du 2026-08-27 (non conservé) | Étayé |
+| 81 | Un script `connectOverCDP` sans déconnexion ne se termine pas, `browser.close()` ne ferme aucun onglet | references/site-ouverture-playwright.md | brief du 2026-08-27 (non conservé), essai du 2026-09-30 sur un chromium jetable, playwright-core 1.60.0 | Étayé |
 
 ### Bilan
 

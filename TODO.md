@@ -2,10 +2,9 @@
 
 ### Triage inbox du 2026-09-26
 
-Sources : `inbox/brief-correctifs-candidature-2026-08-27.md`,
-`inbox/brief-harnais-candidature-2026-09-13.md`, scripts joints dans
-`inbox/harnais-2026-09-13/`, et `../Emploi/correctifs.md` (détail par entrée
-datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
+Sources : les briefs du 2026-08-27 et du 2026-09-13 avec les scripts joints
+au second, supprimés après triage sans copie conservée, et
+`../Emploi/correctifs.md` (détail par entrée datée). Ordre : lot 1, lot 2, lots 3 à 5, lot 6. Une entrée de
 `correctifs.md` intégrée en sort, côté session Emploi.
 
 - [x] Lot 1, défauts du harnais. `decide --action shortlist` sans `--record`

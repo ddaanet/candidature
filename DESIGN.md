@@ -518,6 +518,10 @@ deviner, et il devine mal.
 
 Choix retenu : implémenté (v0.2). Supersède D-16.
 
+Caduque pour la couche navigateur depuis le 2026-10-03. La détection de
+Chrome et `references/site-ouverture.md` ont disparu, le dispatcher charge
+toujours la couche Playwright (D-35).
+
 Un seul `.skill` public (`candidature.skill`). Le dispatcher charge le
 workflow bundlé, puis détecte si Chrome est disponible (présence d'outils
 `Control Chrome:*` dans le contexte). Si oui, il charge
@@ -845,6 +849,12 @@ Le harnais porte aussi `tab.mjs` et `cdp.mjs` depuis le 2026-09-26, des
 onglets nommés par agent pour tout site, parce que plusieurs agents pilotent
 le même navigateur. `site-ouverture-playwright.md` en tire les règles de
 partage du navigateur.
+
+La couche par extension Chrome (`site-ouverture.md`, outils `Control
+Chrome:*`) est supprimée le 2026-10-03. Elle n'était plus chargée depuis le
+pivot (D-41), et le pilotage CDP lui est supérieur sur tous les points
+relevés en usage, téléversement de fichiers, événements de confiance,
+iframes, onglets partagés entre agents.
 
 ### D-36 : Suppression de la vérification de version sur Claude Code
 
@@ -1398,7 +1408,6 @@ candidature/
       preparation-entretien.md
       etayage.md
       backend-write.md
-      site-ouverture.md
       site-ouverture-playwright.md
       site-cloture.md
       consolidation.md

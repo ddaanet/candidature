@@ -31,7 +31,6 @@ content_files=(
   src/references/preparation-entretien.md
   src/references/recruitment-science.md
   src/references/decoupage-relecture.md
-  src/references/site-ouverture.md
   src/references/site-ouverture-playwright.md
   src/references/site-cloture.md
   src/references/consolidation.md

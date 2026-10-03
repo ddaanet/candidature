@@ -18,7 +18,7 @@ Le public cible est non technique. Le contenu du skill est le produit.
 
 `./build/build.sh` assemble un seul artefact, `skills/candidature/`, depuis
 `src/` : SKILL.md, les références, et les scripts (`init_repo.py`,
-`validate.py`, `dispatch.py`). C'est une copie pure, sans transformation.
+`validate.py`, `dispatch.py`, `cv_docx.py`). C'est une copie pure, sans transformation.
 L'artefact ne porte pas de numéro de version, elle vit dans
 `.claude-plugin/plugin.json`. Le build ne génère pas le manifeste et ne tague
 pas.

@@ -78,7 +78,7 @@ src/                          — Source canonique du contenu
   references/                 — Fichiers de phase et documents de support
     *.md                      — Phases du dispatcher et protocoles
     sites/*.md                — Contraintes par plateforme ATS
-  scripts/                    — init_repo.py, validate.py
+  scripts/                    — init_repo.py, validate.py, dispatch.py, cv_docx.py
 build/build.sh                — Assemblage de skills/candidature/ depuis src/
 skills/candidature/           — Artefact buildé, lu par Claude Code
 plugin-dev/                   — Toolkit de release vendu (git subtree)
